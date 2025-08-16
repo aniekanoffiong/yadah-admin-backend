@@ -1,0 +1,38 @@
+{
+  "name": "my-dashboard-backend",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "scripts": {
+    "start": "ts-node src/server.ts",
+    "build": "tsc",
+    "dev": "nodemon --watch src --exec ts-node src/server.ts",
+    "migrate": "npx typeorm-ts-node-commonjs migration:run -d ./src/database/data-source.ts",
+    "migrate:revert": "npx typeorm-ts-node-commonjs migration:revert -d ./src/database/data-source.ts",
+    "migrate:revert:all": "while true; do OUTPUT=$(npx typeorm-ts-node-commonjs migration:revert -d ./src/database/data-source.ts 2>&1) && echo \"$OUTPUT\"; if echo \"$OUTPUT\" | grep -q -i \"No migrations were found\"; then echo \"No more migrations to revert. Exiting.\"; break; elif echo \"$OUTPUT\" | grep -q -i \"No migration files were found\"; then echo \"No migration files found. Exiting.\"; break; fi; echo \"Reverted one migration. Continuing...\"; done",
+    "seed": "ts-node src/database/seeders/index.ts"
+  },
+  "dependencies": {
+    "@types/cors": "^2.8.19",
+    "bcrypt": "^6.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "ioredis": "^5.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.9.0",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.17"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/express": "^4.17.15",
+    "@types/jsonwebtoken": "^9.0.1",
+    "@types/node": "^18.15.11",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.2"
+  }
+}

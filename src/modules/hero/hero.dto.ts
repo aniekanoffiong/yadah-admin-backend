@@ -1,0 +1,53 @@
+import { IsString, IsOptional, IsBoolean } from 'class-validator';
+
+export class HeroDto {
+  id!: number;
+
+  @IsString()
+  page!: string;
+
+  @IsString()
+  backgroundImage!: string;
+
+  @IsString()
+  title!: string;
+
+  @IsOptional()
+  subtitle?: string;
+
+  @IsOptional()
+  showControls?: boolean;
+
+  @IsOptional()
+  volunteerProgramText?: string;
+
+  @IsOptional()
+  volunteerProgramLink?: string;
+}
+
+export class CreateHeroDto {
+  @IsString()
+  page!: string;
+
+  @IsString()
+  backgroundImage!: string;
+
+  @IsString()
+  title!: string;
+
+  @IsOptional()
+  @IsString()
+  subtitle!: string | null;
+
+  @IsOptional()
+  @IsBoolean()
+  showControls?: boolean;
+
+  @IsOptional()
+  @IsString()
+  volunteerProgramText?: string;
+
+  @IsOptional()
+  @IsString()
+  volunteerProgramLink?: string;
+}
