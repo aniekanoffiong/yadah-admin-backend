@@ -9,7 +9,7 @@ const userData = [
     name: 'Aniekan Offiong',
     email: 'excellinginmotion@gmail.com',
     password: 'RandomPassword@123',
-    roles: [RolesEnum.SUPER_ADMIN],
+    roles: [RolesEnum.SYSTEM_ADMIN],
   },
 ];
 

@@ -113,6 +113,13 @@ export const permissionsToSeed: Array<Array<{name: string, description: string}>
     { name: 'create.permission', description: 'Create permission (super admin only)' },
     { name: 'update.permission', description: 'Update permission (super admin only)' },
     { name: 'delete.permission', description: 'Delete permission (super admin only)' },
+  ],
+  [
+    // Admin Config Managements - Only system_admin
+    { name: 'get.config', description: 'View configs (system admin only)' },
+    { name: 'create.config', description: 'Create config (system admin only)' },
+    { name: 'update.config', description: 'Update config (system admin only)' },
+    { name: 'delete.config', description: 'Delete config (system admin only)' },
   ]
 ];
 

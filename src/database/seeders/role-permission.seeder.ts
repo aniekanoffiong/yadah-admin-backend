@@ -6,6 +6,7 @@ import { permissionsToSeed } from "./permission.seeder";
 
 const adminPermissions = permissionsToSeed[0].map(perm => perm.name)
 const superAdminPermissions = permissionsToSeed[1].map(perm => perm.name)
+const systemAdminPermissions = permissionsToSeed[2].map(perm => perm.name)
 
 export const rolePermissionsMap: Record<string, string[]> = {
   [RolesEnum.USER]: [],
@@ -13,6 +14,9 @@ export const rolePermissionsMap: Record<string, string[]> = {
   [RolesEnum.ADMIN]: adminPermissions,
   [RolesEnum.SUPER_ADMIN]: [
     ...adminPermissions, ...superAdminPermissions,
+  ],
+  [RolesEnum.SYSTEM_ADMIN]: [
+    ...adminPermissions, ...superAdminPermissions, ...systemAdminPermissions
   ],
 };
 

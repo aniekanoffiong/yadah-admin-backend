@@ -27,11 +27,9 @@ export class ContactInfoService {
     const info = new ContactInfo();
     info.title = dto.title;
     info.subtitle = dto.subtitle;
-    info.addressTitle = dto.addressTitle;
-    info.location = dto.location;
+    info.address = dto.address;
     info.email = dto.email;
     info.phones = dto.phones;
-    info.chat = dto.chat;
     info.socialPlatforms = socialPlatforms;
 
     return this.contactInfoRepository.create(info);
@@ -42,11 +40,9 @@ export class ContactInfoService {
     const info = await this.findOne(id);
     info.title = dto.title;
     info.subtitle = dto.subtitle;
-    info.addressTitle = dto.addressTitle;
-    info.location = dto.location;
+    info.address = dto.address;
     info.email = dto.email;
     info.phones = dto.phones;
-    info.chat = dto.chat;
     info.socialPlatforms = socialPlatforms;
 
     return this.contactInfoRepository.update(info);

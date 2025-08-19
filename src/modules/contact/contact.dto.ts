@@ -27,10 +27,7 @@ export class CreateContactInfoDto {
   subtitle!: string;
 
   @IsString()
-  addressTitle!: string;
-
-  @IsString()
-  location!: string;
+  address!: string;
 
   @IsString()
   email!: string;
@@ -39,9 +36,6 @@ export class CreateContactInfoDto {
   @ArrayNotEmpty()
   @ArrayUnique()
   phones!: string[];
-
-  @IsString()
-  chat!: string;
 
   @IsArray()
   @ArrayNotEmpty()

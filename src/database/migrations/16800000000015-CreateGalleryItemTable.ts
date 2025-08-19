@@ -8,7 +8,8 @@ export class CreateGalleryItemTable1680000000015 implements MigrationInterface {
         { name: "id", type: "serial", isPrimary: true },
         { name: "src", type: "varchar" },
         { name: "alt", type: "varchar" },
-        { name: "title", type: "varchar" },
+        { name: "caption", type: "varchar" },
+        { name: "date", type: "date", default: "now()" },
         { name: "createdAt", type: "timestamp", default: "now()" },
         { name: "updatedAt", type: "timestamp", default: "now()" },
       ]

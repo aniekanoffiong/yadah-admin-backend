@@ -12,6 +12,7 @@ import { seedPermissions } from "./permission.seeder";
 import { seedRolesWithPermissions } from "./role-permission.seeder";
 import { seedEvents } from "./event.seeder";
 import { seedUser } from "./user.seeder";
+import { seedConfigFields } from "./config-field.seeder";
 
 async function runSeeders() {
   const connection = await AppDataSource.initialize();
@@ -28,6 +29,7 @@ async function runSeeders() {
   await seedRolesWithPermissions();
   await seedUser();
   await seedEvents();
+  await seedConfigFields();
   console.log('All seeders done');
   connection.destroy();
 }

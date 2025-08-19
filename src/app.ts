@@ -20,12 +20,15 @@ import { growInFaithRouter } from "./modules/growInFaith/growInFaith.routes";
 import { authRouter } from "./modules/auth/auth.routes";
 import { authenticationMiddleware } from "./middlewares/auth.middleware";
 import { eventRouter } from "./modules/event/event.routes";
+import { configFieldRouter } from "./modules/config/config.routes";
+import { systemAdminAuthMiddleware } from "./middlewares/systemAdminAuth.middleware";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use('/admin', authenticationMiddleware);
+app.use('/admin/config-fields', systemAdminAuthMiddleware);
 
 // Routes
 app.use("/admin/hero", heroRouter);
@@ -44,6 +47,7 @@ app.use("/admin/statistics", statisticsRouter);
 app.use("/admin/belief", beliefRouter);
 app.use("/admin/grow-in-faith", growInFaithRouter);
 app.use("/admin/event", eventRouter);
+app.use("/admin/config-fields", configFieldRouter);
 
 app.use("/auth", authRouter);
 

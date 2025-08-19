@@ -14,19 +14,13 @@ export class ContactInfo extends BaseEntity {
   subtitle!: string;
 
   @Column()
-  addressTitle!: string;
-
-  @Column()
-  location!: string;
+  address!: string;
 
   @Column()
   email!: string;
 
   @Column('text', { array: true })
   phones!: string[];
-
-  @Column()
-  chat!: string;
 
   @OneToMany(() => SocialLink, (social) => social.contacts, { cascade: true, eager: true })
   @JoinTable({ name: 'contact_social_social_links' })

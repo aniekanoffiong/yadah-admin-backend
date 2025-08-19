@@ -4,11 +4,9 @@ import { ContactInfo } from '../../modules/contact/contact.entity';
 const contactData = {
   title: 'Find Us',
   subtitle: "We're located in the heart of Argyll Road...",
-  addressTitle: 'Address',
-  location: '21 Argyll Road',
+  address: '21 Argyll Road',
   email: 'info@yadah.co.uk',
   phones: ['+447985533064', '01-7649028'],
-  chat: 'Chat here',
   socialPlatforms: [
     {
       platform: 'facebook',

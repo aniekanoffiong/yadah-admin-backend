@@ -7,7 +7,7 @@ const galleryItemsData = [
   {
     src: 'https://api.builder.io/api/v1/image/assets/TEMP/f3f016a85455ab4193763f92f4a2724528e80fe8?width=779',
     alt: 'Church service moment',
-    title: 'Sunday Morning Worship Service',
+    caption: 'Sunday Morning Worship Service',
     category: 'faith',
     tags: [
       'worship',
@@ -17,7 +17,7 @@ const galleryItemsData = [
   {
     src: 'https://api.builder.io/api/v1/image/assets/TEMP/ac60952421c943dc8efd52b32e9c5a63a77bb1d2?width=779',
     alt: 'Community gathering',
-    title: 'Community Fellowship Gathering',
+    caption: 'Community Fellowship Gathering',
     category: 'fellowship',
     tags: [
       'community',
