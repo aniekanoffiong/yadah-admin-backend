@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { AppDataSource } from '../../../database/data-source';
 import { RegisterDto } from '../../auth/dtos/register.dto';
@@ -11,12 +11,21 @@ import ValidationException from '../../../exceptions/validation.exception';
 import UserUpdateRequestDto from '../dtos/userUpdateRequest.dto';
 import bcrypt from 'bcrypt';
 import { Role } from '../entities/role.entity';
+import { RolesEnum } from '../../../enum/roles.enum';
 
 export class UserRepository {
   private repo: Repository<User>;
 
   constructor() {
     this.repo = AppDataSource.getRepository(User);
+  }
+
+  async findAll(permittedRoles: RolesEnum[]): Promise<User[]> {
+    return this.repo
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.roles', 'role')
+      .where('role.name IN (:...permittedRoles)', { permittedRoles })
+      .getMany();
   }
 
   async findById(id: number): Promise<User | null> {

@@ -4,9 +4,11 @@ import { EventRepository } from './event.repository';
 import { CreateEventDto } from './event.dto';
 
 export class EventService {
-  constructor(
-    private eventRepository: EventRepository = new EventRepository(),
-  ) {}
+  private eventRepository: EventRepository;
+
+  constructor(eventRepository?: EventRepository) {
+    this.eventRepository = eventRepository || new EventRepository()
+  }
 
   async create(eventDto: CreateEventDto): Promise<Event> {
     const event = new Event();

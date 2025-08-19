@@ -2,13 +2,13 @@ import { User } from '../user/entities/user.entity';
 import crypto from 'crypto';
 import twilioService from './external/twilio.service';
 import { TwilioResponseDto } from './dtos/twilioResponse.dto';
-import { TwoFactorModel } from './twoFactor.model';
 import twoFactorRepository from './twoFactor.repository';
 import AuthenticationFailedException from '../../exceptions/authenticationFailed.exception';
 import { TwoFactorPurposeEnum } from '../../enum/twoFactorPurpose.enum';
+import { TwoFactor } from './twoFactor.entity';
 
 export class TwoFactorService {
-  async sendLoginToken(user: User): Promise<TwoFactorModel> {
+  async sendLoginToken(user: User): Promise<TwoFactor> {
     const twoFactorCode = this._generateTwoFactorCode();
     console.info(`Generated 2FA code ${twoFactorCode} for user with email ${user.email}`);
     const smsMessage = this._generateSmsMessage(twoFactorCode);
@@ -24,7 +24,7 @@ export class TwoFactorService {
     throw new AuthenticationFailedException();
   }
 
-  async sendPasswordResetToken(user: User, hashPassword: string): Promise<TwoFactorModel> {
+  async sendPasswordResetToken(user: User, hashPassword: string): Promise<TwoFactor> {
     const twoFactorCode = this._generateTwoFactorCode();
     console.info(`Generated 2FA code ${twoFactorCode} for password reset for user with email ${user.email}`);
     const smsMessage = this._generatePasswordMessage(twoFactorCode);

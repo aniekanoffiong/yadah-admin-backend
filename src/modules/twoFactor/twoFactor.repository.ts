@@ -1,18 +1,16 @@
 import InvalidTwoFactorException from '../../exceptions/InvalidTwoFactor.exception';
-import { AppDataSource } from '../../db/data-source';
 import { TwoFactor } from './twoFactor.entity';
-import { TwoFactorModel } from './twoFactor.model';
 import { TwoFactorPurposeEnum } from '../../enum/twoFactorPurpose.enum';
-import { ObjectId } from 'typeorm';
+import { AppDataSource } from '../../database/data-source';
 
 const twoFactorRepository = AppDataSource.getMongoRepository(TwoFactor).extend({
   createRecord: async function (
     code: string,
     temporaryToken: string,
-    userId: ObjectId,
+    userId: number,
     purpose: TwoFactorPurposeEnum = TwoFactorPurposeEnum.LOGIN,
     hashPassword: string | null = null,
-  ): Promise<TwoFactorModel> {
+  ): Promise<TwoFactor> {
     const twoFactorData: TwoFactor = await twoFactorRepository.create({
       tempSessionToken: temporaryToken,
       code,
@@ -23,33 +21,19 @@ const twoFactorRepository = AppDataSource.getMongoRepository(TwoFactor).extend({
     });
     const twoFactor = await twoFactorRepository.save(twoFactorData);
     console.info(`Successfully saved twoFactor data - ${JSON.stringify(twoFactor)} for userId ${userId}`);
-    return new TwoFactorModel(
-      twoFactor._id,
-      twoFactor.tempSessionToken,
-      twoFactor.code,
-      twoFactor.expireAt,
-      twoFactor.userId,
-      twoFactor.hashPassword,
-    );
+    return twoFactor
   },
 
   validateTwoFactor: async function (
     code: string,
     temporaryToken: string,
     checkHashPassword: boolean = false,
-  ): Promise<TwoFactorModel> {
+  ): Promise<TwoFactor> {
     const twoFactor = await twoFactorRepository._fetchRecord(code, temporaryToken, checkHashPassword);
     if (twoFactor) {
-      console.info(`Updating twoFactor record with id ${twoFactor._id} to status "completed"`, twoFactor);
+      console.info(`Updating twoFactor record with id ${twoFactor.id} to status "completed"`, twoFactor);
       await twoFactorRepository._updateRecord(twoFactor, { status: 'completed' });
-      return new TwoFactorModel(
-        twoFactor._id,
-        twoFactor.tempSessionToken,
-        twoFactor.code,
-        twoFactor.expireAt,
-        twoFactor.userId,
-        twoFactor.hashPassword,
-      );
+      return twoFactor;
     }
     throw new InvalidTwoFactorException();
   },
@@ -71,7 +55,7 @@ const twoFactorRepository = AppDataSource.getMongoRepository(TwoFactor).extend({
   },
 
   _updateRecord: async function (twoFactor: TwoFactor, data: Record<string, string>): Promise<void> {
-    await twoFactorRepository.updateOne({ _id: { $eq: twoFactor._id } }, { $set: data });
+    await twoFactorRepository.updateOne({ _id: { $eq: twoFactor.id } }, { $set: data });
   },
 
   _calculateExpiry: function () {

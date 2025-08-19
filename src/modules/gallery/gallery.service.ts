@@ -27,7 +27,7 @@ export class GalleryService {
     const item = new GalleryItem();
     item.src = dto.src;
     item.alt = dto.alt;
-    item.title = dto.title;
+    item.caption = dto.caption;
     item.tags = tags;
 
     return this.galleryRepository.createItem(item);
@@ -38,7 +38,7 @@ export class GalleryService {
     const item = await this.findItemById(id);
     item.src = dto.src;
     item.alt = dto.alt;
-    item.title = dto.title;
+    item.caption = dto.caption;
     item.tags = tags
     return this.galleryRepository.updateItem(item);
   }

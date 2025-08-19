@@ -3,7 +3,7 @@ import { UserRepository } from '../modules/user/repositories/user.repository';
 import { CustomRequest } from '../interfaces/customRequest';
 
 export function authorizationMiddleware(neededPermission: string) {
-  return async function (req: CustomRequest, res: Response, next: NextFunction) {
+  return async function(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       const userId = req.token?.id;
       if (!userId) {
@@ -26,6 +26,7 @@ export function authorizationMiddleware(neededPermission: string) {
         return res.status(403).json({ message: 'Access Forbidden' });
       }
 
+      req.user = user;
       next();
     } catch (error) {
       next(error);

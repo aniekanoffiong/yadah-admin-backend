@@ -9,7 +9,11 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 dotenv.config();
 
 export class AuthController {
-  constructor(private authService: AuthService = new AuthService()) {}
+  private authService: AuthService;
+
+  constructor(authService?: AuthService) {
+    this.authService = authService || new AuthService()
+  }
 
   async register(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -22,15 +26,15 @@ export class AuthController {
 
   async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const {user, token} = await this.authService.login(req.body);
+      const { user, token } = await this.authService.login(req.body);
       res.cookie(process.env.COOKIE_NAME!, token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: Number(process.env.JWT_TOKEN_EXPIRATION),
+        maxAge: Number(process.env.JWT_VALIDITY),
       });
       setCsrfCookie(res);
-      res.status(200).json(this.toDto(user));
+      res.status(200).json(this.toDto(user, token));
     } catch (err) {
       next(err);
     }
@@ -66,12 +70,13 @@ export class AuthController {
     res.json({ message: 'Logged out' });
   }
 
-  private toDto(user: User) {
+  private toDto(user: User, token?: string) {
     return {
       id: user.id,
       name: user.name,
       email: user.email,
       roles: user.roles,
+      token,
     }
   }
 };

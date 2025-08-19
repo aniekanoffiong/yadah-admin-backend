@@ -1,12 +1,6 @@
 import {
   Entity,
   Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ObjectIdColumn,
-  ObjectId,
-  BeforeInsert,
-  BeforeUpdate,
 } from 'typeorm';
 import { TwoFactorPurposeEnum } from '../../enum/twoFactorPurpose.enum';
 import { TwoFactorStatusEnum } from '../../enum/twoFactorStatus.enum';

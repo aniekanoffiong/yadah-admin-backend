@@ -5,7 +5,7 @@ import { PermissionDto, CreatePermissionDto } from './permission.dto';
 export class RoleDto {
   id!: number;
   name!: string;
-  description!: string;
+  description?: string;
   permissions!: PermissionDto[];
 }
 

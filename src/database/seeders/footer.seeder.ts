@@ -92,7 +92,6 @@ export async function seedFooter() {
     let socialAccount = await socialRepo.findOneBy({
       platform: social.platform
     });
-    console.log(`Found social platform ${socialAccount}`)
     if (!socialAccount) {
       socialAccount = socialRepo.create({
         ...social,

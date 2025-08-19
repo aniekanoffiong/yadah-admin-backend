@@ -22,7 +22,7 @@ export class CreateGalleryItemDto {
   alt!: string;
 
   @IsString()
-  title!: string;
+  caption!: string;
 
   @IsOptional()
   @IsString()

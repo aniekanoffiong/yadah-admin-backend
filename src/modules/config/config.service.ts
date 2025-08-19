@@ -3,9 +3,11 @@ import { ConfigFieldDTO } from './config.dto';
 import { ConfigFieldRepository } from './config.repository';
 
 export class ConfigFieldService {
-  constructor(
-    private configFieldRepository: ConfigFieldRepository = new ConfigFieldRepository()
-  ) {}
+  private configFieldRepository: ConfigFieldRepository;
+
+  constructor(configFieldRepository?: ConfigFieldRepository) {
+    this.configFieldRepository = configFieldRepository || new ConfigFieldRepository()
+  }
 
   async create(dto: ConfigFieldDTO): Promise<ConfigField> {
     const config = new ConfigField();

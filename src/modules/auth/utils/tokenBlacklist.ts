@@ -7,7 +7,7 @@ const TOKEN_BLACKLIST_PREFIX = process.env.TOKEN_BLACKLIST_PREFIX || 'jwt:blackl
 /**
  * Add a token to the blacklist with TTL in seconds
  */
-export async function revokeToken(token: string, expireInSeconds: number = Number(process.env.JWT_TOKEN_EXPIRATION)): Promise<void> {
+export async function revokeToken(token: string, expireInSeconds: number = Number(process.env.JWT_VALIDITY)): Promise<void> {
   await redis.set(TOKEN_BLACKLIST_PREFIX + token, 'blacklisted', 'EX', expireInSeconds);
 }
 

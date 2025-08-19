@@ -1,6 +1,7 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import "express-async-errors";
+import cookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import { heroRouter } from "./modules/hero/hero.routes";
 import { ministryRouter } from "./modules/ministries/ministry.routes";
@@ -21,35 +22,44 @@ import { authRouter } from "./modules/auth/auth.routes";
 import { authenticationMiddleware } from "./middlewares/auth.middleware";
 import { eventRouter } from "./modules/event/event.routes";
 import { configFieldRouter } from "./modules/config/config.routes";
-import { systemAdminAuthMiddleware } from "./middlewares/systemAdminAuth.middleware";
+import { userRouter } from "./modules/user/user.routes";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use('/admin', authenticationMiddleware);
-app.use('/admin/config-fields', systemAdminAuthMiddleware);
+app.use(cookieParser());
+
+app.use('/api/admin', authenticationMiddleware);
 
 // Routes
-app.use("/admin/hero", heroRouter);
-app.use("/admin/ministry", ministryRouter);
-app.use("/admin/sermon", sermonRouter);
-app.use("/admin/item-tag", itemTagRouter);
-app.use("/admin/gallery", galleryRouter);
-app.use("/admin/about", aboutRouter);
-app.use("/admin/pastor", pastorRouter);
-app.use("/admin/contact", contactInfoRouter);
-app.use("/admin/social", socialLinkRouter);
-app.use("/admin/cta", ctaRouter);
-app.use("/admin/site-link", siteLinkRouter);
-app.use("/admin/footer", footerRouter);
-app.use("/admin/statistics", statisticsRouter);
-app.use("/admin/belief", beliefRouter);
-app.use("/admin/grow-in-faith", growInFaithRouter);
-app.use("/admin/event", eventRouter);
-app.use("/admin/config-fields", configFieldRouter);
+app.get("/api", (_req: Request, res: Response, _next: NextFunction) => {
+  res.json({ message: "Welcome to our API" })
+})
+app.use("/api/admin/hero", heroRouter);
+app.use("/api/admin/ministry", ministryRouter);
+app.use("/api/admin/sermon", sermonRouter);
+app.use("/api/admin/item-tag", itemTagRouter);
+app.use("/api/admin/gallery", galleryRouter);
+app.use("/api/admin/about", aboutRouter);
+app.use("/api/admin/pastor", pastorRouter);
+app.use("/api/admin/contact", contactInfoRouter);
+app.use("/api/admin/social", socialLinkRouter);
+app.use("/api/admin/cta", ctaRouter);
+app.use("/api/admin/site-link", siteLinkRouter);
+app.use("/api/admin/footer", footerRouter);
+app.use("/api/admin/statistics", statisticsRouter);
+app.use("/api/admin/belief", beliefRouter);
+app.use("/api/admin/grow-in-faith", growInFaithRouter);
+app.use("/api/admin/event", eventRouter);
+app.use("/api/admin/config-fields", configFieldRouter);
+app.use("/api/admin/users", userRouter);
 
 app.use("/auth", authRouter);
+
+app.use((_req: Request, res: Response) => {
+  res.status(404).json({ message: "Not Found!" })
+})
 
 // Error Handler
 app.use(errorHandler);

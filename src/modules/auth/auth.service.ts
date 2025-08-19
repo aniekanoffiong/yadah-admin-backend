@@ -10,10 +10,13 @@ import { RoleRepository } from '../user/repositories/role.repository';
 dotenv.config();
 
 export class AuthService {
-  constructor(
-    private userRepository: UserRepository = new UserRepository(),
-    private roleRepository: RoleRepository = new RoleRepository(),
-  ) {}
+  private userRepository: UserRepository;
+  private roleRepository: RoleRepository;
+
+  constructor(userRepository?: UserRepository, roleRepository?: RoleRepository) {
+    this.userRepository = userRepository || new UserRepository()
+    this.roleRepository = roleRepository || new RoleRepository()
+  }
 
   async register(data: RegisterDto): Promise<User> {
     const roles = await this.roleRepository.findAllByNames(data.roles.map(role => role.name));
