@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { BaseEntity } from '../base/base.entity';
+import { SpecificPage } from '../../utils/enums';
 
 @Entity()
 export class Hero extends BaseEntity {
@@ -18,8 +19,8 @@ export class Hero extends BaseEntity {
   @Column()
   isActive!: boolean;
 
-  @Column()
-  page!: string; // home, about, etc
+  @Column({ type: 'enum', enum: SpecificPage })
+  page!: SpecificPage
 
   @Column({ nullable: true })
   showControls?: boolean;

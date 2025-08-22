@@ -1,4 +1,5 @@
 import { IsString, IsOptional, IsBoolean } from 'class-validator';
+import { SpecificPage } from '../../utils/enums';
 
 export class HeroDto {
   id!: number;
@@ -27,7 +28,7 @@ export class HeroDto {
 
 export class CreateHeroDto {
   @IsString()
-  page!: string;
+  page!: SpecificPage;
 
   @IsString()
   backgroundImage!: string;

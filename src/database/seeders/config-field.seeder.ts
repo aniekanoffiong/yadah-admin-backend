@@ -1,5 +1,6 @@
 import { AppDataSource } from '../data-source';
 import { ConfigField } from '../../modules/config/config.entity';
+import { RolesEnum } from '../../enum/roles.enum';
 
 const heroConfigFields = [
   {
@@ -474,6 +475,7 @@ const ctaConfigFields =[
     displayOrder: 1,
     validationRulesJson: JSON.stringify({ required: true, minLength: 3, maxLength: 100 }),
     helpText: 'Title for the CTA section',
+    multipleOccurrence: true,
   },
   {
     entityName: 'callToAction',
@@ -1078,6 +1080,94 @@ const statisticsConfigFields = [
   },
 ];
 
+const paymentOptionConfigFields = [
+  {
+    entityName: 'paymentOption',
+    fieldName: 'title',
+    label: 'Payment Option Title',
+    fieldType: 'select',
+    optionsJson: JSON.stringify({
+      type: 'static',
+      value: [
+        { value: 'bank_transfer', label: 'Bank Transfer' },
+        { value: 'card', label: 'Card' },
+        { value: 'paypal', label: 'Paypal' },
+        { value: 'stripe', label: 'Stripe' },
+      ]
+    }),
+    editable: true,
+    updateEditable: false,
+    authorizations: JSON.stringify({
+      create: RolesEnum.SYSTEM_ADMIN,
+      delete: RolesEnum.SYSTEM_ADMIN,
+      update: RolesEnum.SUPER_ADMIN
+    }),
+    displayOrder: 1,
+    validationRulesJson: JSON.stringify({ required: true }),
+    helpText: 'Payment Option Title/Type',
+  },
+  {
+    entityName: 'paymentOption',
+    fieldName: 'isEnabled',
+    label: 'Is Payment Option Enabled?',
+    fieldType: 'boolean',
+    editable: true,
+    displayOrder: 2,
+    authorizations: JSON.stringify({
+      create: RolesEnum.SYSTEM_ADMIN,
+      delete: RolesEnum.SYSTEM_ADMIN,
+      update: RolesEnum.SUPER_ADMIN
+    }),
+    validationRulesJson: JSON.stringify({ required: true }),
+    helpText: 'Payment Option Enabled toggle',
+  },
+  {
+    entityName: 'paymentOption',
+    subEntityName: 'bank_transfer',
+    fieldName: 'account_number',
+    label: 'Account Number',
+    fieldType: 'text',
+    editable: true,
+    authorizations: JSON.stringify({
+      create: RolesEnum.SYSTEM_ADMIN,
+      delete: RolesEnum.SYSTEM_ADMIN,
+      update: RolesEnum.SUPER_ADMIN
+    }),
+    displayOrder: 3,
+    helpText: 'Bank Account Number for Bank Transfer',
+  },
+  {
+    entityName: 'paymentOption',
+    subEntityName: 'bank_transfer',
+    fieldName: 'account_name',
+    label: 'Account Name',
+    fieldType: 'text',
+    editable: true,
+    authorizations: JSON.stringify({
+      create: RolesEnum.SYSTEM_ADMIN,
+      delete: RolesEnum.SYSTEM_ADMIN,
+      update: RolesEnum.SUPER_ADMIN
+    }),
+    displayOrder: 4,
+    helpText: 'Bank Account Name for Bank Transfer',
+  },
+  {
+    entityName: 'paymentOption',
+    subEntityName: 'bank_transfer',
+    fieldName: 'bank_name',
+    label: 'Bank Name',
+    fieldType: 'text',
+    editable: true,
+    authorizations: JSON.stringify({
+      create: RolesEnum.SYSTEM_ADMIN,
+      delete: RolesEnum.SYSTEM_ADMIN,
+      update: RolesEnum.SUPER_ADMIN
+    }),
+    displayOrder: 5,
+    helpText: 'Bank for Bank Transfer',
+  },
+];
+
 const configFields = [
   ...heroConfigFields,
   ...eventConfigFields,
@@ -1095,6 +1185,7 @@ const configFields = [
   ...siteLinkConfigFields,
   ...socialLinkConfigFields,
   ...statisticsConfigFields,
+  ...paymentOptionConfigFields,
 ];
 
 export async function seedConfigFields() {

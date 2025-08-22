@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
 import { Hero } from './hero.entity';
 import { AppDataSource } from '../../database/data-source';
+import { SpecificPage } from '../../utils/enums';
 
 export class HeroRepository {
   private repo: Repository<Hero>;
@@ -13,7 +14,7 @@ export class HeroRepository {
     return this.repo.find();
   }
 
-  async findByPage(page: string): Promise<Hero | null> {
+  async findByPage(page: SpecificPage): Promise<Hero | null> {
     return this.repo.findOne({ where: { page } });
   }
 

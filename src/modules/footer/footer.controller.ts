@@ -9,19 +9,9 @@ export class FooterController {
     this.footerService = footerService || new FooterService();
   }
 
-  getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+  get = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const footers = await this.footerService.findAll();
-      res.json(footers);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const id = Number(req.params.id);
-      const footer = await this.footerService.findOne(id);
+      const footer = await this.footerService.find();
       res.json(footer);
     } catch (error) {
       next(error);
@@ -44,16 +34,6 @@ export class FooterController {
       const dto = req.body as CreateFooterDto;
       const footer = await this.footerService.update(id, dto);
       res.json(footer);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  remove = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const id = Number(req.params.id);
-      await this.footerService.delete(id);
-      res.status(204).send();
     } catch (error) {
       next(error);
     }

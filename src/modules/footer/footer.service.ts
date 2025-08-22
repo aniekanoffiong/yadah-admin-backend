@@ -19,13 +19,9 @@ export class FooterService {
     this.siteLinkService = siteLinkService || new SiteLinkService();
   }
 
-  async findAll(): Promise<Footer[]> {
-    return this.footerRepository.findAll();
-  }
-
-  async findOne(id: number): Promise<Footer> {
-    const footer = await this.footerRepository.findOne(id);
-    if (!footer) throw new Error(`Footer with id ${id} not found`);
+  async find(): Promise<Footer> {
+    const footer = await this.footerRepository.findOne();
+    if (!footer) throw new Error(`Footer data not found`);
     return footer;
   }
 
@@ -48,16 +44,12 @@ export class FooterService {
     const quickLinks = await this.siteLinkService.getOrCreateSiteLinks(dto.quickLinks);
     const ministriesLinks = await this.siteLinkService.getOrCreateSiteLinks(dto.ministries);
     const legalLinks = await this.siteLinkService.getOrCreateSiteLinks(dto.legalLinks);
-    const footer = await this.findOne(id);
+    const footer = await this.find();
     Object.assign(footer, dto);
     footer.socialLinks = socialLinks;
     footer.quickLinks = quickLinks;
     footer.ministriesLinks = ministriesLinks;
     footer.legalLinks = legalLinks;
     return this.footerRepository.update(footer);
-  }
-
-  async delete(id: number): Promise<void> {
-    await this.footerRepository.delete(id);
   }
 }

@@ -1,6 +1,7 @@
 import { HeroRepository } from './hero.repository';
 import { Hero } from './hero.entity';
 import { CreateHeroDto } from './hero.dto';
+import { SpecificPage } from '../../utils/enums';
 
 export class HeroService {
   private heroRepository: HeroRepository;
@@ -19,7 +20,7 @@ export class HeroService {
     return hero;
   }
 
-  async findByPage(page: string): Promise<Hero | null> {
+  async findByPage(page: SpecificPage): Promise<Hero | null> {
     return this.heroRepository.findByPage(page) || null;
   }
 

@@ -3,7 +3,8 @@ import { AppDataSource } from '../data-source';
 
 const pastorData = {
   image: 'https://api.builder.io/api/v1/image/assets/TEMP/a5bececf60608166882b14e0af831d25c0ca5fa3?width=1520',
-  role: 'General Overseer',
+  role: 'Lead Pastor',
+  isLeadPastor: true,
   name: 'Apostle Uduak Charles',
   description: 'A visionary leader with a heart for God\'s people...',
   quote: 'My greatest joy is seeing lives transformed...',

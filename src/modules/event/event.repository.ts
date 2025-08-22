@@ -10,7 +10,15 @@ export class EventRepository {
   }
 
   async findAll(): Promise<Event[]> {
-    return this.repo.find();
+    return this.repo.find({ relations: ["tags"] });
+  }
+
+  async getRecentEvents(limit: number): Promise<Event[]> {
+    return this.repo
+      .createQueryBuilder('event')
+      .orderBy("startDate", "DESC")
+      .limit(limit)
+      .getMany();
   }
 
   async findOne(id: number): Promise<Event | null> {

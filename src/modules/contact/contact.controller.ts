@@ -11,18 +11,8 @@ export class ContactInfoController {
 
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const infos = await this.contactInfoService.findAll();
+      const infos = await this.contactInfoService.find();
       res.json(infos);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const id = Number(req.params.id);
-      const info = await this.contactInfoService.findOne(id);
-      res.json(info);
     } catch (error) {
       next(error);
     }
@@ -42,7 +32,7 @@ export class ContactInfoController {
     try {
       const id = Number(req.params.id);
       const dto = req.body as CreateContactInfoDto;
-      const info = await this.contactInfoService.update(id, dto);
+      const info = await this.contactInfoService.update(dto);
       res.json(info);
     } catch (error) {
       next(error);

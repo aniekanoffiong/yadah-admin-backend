@@ -32,6 +32,9 @@ export class Pastor extends BaseEntity {
 
   @Column('text')
   quote!: string;
+  
+  @Column()
+  isLeadPastor: boolean = false;
 
   @OneToMany(() => Achievement, (achievement) => achievement.pastor, {
     cascade: true,

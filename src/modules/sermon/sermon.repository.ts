@@ -13,6 +13,14 @@ export class SermonRepository {
     return this.sermonRepo.find();
   }
 
+  async findRecentSermons(limit: number): Promise<Sermon[]> {
+    return this.sermonRepo
+      .createQueryBuilder('sermon')
+      .orderBy("date", "DESC")
+      .limit(limit)
+      .getMany();
+  }
+
   async findOneSermon(id: number): Promise<Sermon | null> {
     return this.sermonRepo.findOne({ where: { id }});
   }

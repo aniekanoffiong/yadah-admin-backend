@@ -19,6 +19,10 @@ export class PastorService {
     return pastor;
   }
 
+  async leadPastor(): Promise<Pastor | null> {
+    return await this.pastorRepository.getLeadPastor();
+  }
+
   async create(dto: CreatePastorDto): Promise<Pastor> {
     const pastor = new Pastor();
     pastor.image = dto.image;

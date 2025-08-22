@@ -13,6 +13,9 @@ import { seedRolesWithPermissions } from "./role-permission.seeder";
 import { seedEvents } from "./event.seeder";
 import { seedUser } from "./user.seeder";
 import { seedConfigFields } from "./config-field.seeder";
+import { seedPaymentOption } from "./payment-option.seeder";
+import { seedNextSteps } from "./next-step.seeder";
+import { seedScheduledPrograms } from "./scheduled-program.seeder";
 
 async function runSeeders() {
   const connection = await AppDataSource.initialize();
@@ -30,6 +33,9 @@ async function runSeeders() {
   await seedUser();
   await seedEvents();
   await seedConfigFields();
+  await seedPaymentOption();
+  await seedNextSteps();
+  await seedScheduledPrograms();
   console.log('All seeders done');
   connection.destroy();
 }

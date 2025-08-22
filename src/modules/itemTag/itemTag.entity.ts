@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, Index } from 'typeo
 import { BaseEntity } from '../base/base.entity';
 import { GalleryItem } from '../gallery/gallery.entity';
 import { Sermon } from '../sermon/sermon.entity';
+import { Event } from '../event/event.entity';
 
 @Entity()
 export class ItemTag extends BaseEntity {
@@ -20,4 +21,7 @@ export class ItemTag extends BaseEntity {
 
   @ManyToMany(() => Sermon, item => item.tags)
   sermons!: Sermon[];
+
+  @ManyToMany(() => Event, item => item.tags)
+  events!: Event[];
 }

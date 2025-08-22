@@ -11,6 +11,7 @@ export class CreatePastorTables1680000000007 implements MigrationInterface {
         { name: "name", type: "varchar" },
         { name: "description", type: "text" },
         { name: "quote", type: "text" },
+        { name: "isLeadPastor", type: "boolean", default: false },
         { name: "ministryId", type: "int", isNullable: true },
         { name: "createdAt", type: "timestamp", default: "now()" },
         { name: "updatedAt", type: "timestamp", default: "now()" },

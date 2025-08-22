@@ -9,12 +9,8 @@ export class ContactInfoRepository {
     this.repo = AppDataSource.getRepository(ContactInfo);
   }
 
-  async findAll(): Promise<ContactInfo[]> {
-    return this.repo.find();
-  }
-
-  async findOne(id: number): Promise<ContactInfo | null> {
-    return this.repo.findOne({ where: { id } });
+  async find(): Promise<ContactInfo | null> {
+    return this.repo.findOne({ relations: ["socialPlatforms"] });
   }
 
   async create(contactInfo: ContactInfo): Promise<ContactInfo> {

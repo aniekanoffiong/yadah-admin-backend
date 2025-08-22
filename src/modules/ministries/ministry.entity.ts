@@ -23,7 +23,7 @@ export class Ministry {
   @Column({ nullable: true })
   leader?: string;
 
-  @OneToMany(() => MinistryActivity, (activity) => activity.ministry, { onDelete: 'CASCADE' })
+  @OneToMany(() => MinistryActivity, (activity) => activity.ministry, { cascade: true })
   activities?: MinistryActivity[];
 
   @Column({ nullable: true })
@@ -38,7 +38,7 @@ export class MinistryActivity {
   @Column()
   activityName!: string;
 
-  @ManyToOne(() => Ministry, (ministry) => ministry.activities, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Ministry, (ministry) => ministry.activities)
   @JoinColumn({ name: 'ministryId' })
   ministry!: Ministry;
 }

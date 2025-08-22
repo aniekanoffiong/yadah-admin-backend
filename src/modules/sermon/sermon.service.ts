@@ -16,6 +16,10 @@ export class SermonService {
     return this.sermonRepository.findAllSermons();
   }
 
+  async findRecent(limit: number): Promise<Sermon[]> {
+    return this.sermonRepository.findRecentSermons(limit);
+  }
+
   async findOneSermon(id: number): Promise<Sermon> {
     const sermon = await this.sermonRepository.findOneSermon(id);
     if (!sermon) throw new Error(`Sermon with id ${id} not found`);

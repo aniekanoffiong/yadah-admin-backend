@@ -9,19 +9,9 @@ export class AboutController {
     this.aboutService = aboutService || new AboutService();
   }
 
-  getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getById = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const abouts = await this.aboutService.findAll();
-      res.json(abouts);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const id = Number(req.params.id);
-      const about = await this.aboutService.findOne(id);
+      const about = await this.aboutService.find();
       res.json(about);
     } catch (error) {
       next(error);
@@ -40,20 +30,9 @@ export class AboutController {
 
   update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const id = Number(req.params.id);
       const dto = req.body as CreateAboutDto;
-      const about = await this.aboutService.update(id, dto);
+      const about = await this.aboutService.update(dto);
       res.json(about);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  remove = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const id = Number(req.params.id);
-      await this.aboutService.delete(id);
-      res.status(204).send();
     } catch (error) {
       next(error);
     }

@@ -25,6 +25,10 @@ export class EventService {
     return this.eventRepository.findAll();
   }
 
+  async findUpcomingEvents(limit: number = 8): Promise<Event[]> {
+    return this.eventRepository.getRecentEvents(limit);
+  }
+
   async findById(id: number): Promise<Event | null> {
     const event = await this.eventRepository.findOne(id);
     if (!event) throw new Error(`Event with id ${id} not found`);

@@ -16,6 +16,10 @@ export class GalleryService {
     return this.galleryRepository.findAllItems();
   }
 
+  async findRecent(limit: number): Promise<GalleryItem[]> {
+    return this.galleryRepository.findRecent(limit);
+  }
+
   async findItemById(id: number): Promise<GalleryItem> {
     const item = await this.galleryRepository.findOneItem(id);
     if (!item) throw new Error(`GalleryItem with id ${id} not found`);

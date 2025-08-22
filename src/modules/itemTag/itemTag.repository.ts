@@ -17,6 +17,13 @@ export class ItemTagRepository {
     return this.itemTagRepo.findOne({ where: { id }});
   }
 
+  async findByRelation(relation: string): Promise<ItemTag[]> {
+    return this.itemTagRepo
+      .createQueryBuilder('itemTag')
+      .innerJoin('itemTag.events', 'event')
+      .getMany();
+  }
+
   async findTagByLabel(label: string): Promise<ItemTag | null> {
     return this.itemTagRepo.findOne({ where: { label }});
   }

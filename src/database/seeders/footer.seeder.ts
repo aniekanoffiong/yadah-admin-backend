@@ -77,7 +77,7 @@ const footerData = {
     { url: '#', icon: 'instagram', platform: 'instagram', name: 'instagram' },
     { url: '#', icon: 'tiktok', platform: 'tiktok', name: 'tiktok' },
     { url: '#', icon: 'youtube', platform: 'youtube', name: 'youtube' }
-  ]
+  ],
 };
 
 export async function seedFooter() {

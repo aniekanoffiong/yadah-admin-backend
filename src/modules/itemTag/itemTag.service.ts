@@ -21,7 +21,11 @@ export class ItemTagService {
     return tag;
   }
 
-  async findTagByLabel(label: string): Promise<ItemTag | null> {
+  async findByRelation(relation: string): Promise<ItemTag[]> {
+    return await this.itemTagRepository.findByRelation(relation)
+  }
+
+  async findOneTagByLabel(label: string): Promise<ItemTag | null> {
     return await this.itemTagRepository.findTagByLabel(label);
   }
 
@@ -35,7 +39,7 @@ export class ItemTagService {
 
   async getOrCreateTags(tags: string[] | undefined): Promise<ItemTag[]> {
     return tags ? Promise.all(tags.map(async label => 
-      await this.findTagByLabel(label) ||
+      await this.findOneTagByLabel(label) ||
       await this.createTag({ label, active: true }))
     ) : []
   }

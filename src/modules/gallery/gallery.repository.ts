@@ -13,6 +13,14 @@ export class GalleryRepository {
     return this.itemRepo.find();
   }
 
+  async findRecent(limit: number): Promise<GalleryItem[]> {
+    return this.itemRepo
+      .createQueryBuilder('gallery')
+      .orderBy("date", "DESC")
+      .limit(limit)
+      .getMany();
+  }
+
   async findOneItem(id: number): Promise<GalleryItem | null> {
     return this.itemRepo.findOne({ where: { id }});
   }

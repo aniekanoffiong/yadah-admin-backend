@@ -12,6 +12,9 @@ export class CallToAction extends BaseEntity {
   @Column()
   subtitle!: string;
 
+  @Column()
+  page!: string;
+
   @OneToMany(() => CTAButton, (button) => button.callToAction, { cascade: true })
   buttons!: CTAButton[];
 }

@@ -9,13 +9,9 @@ export class AboutService {
     this.aboutRepository = aboutRepository || new AboutRepository();
   }
 
-  async findAll(): Promise<About[]> {
-    return this.aboutRepository.findAll();
-  }
-
-  async findOne(id: number): Promise<About> {
-    const about = await this.aboutRepository.findOne(id);
-    if (!about) throw new Error(`About with id ${id} not found`);
+  async find(): Promise<About> {
+    const about = await this.aboutRepository.find();
+    if (!about) throw new Error(`About data not found`);
     return about;
   }
 
@@ -54,8 +50,8 @@ export class AboutService {
     return this.aboutRepository.create(about);
   }
 
-  async update(id: number, dto: CreateAboutDto): Promise<About> {
-    const about = await this.findOne(id);
+  async update(dto: CreateAboutDto): Promise<About> {
+    const about = await this.find();
     about.mainTitle = dto.mainTitle;
     about.highlightedTitle = dto.highlightedTitle;
     about.description = dto.description;
@@ -111,9 +107,5 @@ export class AboutService {
     }
 
     return this.aboutRepository.update(about);
-  }
-
-  async delete(id: number): Promise<void> {
-    await this.aboutRepository.delete(id);
   }
 }

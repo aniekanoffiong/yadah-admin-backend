@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
 import { CallToAction, CTAButton } from './cta.entity';
 import { AppDataSource } from '../../database/data-source';
+import { SpecificPage } from '../../utils/enums';
 
 export class CallToActionRepository {
   private ctaRepo: Repository<CallToAction>;
@@ -17,6 +18,10 @@ export class CallToActionRepository {
 
   async findOne(id: number): Promise<CallToAction | null> {
     return this.ctaRepo.findOne({ where: { id }, relations: ['buttons'] });
+  }
+
+  async findByPage(page: SpecificPage): Promise<CallToAction | null> {
+    return this.ctaRepo.findOne({ where: { page }, relations: ['buttons'] });
   }
 
   async create(cta: CallToAction): Promise<CallToAction> {

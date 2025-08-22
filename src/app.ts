@@ -23,6 +23,8 @@ import { authenticationMiddleware } from "./middlewares/auth.middleware";
 import { eventRouter } from "./modules/event/event.routes";
 import { configFieldRouter } from "./modules/config/config.routes";
 import { userRouter } from "./modules/user/user.routes";
+import { publicRouter } from "./modules/public/public-content.routes";
+import { paymentOptionRouter } from "./modules/payment/paymentOption.routes";
 
 const app = express();
 
@@ -54,8 +56,10 @@ app.use("/api/admin/grow-in-faith", growInFaithRouter);
 app.use("/api/admin/event", eventRouter);
 app.use("/api/admin/config-fields", configFieldRouter);
 app.use("/api/admin/users", userRouter);
+app.use("/api/admin/payment-options", paymentOptionRouter);
 
 app.use("/auth", authRouter);
+app.use('/api/public', publicRouter)
 
 app.use((_req: Request, res: Response) => {
   res.status(404).json({ message: "Not Found!" })

@@ -6,7 +6,7 @@ export class EventDto {
   startDate!: Date;
   endDate!: Date;
   location!: string;
-  description!: string;
+  description?: string;
   image!: string;
 }
 

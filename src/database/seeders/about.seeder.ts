@@ -40,7 +40,7 @@ const aboutData = {
         description: "Experiencing the power of God to change lives, families, and communities."
       }
     ]
-  }
+  },
 };
 
 export async function seedAboutSection() {

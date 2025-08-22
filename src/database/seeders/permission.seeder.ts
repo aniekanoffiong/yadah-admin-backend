@@ -99,8 +99,12 @@ export const permissionsToSeed: Array<Array<{name: string, description: string}>
     { name: 'update.siteLink', description: 'Update site link' },
     { name: 'delete.siteLink', description: 'Delete site link' },
     
-    // Get congif for entity - Admin can access
+    // Get config for entity - Admin can access
     { name: 'getEntity.config', description: 'Get config for entity' },
+
+    // Retrieve and Update Payment Options
+    { name: 'get.paymentOption', description: 'View Payment Options' },
+    { name: 'update.paymentOption', description: 'Update Payment Options' },
   ],
   [
     // User Management - Only super_admin
@@ -122,6 +126,10 @@ export const permissionsToSeed: Array<Array<{name: string, description: string}>
     { name: 'delete.permission', description: 'Delete permission (super admin only)' },
   ],
   [
+    // Create and Delete Payment Options
+    { name: 'create.paymentOption', description: 'Create Payment Options' },
+    { name: 'delete.paymentOption', description: 'Delete Payment Options' },
+
     // Admin Config Managements - Only system_admin
     { name: 'get.config', description: 'View configs (system admin only)' },
     { name: 'create.config', description: 'Create config (system admin only)' },

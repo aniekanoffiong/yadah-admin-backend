@@ -21,6 +21,10 @@ export class PastorRepository {
     return this.pastorRepo.findOne({ where: { id }, relations: ['achievements', 'ministry'] });
   }
 
+  async getLeadPastor(): Promise<Pastor | null> {
+    return this.pastorRepo.findOne({ where: { isLeadPastor: true }, relations: ['achievements', 'ministry']});
+  }
+
   async create(pastor: Pastor): Promise<Pastor> {
     return this.pastorRepo.save(pastor);
   }

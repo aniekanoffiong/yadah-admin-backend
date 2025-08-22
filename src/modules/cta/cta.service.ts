@@ -1,6 +1,7 @@
 import { CallToActionRepository } from './cta.repository';
 import { CreateCallToActionDto } from './cta.dto';
 import { CallToAction, CTAButton } from './cta.entity';
+import { SpecificPage } from '../../utils/enums';
 
 export class CallToActionService {
   private ctaRepository: CallToActionRepository;
@@ -16,6 +17,12 @@ export class CallToActionService {
   async findOne(id: number): Promise<CallToAction> {
     const cta = await this.ctaRepository.findOne(id);
     if (!cta) throw new Error(`CallToAction with id ${id} not found`);
+    return cta;
+  }
+
+  async findByPage(page: SpecificPage): Promise<CallToAction> {
+    const cta = await this.ctaRepository.findByPage(page);
+    if (!cta) throw new Error(`CallToAction with page ${page} not found`);
     return cta;
   }
 

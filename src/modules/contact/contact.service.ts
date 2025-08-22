@@ -12,13 +12,9 @@ export class ContactInfoService {
     this.socialService = socialService || new SocialLinkService();
   }
 
-  async findAll(): Promise<ContactInfo[]> {
-    return this.contactInfoRepository.findAll();
-  }
-
-  async findOne(id: number): Promise<ContactInfo> {
-    const info = await this.contactInfoRepository.findOne(id);
-    if (!info) throw new Error(`ContactInfo with id ${id} not found`);
+  async find(): Promise<ContactInfo> {
+    const info = await this.contactInfoRepository.find();
+    if (!info) throw new Error(`ContactInfo not found`);
     return info;
   }
 
@@ -35,9 +31,9 @@ export class ContactInfoService {
     return this.contactInfoRepository.create(info);
   }
 
-  async update(id: number, dto: CreateContactInfoDto): Promise<ContactInfo> {
+  async update(dto: CreateContactInfoDto): Promise<ContactInfo> {
     const socialPlatforms = await this.socialService.getOrCreateSocialLinks(dto.socialPlatforms);
-    const info = await this.findOne(id);
+    const info = await this.find();
     info.title = dto.title;
     info.subtitle = dto.subtitle;
     info.address = dto.address;

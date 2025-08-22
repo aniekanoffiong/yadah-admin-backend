@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { EventService } from './event.service';
-import { EventDto } from './event.dto';
+import { CreateEventDto, EventDto } from './event.dto';
 
 export class EventController {
   private eventService: EventService;
@@ -30,7 +30,7 @@ export class EventController {
 
   create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const dto = req.body as EventDto;
+      const dto = req.body as CreateEventDto;
       const event = await this.eventService.create(dto);
       res.status(201).json(event);
     } catch (error) {

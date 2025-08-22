@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { PastorController } from './pastor.controller';
 import { authorizationMiddleware } from '../../middlewares/authorization.middleware';
+import { PastorController } from './pastor.controller';
 
 const pastorRouter = Router();
 const pastorController = new PastorController();

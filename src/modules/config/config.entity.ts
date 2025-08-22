@@ -48,4 +48,7 @@ export class ConfigField extends BaseEntity {
 
   @Column()
   helpText?: string;
+
+  @Column({ type: "json" })
+  authorizations?: string;
 }

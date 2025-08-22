@@ -3,6 +3,7 @@ import { HeroService } from './hero.service';
 import { CreateHeroDto } from './hero.dto';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
+import { SpecificPage } from '../../utils/enums';
 
 export class HeroController {
   private heroService: HeroService;
@@ -32,7 +33,7 @@ export class HeroController {
 
   getByPage = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const page = req.params.page;
+      const page = SpecificPage[req.params.page as keyof typeof SpecificPage];
       const hero = await this.heroService.findByPage(page);
       if (!hero) {
         res.status(404).json({ message: 'Hero not found for page' });
