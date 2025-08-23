@@ -8,6 +8,7 @@ const paymentOptionData = {
     "account_number": "",
     "bank_name": "",
     "account_name": "",
+    "sort_code": "",
   }),
 };
 

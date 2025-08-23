@@ -11,8 +11,8 @@ export class PaymentOptionController {
 
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const pastors = await this.paymentService.findAll();
-      res.json(pastors);
+      const paymentOptions = await this.paymentService.findAll();
+      res.json({ data: paymentOptions });
     } catch (error) {
       next(error);
     }
@@ -21,8 +21,8 @@ export class PaymentOptionController {
   getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const id = Number(req.params.id);
-      const pastor = await this.paymentService.findOne(id);
-      res.json(pastor);
+      const paymentOption = await this.paymentService.findOne(id);
+      res.json({ data: paymentOption });
     } catch (error) {
       next(error);
     }
@@ -31,8 +31,8 @@ export class PaymentOptionController {
   create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const dto = req.body as CreatePaymentOptionDto;
-      const pastor = await this.paymentService.create(dto);
-      res.status(201).json(pastor);
+      const paymentOption = await this.paymentService.create(dto);
+      res.status(201).json({ data: paymentOption });
     } catch (error) {
       next(error);
     }
@@ -42,8 +42,8 @@ export class PaymentOptionController {
     try {
       const id = Number(req.params.id);
       const dto = req.body as CreatePaymentOptionDto;
-      const pastor = await this.paymentService.update(id, dto);
-      res.json(pastor);
+      const paymentOption = await this.paymentService.update(id, dto);
+      res.json({ data: paymentOption });
     } catch (error) {
       next(error);
     }

@@ -36,7 +36,7 @@ export class ScheduledProgramService {
   }
 
   async findAllRegularPrograms(): Promise<ScheduledProgram[]> {
-    return this.scheduledProgramRepository.findAll(true)
+    return this.scheduledProgramRepository.findAll()
   }
 
   async findAll(): Promise<ScheduledProgram[]> {

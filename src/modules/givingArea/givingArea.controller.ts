@@ -12,7 +12,7 @@ export class GivingAreaController {
   getAllTags = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const tags = await this.givingAreaService.findAllGivingAreas();
-      res.json(tags);
+      res.json({ data: tags });
     } catch (error) {
       next(error);
     }
@@ -22,7 +22,7 @@ export class GivingAreaController {
     try {
       const id = Number(req.params.id);
       const tag = await this.givingAreaService.findGivingAreaById(id);
-      res.json(tag);
+      res.json({ data: tag });
     } catch (error) {
       next(error);
     }
@@ -32,7 +32,7 @@ export class GivingAreaController {
     try {
       const dto = req.body as CreateGivingAreaDto;
       const tag = await this.givingAreaService.createGivingArea(dto);
-      res.status(201).json(tag);
+      res.status(201).json({ data: tag });
     } catch (error) {
       next(error);
     }
@@ -43,7 +43,7 @@ export class GivingAreaController {
       const id = Number(req.params.id);
       const dto = req.body as CreateGivingAreaDto;
       const tag = await this.givingAreaService.updateGivingArea(id, dto);
-      res.json(tag);
+      res.json({ data: tag });
     } catch (error) {
       next(error);
     }

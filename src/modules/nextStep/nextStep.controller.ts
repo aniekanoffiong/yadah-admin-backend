@@ -14,7 +14,7 @@ export class NextStepController {
   getById = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const nextStep = await this.nextStepService.findOne();
-      res.json(this.toDto(nextStep));
+      res.json({ data: this.toDto(nextStep) });
     } catch (error) {
       next(error);
     }
@@ -47,7 +47,7 @@ export class NextStepController {
       }
 
       const updatedNextStep = await this.nextStepService.update(dto);
-      res.json(this.toDto(updatedNextStep));
+      res.json({ data: this.toDto(updatedNextStep) });
     } catch (error) {
       next(error);
     }
@@ -57,7 +57,7 @@ export class NextStepController {
     try {
       const id = parseInt(req.params.id, 10);
       const nextStep = await this.nextStepService.findNextStepItem(id);
-      res.json(this.toDto(nextStep));
+      res.json({ data: this.toDto(nextStep) });
     } catch (error) {
       next(error);
     }
@@ -68,7 +68,7 @@ export class NextStepController {
       const id = parseInt(req.params.id, 10);
       const dto = req.body as UpdateNextStepItemDto;
       const updatedNextStep = await this.nextStepService.updateNextStepItem(id, dto);
-      res.json(this.toDto(updatedNextStep));
+      res.json({ data: this.toDto(updatedNextStep) });
     } catch (error) {
       next(error);
     }
@@ -83,8 +83,6 @@ export class NextStepController {
       next(error);
     }
   };
-
-
 
   private toDto(nextStep: any) {
     return {

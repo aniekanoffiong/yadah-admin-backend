@@ -11,8 +11,8 @@ export class CallToActionController {
 
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const ctAs = await this.ctaService.findAll();
-      res.json(ctAs);
+      const ctas = await this.ctaService.findAll();
+      res.json({ data: ctas });
     } catch (error) {
       next(error);
     }
@@ -22,7 +22,7 @@ export class CallToActionController {
     try {
       const id = Number(req.params.id);
       const cta = await this.ctaService.findOne(id);
-      res.json(cta);
+      res.json({ data: cta });
     } catch (error) {
       next(error);
     }
@@ -32,7 +32,7 @@ export class CallToActionController {
     try {
       const dto = req.body as CreateCallToActionDto;
       const cta = await this.ctaService.create(dto);
-      res.status(201).json(cta);
+      res.status(201).json({ data: cta });
     } catch (error) {
       next(error);
     }
@@ -43,7 +43,7 @@ export class CallToActionController {
       const id = Number(req.params.id);
       const dto = req.body as CreateCallToActionDto;
       const cta = await this.ctaService.update(id, dto);
-      res.json(cta);
+      res.json({ data: cta });
     } catch (error) {
       next(error);
     }

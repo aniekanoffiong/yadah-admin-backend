@@ -12,7 +12,7 @@ export class GrowInFaithController {
   get = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const result = await this.service.findOne();
-      res.json(result);
+      res.json({ data: result });
     } catch (err) {
       next(err);
     }
@@ -22,7 +22,7 @@ export class GrowInFaithController {
     try {
       const dto = req.body as CreateGrowInFaithDto;
       const result = await this.service.create(dto);
-      res.status(201).json(result);
+      res.status(201).json({ data: result });
     } catch (err) {
       next(err);
     }
@@ -30,10 +30,9 @@ export class GrowInFaithController {
 
   update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const id = Number(req.params.id);
       const dto = req.body as CreateGrowInFaithDto;
-      const result = await this.service.update(id, dto);
-      res.json(result);
+      const result = await this.service.update(dto);
+      res.json({ data: result });
     } catch (err) {
       next(err);
     }

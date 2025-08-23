@@ -13,7 +13,7 @@ export class MinistryController {
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const ministries = await this.ministryService.findAll();
-      res.json(ministries.map(min => this.toDto(min)));
+      res.json({ data: ministries.map(min => this.toDto(min)) });
     } catch (error) {
       next(error);
     }
@@ -23,7 +23,7 @@ export class MinistryController {
     try {
       const id = Number(req.params.id);
       const ministry = await this.ministryService.findOne(id);
-      res.json(this.toDto(ministry));
+      res.json({ data: this.toDto(ministry) });
     } catch (error) {
       next(error);
     }
@@ -44,7 +44,7 @@ export class MinistryController {
       const id = Number(req.params.id);
       const dto = req.body as CreateMinistryDto;
       const ministry = await this.ministryService.update(id, dto);
-      res.json(this.toDto(ministry));
+      res.json({ data: this.toDto(ministry) });
     } catch (error) {
       next(error);
     }

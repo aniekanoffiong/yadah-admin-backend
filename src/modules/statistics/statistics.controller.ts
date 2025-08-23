@@ -12,7 +12,7 @@ export class StatisticsController {
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const stats = await this.statisticsService.findAll();
-      res.json(stats);
+      res.json({ data: stats });
     } catch (error) {
       next(error);
     }
@@ -22,7 +22,7 @@ export class StatisticsController {
     try {
       const id = Number(req.params.id);
       const stats = await this.statisticsService.findOne(id);
-      res.json(stats);
+      res.json({ data: stats });
     } catch (error) {
       next(error);
     }
@@ -32,7 +32,7 @@ export class StatisticsController {
     try {
       const dto = req.body as CreateStatisticsDto;
       const stats = await this.statisticsService.create(dto);
-      res.status(201).json(stats);
+      res.status(201).json({ data: stats });
     } catch (error) {
       next(error);
     }
@@ -43,7 +43,7 @@ export class StatisticsController {
       const id = Number(req.params.id);
       const dto = req.body as CreateStatisticsDto;
       const stats = await this.statisticsService.update(id, dto);
-      res.json(stats);
+      res.json({ data: stats });
     } catch (error) {
       next(error);
     }

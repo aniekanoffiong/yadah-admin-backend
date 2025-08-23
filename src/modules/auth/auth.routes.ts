@@ -19,6 +19,11 @@ authRouter.post(
   authController.login.bind(authController)
 );
 
+authRouter.get(
+  '/me',
+  authController.authUser.bind(authController)
+);
+
 authRouter.post(
   '/logout',
   authController.logout.bind(authController)

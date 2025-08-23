@@ -12,7 +12,7 @@ export class EventController {
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const events = await this.eventService.findAll();
-      res.json(events);
+      res.json({ data: events });
     } catch (error) {
       next(error);
     }
@@ -22,7 +22,7 @@ export class EventController {
     try {
       const id = Number(req.params.id);
       const event = await this.eventService.findById(id);
-      res.json(event);
+      res.json({ data: event });
     } catch (error) {
       next(error);
     }
@@ -32,7 +32,7 @@ export class EventController {
     try {
       const dto = req.body as CreateEventDto;
       const event = await this.eventService.create(dto);
-      res.status(201).json(event);
+      res.status(201).json({ data: event });
     } catch (error) {
       next(error);
     }
@@ -43,7 +43,7 @@ export class EventController {
       const id = Number(req.params.id);
       const dto = req.body as Partial<EventDto>;
       const event = await this.eventService.update(id, dto);
-      res.json(event);
+      res.json({ data: event });
     } catch (error) {
       next(error);
     }

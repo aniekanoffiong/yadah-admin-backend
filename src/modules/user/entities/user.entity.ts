@@ -17,6 +17,9 @@ export class User extends BaseEntity {
   @Column()
   password!: string; // hash this in your app
 
+  @Column({ default: true })
+  isActive: boolean = true;
+
   @ManyToMany(() => Role, (role) => role.users, { cascade: true, eager: true })
   @JoinTable({ name: 'users_roles' })
   roles!: Role[];

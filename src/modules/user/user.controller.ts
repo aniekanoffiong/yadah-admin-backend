@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserService } from './user.service';
-import { CreateUserDto } from './/dtos/user.dto';
+import { CreateUserDto, UserDto } from './/dtos/user.dto';
 import { CustomRequest } from '../../interfaces/customRequest';
+import { User } from './entities/user.entity';
 
 export class UserController {
   constructor(
@@ -12,7 +13,7 @@ export class UserController {
     try {
       const user = req.user
       const stats = await this.userService.findAll(user!.userRole());
-      res.json(stats);
+      res.json({ data: stats });
     } catch (error) {
       next(error);
     }
@@ -21,8 +22,8 @@ export class UserController {
   getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const id = Number(req.params.id);
-      const stats = await this.userService.findOne(id);
-      res.json(stats);
+      const user = await this.userService.findOne(id);
+      res.json({ data: this.toDto(user) });
     } catch (error) {
       next(error);
     }
@@ -32,7 +33,7 @@ export class UserController {
     try {
       const dto = req.body as CreateUserDto;
       const stats = await this.userService.create(dto);
-      res.status(201).json(stats);
+      res.status(201).json({ data: stats });
     } catch (error) {
       next(error);
     }
@@ -43,7 +44,7 @@ export class UserController {
       const id = Number(req.params.id);
       const dto = req.body as CreateUserDto;
       const stats = await this.userService.update(id, dto);
-      res.json(stats);
+      res.json({ data: stats });
     } catch (error) {
       next(error);
     }
@@ -58,4 +59,13 @@ export class UserController {
       next(error);
     }
   };
+
+  private toDto(user: User) {
+    const userDto = new UserDto()
+    userDto.id = user.id;
+    userDto.name = user.name;
+    userDto.email = user.email;
+    userDto.roles = user.roles.map(r => r.name);
+    return userDto;
+  }
 }

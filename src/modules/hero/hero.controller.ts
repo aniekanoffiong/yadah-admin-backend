@@ -15,7 +15,7 @@ export class HeroController {
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const heroes = await this.heroService.findAll();
-      res.json(heroes.map(h => this.toDto(h)));
+      res.json({ data: heroes.map(h => this.toDto(h)) });
     } catch (error) {
       next(error);
     }
@@ -25,7 +25,7 @@ export class HeroController {
     try {
       const id = parseInt(req.params.id, 10);
       const hero = await this.heroService.findOne(id);
-      res.json(this.toDto(hero));
+      res.json({ data: this.toDto(hero) });
     } catch (error) {
       next(error);
     }
@@ -39,7 +39,7 @@ export class HeroController {
         res.status(404).json({ message: 'Hero not found for page' });
         return;
       }
-      res.json(this.toDto(hero));
+      res.json({ data: this.toDto(hero) });
     } catch (error) {
       next(error);
     }
@@ -72,7 +72,7 @@ export class HeroController {
       }
 
       const updatedHero = await this.heroService.update(id, dto);
-      res.json(this.toDto(updatedHero));
+      res.json({ data: this.toDto(updatedHero) });
     } catch (error) {
       next(error);
     }

@@ -12,7 +12,7 @@ export class ItemTagController {
   getAllTags = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const tags = await this.itemTagService.findAllTags();
-      res.json(tags);
+      res.json({ data: tags });
     } catch (error) {
       next(error);
     }
@@ -22,7 +22,7 @@ export class ItemTagController {
     try {
       const id = Number(req.params.id);
       const tag = await this.itemTagService.findTagById(id);
-      res.json(tag);
+      res.json({ data: tag });
     } catch (error) {
       next(error);
     }
@@ -32,7 +32,7 @@ export class ItemTagController {
     try {
       const dto = req.body as CreateItemTagDto;
       const tag = await this.itemTagService.createTag(dto);
-      res.status(201).json(tag);
+      res.status(201).json({ data: tag });
     } catch (error) {
       next(error);
     }
@@ -43,7 +43,7 @@ export class ItemTagController {
       const id = Number(req.params.id);
       const dto = req.body as CreateItemTagDto;
       const tag = await this.itemTagService.updateTag(id, dto);
-      res.json(tag);
+      res.json({ data: tag });
     } catch (error) {
       next(error);
     }

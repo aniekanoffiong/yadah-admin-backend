@@ -12,7 +12,7 @@ export class SermonController {
   getAllSermons = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const sermons = await this.sermonService.findAllSermons();
-      res.json(sermons);
+      res.json({ data: sermons });
     } catch (error) {
       next(error);
     }
@@ -22,7 +22,7 @@ export class SermonController {
     try {
       const id = Number(req.params.id);
       const sermon = await this.sermonService.findOneSermon(id);
-      res.json(sermon);
+      res.json({ data: sermon });
     } catch (error) {
       next(error);
     }
@@ -32,7 +32,7 @@ export class SermonController {
     try {
       const dto = req.body as CreateSermonDto;
       const sermon = await this.sermonService.createSermon(dto);
-      res.status(201).json(sermon);
+      res.status(201).json({ data: sermon });
     } catch (error) {
       next(error);
     }
@@ -43,7 +43,7 @@ export class SermonController {
       const id = Number(req.params.id);
       const dto = req.body as CreateSermonDto;
       const sermon = await this.sermonService.updateSermon(id, dto);
-      res.json(sermon);
+      res.json({ data: sermon });
     } catch (error) {
       next(error);
     }

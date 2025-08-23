@@ -12,7 +12,7 @@ export class ConfigFieldController {
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const fields = await this.configFieldService.findAll();
-      res.json(fields);
+      res.json({ data: fields });
     } catch (error) {
       next(error);
     }
@@ -22,7 +22,7 @@ export class ConfigFieldController {
     try {
       const entityName = req.params.entityName;
       const fields = await this.configFieldService.findByEntity(entityName);
-      res.json(fields);
+      res.json({ data: fields });
     } catch (error) {
       next(error);
     }
@@ -32,7 +32,7 @@ export class ConfigFieldController {
     try {
       const id = Number(req.params.id);
       const field = await this.configFieldService.findById(id);
-      res.json(field);
+      res.json({ data: field });
     } catch (error) {
       next(error);
     }
@@ -42,7 +42,7 @@ export class ConfigFieldController {
     try {
       const dto = req.body as CreateConfigFieldDto;
       const field = await this.configFieldService.create(dto);
-      res.status(201).json(field);
+      res.status(201).json({ data: field });
     } catch (error) {
       next(error);
     }
@@ -53,7 +53,7 @@ export class ConfigFieldController {
       const id = Number(req.params.id);
       const dto = req.body as Partial<ConfigFieldDTO>;
       const field = await this.configFieldService.update(id, dto);
-      res.json(field);
+      res.json({ data: field });
     } catch (error) {
       next(error);
     }

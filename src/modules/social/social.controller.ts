@@ -12,7 +12,7 @@ export class SocialLinkController {
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const socialLinks = await this.socialLinkService.findAll();
-      res.json(socialLinks);
+      res.json({ data: socialLinks });
     } catch (error) {
       next(error);
     }
@@ -22,7 +22,7 @@ export class SocialLinkController {
     try {
       const id = Number(req.params.id);
       const socialLink = await this.socialLinkService.findOne(id);
-      res.json(socialLink);
+      res.json({ data: socialLink });
     } catch (error) {
       next(error);
     }
@@ -32,7 +32,7 @@ export class SocialLinkController {
     try {
       const dto = req.body as CreateSocialDto;
       const socialLink = await this.socialLinkService.create(dto);
-      res.status(201).json(socialLink);
+      res.status(201).json({ data: socialLink });
     } catch (error) {
       next(error);
     }
@@ -43,7 +43,7 @@ export class SocialLinkController {
       const id = Number(req.params.id);
       const dto = req.body as CreateSocialDto;
       const socialLink = await this.socialLinkService.update(id, dto);
-      res.json(socialLink);
+      res.json({ data: socialLink });
     } catch (error) {
       next(error);
     }
@@ -53,7 +53,7 @@ export class SocialLinkController {
     try {
       const id = Number(req.params.id);
       await this.socialLinkService.delete(id);
-      res.status(204).send();
+      res.sendStatus(204);
     } catch (error) {
       next(error);
     }

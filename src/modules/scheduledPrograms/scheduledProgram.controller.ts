@@ -12,7 +12,7 @@ export class ScheduledProgramController {
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const scheduledPrograms = await this.scheduledProgramService.findAll();
-      res.json(scheduledPrograms);
+      res.json({ data: scheduledPrograms });
     } catch (error) {
       next(error);
     }
@@ -22,7 +22,7 @@ export class ScheduledProgramController {
     try {
       const id = Number(req.params.id);
       const scheduledProgram = await this.scheduledProgramService.findById(id);
-      res.json(scheduledProgram);
+      res.json({ data: scheduledProgram });
     } catch (error) {
       next(error);
     }
@@ -32,7 +32,7 @@ export class ScheduledProgramController {
     try {
       const dto = req.body as CreateScheduledProgramDto;
       const scheduledProgram = await this.scheduledProgramService.create(dto);
-      res.status(201).json(scheduledProgram);
+      res.status(201).json({ data: scheduledProgram });
     } catch (error) {
       next(error);
     }
@@ -43,7 +43,7 @@ export class ScheduledProgramController {
       const id = Number(req.params.id);
       const dto = req.body as Partial<ScheduledProgramDto>;
       const scheduledProgram = await this.scheduledProgramService.update(id, dto);
-      res.json(scheduledProgram);
+      res.json({ data: scheduledProgram });
     } catch (error) {
       next(error);
     }

@@ -12,7 +12,7 @@ export class LiveController {
   async getAll(_req: Request, res: Response) {
     try {
       const lives = await this.liveService.getAll();
-      res.json(lives);
+      res.json({ data: lives });
     } catch (err) {
       res.status(500).json({ message: 'Failed to retrieve live records' });
     }
@@ -23,7 +23,7 @@ export class LiveController {
       const id = Number(req.params.id);
       const live = await this.liveService.getById(id);
       if (live) {
-        res.json(live);
+        res.json({ data: live });
       } else {
         res.status(404).json({ message: 'Live record not found' });
       }
@@ -37,7 +37,7 @@ export class LiveController {
       const liveData = req.body as CreateWatchLiveDto;
       
       const live = await this.liveService.create(liveData);
-      res.status(201).json(live);
+      res.status(201).json({ data: live });
     } catch {
       res.status(400).json({ message: 'Failed to create watch live record' });
     }
@@ -49,7 +49,7 @@ export class LiveController {
       const liveData = req.body;
       const updated = await this.liveService.update(id, liveData);
       if (updated) {
-        res.json(updated);
+        res.json({ data: updated });
       } else {
         res.status(404).json({ message: 'Live record not found' });
       }

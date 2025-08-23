@@ -59,16 +59,17 @@ export class PublicContentController {
 
       // Compose response matching your attached data structure
       // Adjust and format as necessary for exact shape
-      res.json({
-        hero,
-        services,
-        about,
-        pastor,
-        ministries,
-        events,
-        sermons,
-        gallery,
-        footer,
+      res.json({ data: {
+          hero,
+          services,
+          about,
+          pastor,
+          ministries,
+          events,
+          sermons,
+          gallery,
+          footer,
+        }
       });
     } catch (error) {
       next(error);
@@ -87,11 +88,12 @@ export class PublicContentController {
         this.pastorService.leadPastor(),
         this.ministryService.findAll(),
       ])
-      res.json({ 
-        about,
-        pastor,
-        ministries,
-       });
+      res.json({ data: { 
+          about,
+          pastor,
+          ministries,
+        }
+      });
     } catch (error) {
       next(error);
     }
@@ -111,11 +113,12 @@ export class PublicContentController {
         this.nextStepService.findOne(NextStepVariants.QuestionNextStep),
         this.ctaService.findByPage(SpecificPage.MINISTRY),
       ]);
-      res.json({
-        ministries,
-        upcomingEvents,
-        questionNextStep,
-        cta
+      res.json({ data: {
+          ministries,
+          upcomingEvents,
+          questionNextStep,
+          cta
+        }
       });
     } catch (error) {
       next(error);
@@ -134,10 +137,11 @@ export class PublicContentController {
         this.itemTagService.findByRelation("event"),
         this.eventService.findUpcomingEvents(),
       ]);
-      res.json({
-        hero: eventHero,
-        filters,
-        events: upcomingEvents,
+      res.json({ data: {
+          hero: eventHero,
+          filters,
+          events: upcomingEvents,
+        }
       });
     } catch (error) {
       next(error);
@@ -157,10 +161,11 @@ export class PublicContentController {
         this.itemTagService.findByRelation("sermon"),
       ])
 
-      res.json({
-        hero,
-        filters,
-        sermons
+      res.json({ data: {
+          hero,
+          filters,
+          sermons
+        }
       });
     } catch (error) {
       next(error);
@@ -178,9 +183,10 @@ export class PublicContentController {
         this.contactService.find(),
       ]);
       // Add call to a ContactService if exists or static data
-      res.json({
-        hero: contactHero,
-        contact,
+      res.json({ data: {
+          hero: contactHero,
+          contact,
+        }
       });
     } catch (error) {
       next(error);
@@ -197,9 +203,10 @@ export class PublicContentController {
         this.galleryService.findAllItems(),
         this.itemTagService.findByRelation("gallery"),
       ])
-      res.json({
-        galleryData,
-        filters,
+      res.json({ data: {
+          galleryData,
+          filters,
+        }
       });
     } catch (error) {
       next(error);
@@ -225,7 +232,7 @@ export class PublicContentController {
         liveStream = await this.liveService.getLastestLive()
       }
 
-      res.json({ liveStream, upcomingServices, recentServices });
+      res.json({ data: { liveStream, upcomingServices, recentServices }});
     } catch (error) {
       next(error);
     }

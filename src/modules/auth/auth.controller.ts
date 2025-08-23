@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { setCsrfCookie } from './utils/csrf.token';
 import { revokeToken } from './utils/tokenBlacklist';
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { CustomRequest } from '../../interfaces/customRequest';
 
 dotenv.config();
 
@@ -38,6 +39,11 @@ export class AuthController {
     } catch (err) {
       next(err);
     }
+  }
+
+  authUser = async (req: CustomRequest, res: Response): Promise<void> => {
+    const user = req.user
+    res.json({ data: this.toDto(user!) })
   }
 
   // Not currently used, but kept for future reference

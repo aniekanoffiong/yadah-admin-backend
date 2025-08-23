@@ -12,7 +12,7 @@ export class SiteLinkController {
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const siteLinks = await this.siteLinkService.findAll();
-      res.json(siteLinks);
+      res.json({ data: siteLinks });
     } catch (error) {
       next(error);
     }
@@ -22,7 +22,7 @@ export class SiteLinkController {
     try {
       const id = Number(req.params.id);
       const siteLink = await this.siteLinkService.findOne(id);
-      res.json(siteLink);
+      res.json({ data: siteLink });
     } catch (error) {
       next(error);
     }
@@ -32,7 +32,7 @@ export class SiteLinkController {
     try {
       const dto = req.body as CreateSiteLinkDto;
       const siteLink = await this.siteLinkService.create(dto);
-      res.status(201).json(siteLink);
+      res.status(201).json({ data: siteLink });
     } catch (error) {
       next(error);
     }
@@ -43,7 +43,7 @@ export class SiteLinkController {
       const id = Number(req.params.id);
       const dto = req.body as CreateSiteLinkDto;
       const siteLink = await this.siteLinkService.update(id, dto);
-      res.json(siteLink);
+      res.json({ data: siteLink });
     } catch (error) {
       next(error);
     }

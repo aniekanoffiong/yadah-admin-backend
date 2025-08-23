@@ -12,7 +12,7 @@ export class AboutController {
   getById = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const about = await this.aboutService.find();
-      res.json(about);
+      res.json({ data: about });
     } catch (error) {
       next(error);
     }
@@ -22,7 +22,7 @@ export class AboutController {
     try {
       const dto = req.body as CreateAboutDto;
       const about = await this.aboutService.create(dto);
-      res.status(201).json(about);
+      res.status(201).json({ data: about });
     } catch (error) {
       next(error);
     }
@@ -32,7 +32,7 @@ export class AboutController {
     try {
       const dto = req.body as CreateAboutDto;
       const about = await this.aboutService.update(dto);
-      res.json(about);
+      res.json({ data: about });
     } catch (error) {
       next(error);
     }

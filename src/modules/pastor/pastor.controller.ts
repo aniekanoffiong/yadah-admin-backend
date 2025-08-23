@@ -13,7 +13,7 @@ export class PastorController {
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const pastors = await this.pastorService.findAll();
-      res.json(pastors);
+      res.json({ data: pastors });
     } catch (error) {
       next(error);
     }
@@ -23,7 +23,7 @@ export class PastorController {
     try {
       const id = Number(req.params.id);
       const pastor = await this.pastorService.findOne(id);
-      res.json(pastor);
+      res.json({ data: pastor });
     } catch (error) {
       next(error);
     }
@@ -33,7 +33,7 @@ export class PastorController {
     try {
       const dto = req.body as CreatePastorDto;
       const pastor = await this.pastorService.create(dto);
-      res.status(201).json(pastor);
+      res.status(201).json({ data: pastor });
     } catch (error) {
       next(error);
     }
@@ -44,7 +44,7 @@ export class PastorController {
       const id = Number(req.params.id);
       const dto = req.body as CreatePastorDto;
       const pastor = await this.pastorService.update(id, dto);
-      res.json(pastor);
+      res.json({ data: pastor });
     } catch (error) {
       next(error);
     }

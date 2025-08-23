@@ -27,8 +27,8 @@ export class GrowInFaithService {
     return this.growingInFaithRepository.create(entity);
   }
 
-  async update(id: number, dto: CreateGrowInFaithDto): Promise<GrowInFaith> {
-    const entity = await this.findOne(id);
+  async update(dto: CreateGrowInFaithDto): Promise<GrowInFaith> {
+    const entity = await this.findOne();
     entity.title = dto.title;
     entity.description = dto.description;
     entity.secondDescription = dto.secondDescription;

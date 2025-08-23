@@ -6,7 +6,7 @@ export class UserDto {
   id!: number;
   name!: string;
   email!: string;
-  roles!: RoleDto[];
+  roles!: string[];
 }
 
 export class CreateUserDto {

@@ -12,7 +12,7 @@ export class BeliefController {
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const beliefs = await this.beliefService.findAll();
-      res.json(beliefs);
+      res.json({ data: beliefs });
     } catch (error) {
       next(error);
     }
@@ -22,7 +22,7 @@ export class BeliefController {
     try {
       const id = Number(req.params.id);
       const belief = await this.beliefService.findOne(id);
-      res.json(belief);
+      res.json({ data: belief });
     } catch (error) {
       next(error);
     }
@@ -32,7 +32,7 @@ export class BeliefController {
     try {
       const dto = req.body as CreateBeliefDto;
       const belief = await this.beliefService.create(dto);
-      res.status(201).json(belief);
+      res.status(201).json({ data: belief });
     } catch (error) {
       next(error);
     }
@@ -43,7 +43,7 @@ export class BeliefController {
       const id = Number(req.params.id);
       const dto = req.body as CreateBeliefDto;
       const belief = await this.beliefService.update(id, dto);
-      res.json(belief);
+      res.json({ data: belief });
     } catch (error) {
       next(error);
     }
