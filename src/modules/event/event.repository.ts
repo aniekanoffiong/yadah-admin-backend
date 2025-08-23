@@ -13,6 +13,14 @@ export class EventRepository {
     return this.repo.find({ relations: ["tags"] });
   }
 
+  async currentEvent(date: Date): Promise<Event | null> {
+    return await this.repo
+      .createQueryBuilder("event")
+      .andWhere("startDate >= :date", { date })
+      .andWhere("endDate <= :date", { date })
+      .getOne();
+  }
+
   async getRecentEvents(limit: number): Promise<Event[]> {
     return this.repo
       .createQueryBuilder('event')

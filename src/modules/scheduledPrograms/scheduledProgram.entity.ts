@@ -1,15 +1,7 @@
 import { Entity, Column } from 'typeorm';
 import { BaseEntity } from '../base/base.entity';
+import { DayOfWeek } from '../../utils/dayOfWeek';
 
-export enum DayOfWeek {
-  Monday = 'Monday',
-  Tuesday = 'Tuesday',
-  Wednesday = 'Wednesday',
-  Thursday = 'Thursday',
-  Friday = 'Friday',
-  Saturday = 'Saturday',
-  Sunday = 'Sunday'
-}
 
 @Entity()
 export class ScheduledProgram extends BaseEntity {

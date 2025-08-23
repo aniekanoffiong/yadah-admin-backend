@@ -14,6 +14,7 @@ import { NextStepService } from '../nextStep/nextStep.service';
 import { NextStepVariants } from '../nextStep/nextStep.entity';
 import { CallToActionService } from '../cta/cta.service';
 import { SpecificPage } from '../../utils/enums';
+import { LiveService } from '../live/live.service';
 
 export class PublicContentController {
   private heroService = new HeroService();
@@ -29,6 +30,7 @@ export class PublicContentController {
   private scheduleProgramService = new ScheduledProgramService();
   private nextStepService = new NextStepService();
   private ctaService = new CallToActionService();
+  private liveService = new LiveService();
 
   // GET /api/public/home
   home = async (_req: Request, res: Response, next: NextFunction) => {
@@ -208,17 +210,61 @@ export class PublicContentController {
   watchLive = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const [
-        liveStream,
         upcomingServices,
         recentServices,
       ] = await Promise.all([
-        this.sermonService.getLiveStreamData(),
         this.scheduleProgramService.findUpcomingServices(),
         this.sermonService.findRecent(4),
       ])
+      let liveStream = await this.liveService.getCachedLiveEvent();
+      if (!liveStream) {
+        liveStream = await this.liveService.pollLiveEvent();
+      }
+
+      if (!liveStream) {
+        liveStream = await this.liveService.getLastestLive()
+      }
+
       res.json({ liveStream, upcomingServices, recentServices });
     } catch (error) {
       next(error);
     }
   };
+
+  async liveUpdatesSSE(req: Request, res: Response) {
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      Connection: 'keep-alive',
+    });
+
+    const sendEvent = (data: any) => {
+      res.write(`data: ${JSON.stringify(data)}\n\n`);
+    };
+
+    const onLiveUpdate = (liveData: any) => {
+      sendEvent(liveData);
+    };
+
+    // Subscribe to liveUpdated events
+    this.liveService.on('liveUpdated', onLiveUpdate);
+    
+    // Optionally, send latest cached event immediately on connection
+    const cachedLive = await this.liveService.getCachedLiveEvent();
+    if (cachedLive) {
+      sendEvent(cachedLive);
+    }
+
+    const intervalId = setInterval(async () => {
+      const liveEvent = await this.liveService.getCachedLiveEvent();
+      sendEvent(liveEvent);
+    }, 60000);
+
+    req.on('close', () => {
+      clearInterval(intervalId);
+      this.liveService.off('liveUpdated', onLiveUpdate);
+      res.end();
+    });
+  }
+
 }

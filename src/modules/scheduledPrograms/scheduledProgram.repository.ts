@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
-import { ScheduledProgram } from './scheduledProgram.entity';
 import { AppDataSource } from '../../database/data-source';
+import { getDayOfWeekFromDate } from '../../utils/dayOfWeek';
+import { ScheduledProgram } from './scheduledProgram.entity';
 
 export class ScheduledProgramRepository {
   private repo: Repository<ScheduledProgram>;
@@ -9,8 +10,19 @@ export class ScheduledProgramRepository {
     this.repo = AppDataSource.getRepository(ScheduledProgram);
   }
 
-  async findAll(regularScheduledProgram: boolean = false): Promise<ScheduledProgram[]> {
-    return this.repo.find({ where: { regularScheduledProgram } });
+  async findAll(): Promise<ScheduledProgram[]> {
+    return this.repo.find();
+  }
+
+  async currentProgram(now: Date): Promise<ScheduledProgram | null> {
+    const currentTime = now.toTimeString().slice(0, 8)
+    const dayOfWeek = getDayOfWeekFromDate(now)
+    return this.repo
+      .createQueryBuilder("scheduledProgram")
+      .where("scheduledDay = :dayOfWeek", { dayOfWeek })
+      .andWhere("startTime >= :currentTime", { currentTime })
+      .andWhere("endTime <= :currentTime", { currentTime })
+      .getOne();
   }
 
   async getRecentScheduledPrograms(limit: number): Promise<ScheduledProgram[]> {

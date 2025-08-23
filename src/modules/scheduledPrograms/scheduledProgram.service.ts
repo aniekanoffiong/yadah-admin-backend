@@ -1,5 +1,6 @@
+import { DayOfWeek } from '../../utils/dayOfWeek';
 import { CreateScheduledProgramDto, ScheduledProgramDto } from './scheduledProgram.dto';
-import { DayOfWeek, ScheduledProgram } from './scheduledProgram.entity';
+import { ScheduledProgram } from './scheduledProgram.entity';
 import { ScheduledProgramRepository } from './scheduledProgram.repository';
 
 export class ScheduledProgramService {
@@ -40,6 +41,10 @@ export class ScheduledProgramService {
 
   async findAll(): Promise<ScheduledProgram[]> {
     return this.scheduledProgramRepository.findAll();
+  }
+
+  async currentProgram(date: Date): Promise<ScheduledProgram | null> {
+    return this.scheduledProgramRepository.currentProgram(date)
   }
 
   async findUpcomingScheduledPrograms(limit: number = 8): Promise<ScheduledProgram[]> {

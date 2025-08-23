@@ -25,6 +25,7 @@ import { configFieldRouter } from "./modules/config/config.routes";
 import { userRouter } from "./modules/user/user.routes";
 import { publicRouter } from "./modules/public/public-content.routes";
 import { paymentOptionRouter } from "./modules/payment/paymentOption.routes";
+import liveRouter from "./modules/live/live.routes";
 
 const app = express();
 
@@ -57,6 +58,7 @@ app.use("/api/admin/event", eventRouter);
 app.use("/api/admin/config-fields", configFieldRouter);
 app.use("/api/admin/users", userRouter);
 app.use("/api/admin/payment-options", paymentOptionRouter);
+app.use("/api/admin/live", liveRouter);
 
 app.use("/auth", authRouter);
 app.use('/api/public', publicRouter)

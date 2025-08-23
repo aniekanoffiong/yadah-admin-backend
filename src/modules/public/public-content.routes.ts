@@ -12,5 +12,6 @@ publicRouter.get('/about', controller.about.bind(controller));
 publicRouter.get('/contact', controller.contact.bind(controller));
 publicRouter.get('/gallery', controller.gallery.bind(controller));
 publicRouter.get('/watch-live', controller.watchLive.bind(controller));
+publicRouter.get('/live-updates', controller.liveUpdatesSSE.bind(controller));
 
 export { publicRouter };

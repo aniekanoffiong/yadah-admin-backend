@@ -102,9 +102,21 @@ export const permissionsToSeed: Array<Array<{name: string, description: string}>
     // Get config for entity - Admin can access
     { name: 'getEntity.config', description: 'Get config for entity' },
 
-    // Retrieve and Update Payment Options
+    // Retrieve and Update Payment Options - Admin can access
     { name: 'get.paymentOption', description: 'View Payment Options' },
     { name: 'update.paymentOption', description: 'Update Payment Options' },
+
+    // Giving Area - Admin can access
+    { name: 'get.givingArea', description: 'View Giving Areas' },
+    { name: 'create.givingArea', description: 'Update Giving Areas' },
+    { name: 'update.givingArea', description: 'View Giving Areas' },
+    { name: 'delete.givingArea', description: 'Update Giving Areas' },
+
+    // Watch Live - Admin can access
+    { name: 'get.live', description: 'View Watch Live' },
+    { name: 'create.live', description: 'Update Watch Live' },
+    { name: 'update.live', description: 'View Watch Live' },
+    { name: 'delete.live', description: 'Update Watch Live' },
   ],
   [
     // User Management - Only super_admin
