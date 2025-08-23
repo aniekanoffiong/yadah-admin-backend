@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { PastorService } from './pastor.service';
 import { CreatePastorDto } from './pastor.dto';
+import { validateEntity } from '../../utils/validate';
 
 export class PastorController {
   private pastorService: PastorService;

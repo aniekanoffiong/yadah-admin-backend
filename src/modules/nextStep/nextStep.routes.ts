@@ -1,16 +1,48 @@
 import { Router } from 'express';
 import { NextStepController } from './nextStep.controller';
 import { authorizationMiddleware } from '../../middlewares/authorization.middleware';
+import validationMiddleware from '../../middlewares/validation.middleware';
+import { CreateNextStepDto, UpdateNextStepItemDto } from './nextStep.dto';
 
 const nextStepRouter = Router();
 const nextStepController = new NextStepController();
 
-nextStepRouter.get('/', authorizationMiddleware('get.nextStep'), nextStepController.getById.bind(nextStepController));
-nextStepRouter.post('/', authorizationMiddleware('create.nextStep'), nextStepController.create.bind(nextStepController));
-nextStepRouter.put('/:id', authorizationMiddleware('update.nextStep'), nextStepController.update.bind(nextStepController));
+nextStepRouter.get(
+  '/',
+  authorizationMiddleware('get.nextStep'),
+  nextStepController.getById.bind(nextStepController)
+);
 
-nextStepRouter.get('/:id', authorizationMiddleware('get.nextStepItem'), nextStepController.findNextStepItem.bind(nextStepController));
-nextStepRouter.put('/:id', authorizationMiddleware('update.nextStepItem'), nextStepController.updateNextStepItem.bind(nextStepController));
-nextStepRouter.delete('/:id', authorizationMiddleware('delete.nextStep'), nextStepController.removeNextStepItem.bind(nextStepController));
+nextStepRouter.post(
+  '/',
+  authorizationMiddleware('create.nextStep'),
+  validationMiddleware(CreateNextStepDto),
+  nextStepController.create.bind(nextStepController)
+);
 
+nextStepRouter.put(
+  '/:id',
+  authorizationMiddleware('update.nextStep'),
+  nextStepController.update.bind(nextStepController)
+);
+
+
+nextStepRouter.get(
+  '/:id',
+  authorizationMiddleware('get.nextStepItem'),
+  nextStepController.findNextStepItem.bind(nextStepController)
+);
+
+nextStepRouter.put(
+  '/:id',
+  authorizationMiddleware('update.nextStepItem'),
+  validationMiddleware(UpdateNextStepItemDto),
+  nextStepController.updateNextStepItem.bind(nextStepController)
+);
+
+nextStepRouter.delete(
+  '/:id',
+  authorizationMiddleware('delete.nextStep'),
+  nextStepController.removeNextStepItem.bind(nextStepController)
+);
 export { nextStepRouter };

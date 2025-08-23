@@ -9,19 +9,9 @@ export class GrowInFaithController {
     this.service = service || new GrowInFaithService();
   }
 
-  getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+  get = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const result = await this.service.findAll();
-      res.json(result);
-    } catch (err) {
-      next(err);
-    }
-  };
-
-  getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const id = Number(req.params.id);
-      const result = await this.service.findOne(id);
+      const result = await this.service.findOne();
       res.json(result);
     } catch (err) {
       next(err);

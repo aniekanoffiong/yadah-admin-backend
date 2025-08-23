@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { LiveService } from './live.service';
+import { CreateWatchLiveDto } from './live.dto';
 
 export class LiveController {
   private liveService: LiveService;
@@ -33,12 +34,12 @@ export class LiveController {
 
   async create(req: Request, res: Response) {
     try {
-      const liveData = req.body;
+      const liveData = req.body as CreateWatchLiveDto;
+      
       const live = await this.liveService.create(liveData);
-      // Optionally, notify frontend about new live record using SSE or other method
       res.status(201).json(live);
     } catch {
-      res.status(400).json({ message: 'Failed to create live record' });
+      res.status(400).json({ message: 'Failed to create watch live record' });
     }
   }
 

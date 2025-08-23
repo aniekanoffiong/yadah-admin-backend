@@ -1,6 +1,7 @@
 import { AppDataSource } from '../data-source';
 import { ConfigField } from '../../modules/config/config.entity';
 import { RolesEnum } from '../../enum/roles.enum';
+import { DayOfWeek } from '../../utils/dayOfWeek';
 
 const heroConfigFields = [
   {
@@ -1168,6 +1169,169 @@ const paymentOptionConfigFields = [
   },
 ];
 
+const scheduleProgramConfigFields = [
+  {
+    entityName: 'scheduledProgram',
+    fieldName: 'title',
+    label: 'Event Title',
+    fieldType: 'text',
+    editable: true,
+    displayOrder: 1,
+    validationRulesJson: JSON.stringify({ required: true, minLength: 3, maxLength: 150 }),
+  },
+  {
+    entityName: 'scheduledProgram',
+    fieldName: 'scheduledDay',
+    label: 'Scheduled Day',
+    fieldType: 'select',
+    optionsJson: JSON.stringify({
+      type: 'static',
+      value: Object.entries(DayOfWeek).map(dayOfWeek => {
+        return {value: dayOfWeek, label: dayOfWeek}
+      })
+    }),
+    editable: true,
+    displayOrder: 2,
+    validationRulesJson: JSON.stringify({ required: true }),
+  },
+  {
+    entityName: 'scheduledProgram',
+    fieldName: 'startTime',
+    label: 'Start Time',
+    fieldType: 'time',
+    editable: true,
+    displayOrder: 3,
+    validationRulesJson: JSON.stringify({ required: true }),
+  },
+  {
+    entityName: 'scheduledProgram',
+    fieldName: 'endTime',
+    label: 'End Time',
+    fieldType: 'time',
+    editable: true,
+    displayOrder: 4,
+    validationRulesJson: JSON.stringify({ required: true }),
+  },
+  {
+    entityName: 'scheduledProgram',
+    fieldName: 'location',
+    label: 'Location',
+    fieldType: 'text',
+    editable: true,
+    displayOrder: 5,
+  },
+  {
+    entityName: 'scheduledProgram',
+    fieldName: 'description',
+    label: 'Description',
+    fieldType: 'textarea',
+    editable: true,
+    displayOrder: 6,
+  },
+  {
+    entityName: 'scheduledProgram',
+    fieldName: 'icon',
+    label: 'Icon',
+    fieldType: 'text',
+    editable: true,
+    displayOrder: 7,
+  },
+  {
+    entityName: 'scheduledProgram',
+    fieldName: 'image',
+    label: 'Image URL',
+    fieldType: 'url',
+    editable: true,
+    displayOrder: 8,
+  },
+];
+
+const nextStepConfigFields = [
+  {
+    entityName: 'nextStep',
+    fieldName: 'title',
+    label: 'Next Step Title',
+    fieldType: 'text',
+    editable: true,
+    displayOrder: 1,
+    validationRulesJson: JSON.stringify({ required: true }),
+  },
+  {
+    entityName: 'nextStep',
+    fieldName: 'subtitle',
+    label: 'Next Step Subtitle',
+    fieldType: 'text',
+    editable: true,
+    displayOrder: 2,
+    validationRulesJson: JSON.stringify({ required: true }),
+  },
+  {
+    entityName: 'nextStep',
+    fieldName: 'page',
+    label: 'Related Page',
+    fieldType: 'text',
+    editable: true,
+    displayOrder: 3,
+    validationRulesJson: JSON.stringify({ required: true }),
+    helpText: "Related Page for Next Step Section"
+  },
+];
+
+const questionNextStepConfigFields = [
+    {
+    entityName: 'questionNextStep',
+    fieldName: 'title',
+    label: 'Next Step Title',
+    fieldType: 'text',
+    editable: true,
+    displayOrder: 1,
+    validationRulesJson: JSON.stringify({ required: true }),
+  },
+  {
+    entityName: 'questionNextStep',
+    fieldName: 'subtitle',
+    label: 'Next Step Subtitle',
+    fieldType: 'text',
+    editable: true,
+    displayOrder: 2,
+    validationRulesJson: JSON.stringify({ required: true }),
+  },
+  {
+    entityName: 'questionNextStep',
+    fieldName: 'page',
+    label: 'Related Page',
+    fieldType: 'text',
+    editable: true,
+    displayOrder: 3,
+    validationRulesJson: JSON.stringify({ required: true }),
+    helpText: "Related Page for Next Step Section"
+  },
+];
+
+const watchLiveCOnfigFields = [
+  {
+    entityName: 'live',
+    fieldName: 'videoUrl',
+    label: 'YouTube Live Video URL',
+    fieldType: 'url',
+    editable: true,
+    displayOrder: 3,
+    validationRulesJson: JSON.stringify({ required: true }),
+    helpText: "URL for current YouTube Live"
+  },
+  {
+    entityName: 'live',
+    fieldName: 'videoUrl',
+    label: 'YouTube Live Video URL',
+    fieldType: 'url',
+    editable: true,
+    displayOrder: 3,
+    validationRulesJson: JSON.stringify({ required: true }),
+    helpText: "URL for current YouTube Live"
+  }
+]
+
+
 const configFields = [
   ...heroConfigFields,
   ...eventConfigFields,
@@ -1186,6 +1350,10 @@ const configFields = [
   ...socialLinkConfigFields,
   ...statisticsConfigFields,
   ...paymentOptionConfigFields,
+  ...scheduleProgramConfigFields,
+  ...nextStepConfigFields,
+  ...questionNextStepConfigFields,
+
 ];
 
 export async function seedConfigFields() {

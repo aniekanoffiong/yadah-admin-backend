@@ -1,14 +1,42 @@
 import { Router } from 'express';
 import { StatisticsController } from './statistics.controller';
 import { authorizationMiddleware } from '../../middlewares/authorization.middleware';
+import validationMiddleware from '../../middlewares/validation.middleware';
+import { CreateStatisticsDto } from './statistics.dto';
 
 const statisticsRouter = Router();
 const statisticsController = new StatisticsController();
 
-statisticsRouter.get('/', authorizationMiddleware('get.statistics'), statisticsController.getAll.bind(statisticsController));
-statisticsRouter.get('/:id', authorizationMiddleware('get.statistics'), statisticsController.getById.bind(statisticsController));
-statisticsRouter.post('/', authorizationMiddleware('create.statistics'), statisticsController.create.bind(statisticsController));
-statisticsRouter.put('/:id', authorizationMiddleware('update.statistics'), statisticsController.update.bind(statisticsController));
-statisticsRouter.delete('/:id', authorizationMiddleware('delete.statistics'), statisticsController.remove.bind(statisticsController));
+statisticsRouter.get(
+  '/',
+  authorizationMiddleware('get.statistics'),
+  statisticsController.getAll.bind(statisticsController)
+);
+
+statisticsRouter.get(
+  '/:id',
+  authorizationMiddleware('get.statistics'),
+  statisticsController.getById.bind(statisticsController)
+);
+
+statisticsRouter.post(
+  '/',
+  authorizationMiddleware('create.statistics'),
+  validationMiddleware(CreateStatisticsDto),
+  statisticsController.create.bind(statisticsController)
+);
+
+statisticsRouter.put(
+  '/:id',
+  authorizationMiddleware('update.statistics'),
+  validationMiddleware(CreateStatisticsDto),
+  statisticsController.update.bind(statisticsController)
+);
+
+statisticsRouter.delete(
+  '/:id',
+  authorizationMiddleware('delete.statistics'),
+  statisticsController.remove.bind(statisticsController)
+);
 
 export { statisticsRouter };

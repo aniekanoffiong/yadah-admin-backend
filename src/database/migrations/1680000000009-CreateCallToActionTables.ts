@@ -8,6 +8,7 @@ export class CreateCallToActionTables1680000000009 implements MigrationInterface
         { name: "id", type: "serial", isPrimary: true },
         { name: "title", type: "varchar" },
         { name: "subtitle", type: "varchar" },
+        { name: "page", type: "varchar" },
         { name: "createdAt", type: "timestamp", default: "now()" },
         { name: "updatedAt", type: "timestamp", default: "now()" },
       ]

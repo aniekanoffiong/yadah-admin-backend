@@ -1,5 +1,5 @@
 import { ConfigField } from './config.entity';
-import { ConfigFieldDTO } from './config.dto';
+import { ConfigFieldDTO, CreateConfigFieldDto } from './config.dto';
 import { ConfigFieldRepository } from './config.repository';
 
 export class ConfigFieldService {
@@ -9,7 +9,7 @@ export class ConfigFieldService {
     this.configFieldRepository = configFieldRepository || new ConfigFieldRepository()
   }
 
-  async create(dto: ConfigFieldDTO): Promise<ConfigField> {
+  async create(dto: CreateConfigFieldDto): Promise<ConfigField> {
     const config = new ConfigField();
     config.entityName = dto.entityName;
     config.fieldName = dto.fieldName;
@@ -20,6 +20,9 @@ export class ConfigFieldService {
     config.validationRulesJson = dto.validationRulesJson;
     config.displayOrder = dto.displayOrder;
     config.helpText = dto.helpText;
+    config.multipleOccurrence = dto.multipleOccurrence;
+    config.maxOccurrence = dto.maxOccurrence;
+    config.authorizations = dto.authorizations;
 
     return this.configFieldRepository.create(config);
   }

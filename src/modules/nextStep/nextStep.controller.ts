@@ -66,13 +66,7 @@ export class NextStepController {
   updateNextStepItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const id = parseInt(req.params.id, 10);
-      const dto = plainToClass(UpdateNextStepItemDto, req.body);
-      const errors = await validate(dto);
-      if (errors.length > 0) {
-        res.status(400).json({ errors });
-        return;
-      }
-
+      const dto = req.body as UpdateNextStepItemDto;
       const updatedNextStep = await this.nextStepService.updateNextStepItem(id, dto);
       res.json(this.toDto(updatedNextStep));
     } catch (error) {

@@ -5,19 +5,16 @@ import { AppDataSource } from '../../database/data-source';
 import { EventService } from '../event/event.service';
 import { ScheduledProgramService } from '../scheduledPrograms/scheduledProgram.service';
 import { EventEmitter } from 'events';
+import { CreateWatchLiveDto } from './live.dto';
 
 export class LiveService extends EventEmitter {
   private liveRepository: Repository<Live>;
   private youtubeService: YoutubeIntegrationService;
-  private eventService: EventService;
-  private scheduledProgramService: ScheduledProgramService;
 
   constructor() {
     super()
     this.liveRepository = AppDataSource.getRepository(Live);
     this.youtubeService = new YoutubeIntegrationService();
-    this.eventService = new EventService()
-    this.scheduledProgramService = new ScheduledProgramService()
   }
 
   async getAll(): Promise<Live[]> {
@@ -28,8 +25,12 @@ export class LiveService extends EventEmitter {
     return this.liveRepository.findOne({ where: { id } });
   }
 
-  async create(liveData: Partial<Live>): Promise<Live> {
-    const live = this.liveRepository.create(liveData);
+  async create(liveData: CreateWatchLiveDto): Promise<Live> {
+    const videoId = this.extractYoutubeVideoId(liveData.videoUrl)
+    if (!videoId) {
+      throw Error("Video URL is not valid... please provide in format: https://www.youtube.com/watch?v=VIDEO_ID, https://youtu.be/VIDEO_ID, https://www.youtube.com/embed/VIDEO_ID")
+    }
+    const live = this.liveRepository.create({ ...liveData, videoId });
     live.isLive = live.isLive ?? false;
     const saved = this.liveRepository.save(live);
     this.emit('liveUpdated', saved);
@@ -72,6 +73,16 @@ export class LiveService extends EventEmitter {
 
     return null;
   }
+
+  private extractYoutubeVideoId(url: string): string | null {
+  // Standard: https://www.youtube.com/watch?v=VIDEO_ID
+  // Short: https://youtu.be/VIDEO_ID
+  // Embed: https://www.youtube.com/embed/VIDEO_ID
+  const regex =
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+}
 
   async pollLiveEvent(): Promise<Live | null> {
     const currentLive = await this.youtubeService.checkLiveStream();

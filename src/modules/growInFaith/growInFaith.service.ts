@@ -9,13 +9,9 @@ export class GrowInFaithService {
     this.growingInFaithRepository = growingInFaithRepository || new GrowInFaithRepository();
   }
 
-  async findAll(): Promise<GrowInFaith[]> {
-    return this.growingInFaithRepository.findAll();
-  }
-
-  async findOne(id: number): Promise<GrowInFaith> {
-    const entity = await this.growingInFaithRepository.findOne(id);
-    if (!entity) throw new Error(`GrowingInFaith with id ${id} not found`);
+  async findOne(): Promise<GrowInFaith> {
+    const entity = await this.growingInFaithRepository.findOne();
+    if (!entity) throw new Error(`GrowingInFaith not found`);
     return entity;
   }
 

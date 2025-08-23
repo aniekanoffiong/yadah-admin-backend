@@ -7,5 +7,4 @@ const aboutController = new AboutController();
 
 aboutRouter.get('/', authorizationMiddleware('get.about'), aboutController.getById.bind(aboutController));
 aboutRouter.put('/:id', authorizationMiddleware('update.about'), aboutController.update.bind(aboutController));
-
 export { aboutRouter };

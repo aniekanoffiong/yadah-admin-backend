@@ -9,12 +9,8 @@ export class GrowInFaithRepository {
     this.repo = AppDataSource.getRepository(GrowInFaith);
   }
 
-  async findAll(): Promise<GrowInFaith[]> {
-    return this.repo.find();
-  }
-
-  async findOne(id: number): Promise<GrowInFaith | null> {
-    return this.repo.findOne({ where: { id }});
+  async findOne(): Promise<GrowInFaith | null> {
+    return this.repo.findOne({});
   }
 
   async create(entity: GrowInFaith): Promise<GrowInFaith> {
