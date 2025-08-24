@@ -2,24 +2,28 @@ import { NextFunction, Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { User } from '../user/entities/user.entity';
 import dotenv from "dotenv";
-import { setCsrfCookie } from './utils/csrf.token';
+import { clearCookie, setResponseCookie } from './utils/csrf.token';
 import { revokeToken } from './utils/tokenBlacklist';
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { CustomRequest } from '../../interfaces/customRequest';
+import { randomBytes } from 'crypto';
+import { LoginHistoryService } from '../loginHistory/loginHistory.service';
 
 dotenv.config();
 
 export class AuthController {
   private authService: AuthService;
+  private loginHistoryService: LoginHistoryService;
 
   constructor(authService?: AuthService) {
     this.authService = authService || new AuthService()
+    this.loginHistoryService = new LoginHistoryService()
   }
 
   async register(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const user = await this.authService.register(req.body);
-      res.status(201).json(this.toDto(user));
+      res.status(201).json({ data: this.toDto(user) });
     } catch (err) {
       next(err);
     }
@@ -28,14 +32,21 @@ export class AuthController {
   async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { user, token } = await this.authService.login(req.body);
-      res.cookie(process.env.COOKIE_NAME!, token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: Number(process.env.JWT_VALIDITY),
-      });
-      setCsrfCookie(res);
-      res.status(200).json(this.toDto(user, token));
+      this.loginHistoryService.create(req, user);
+      // Set Auth Cookie
+      setResponseCookie(
+        res,
+        process.env.COOKIE_NAME!,
+        token,
+      )
+      // Set CSRF Cookie
+      setResponseCookie(
+        res,
+        process.env.CSRF_TOKEN_NAME!,
+        randomBytes(24).toString('hex'),
+        false
+      )
+      res.status(200).json({ data: this.toDto(user, token) });
     } catch (err) {
       next(err);
     }
@@ -67,22 +78,20 @@ export class AuthController {
       if (expiresInSeconds > 0) {
         await revokeToken(token, expiresInSeconds);
       }
-      res.clearCookie(process.env.COOKIE_NAME!, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-      });
+      clearCookie(res, process.env.COOKIE_NAME!)
+      clearCookie(res, process.env.CSRF_TOKEN_NAME!, false)
     }
     res.json({ message: 'Logged out' });
   }
 
-  private toDto(user: User, token?: string) {
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      roles: user.roles,
-      token,
+  private toDto(userEntity: User, token?: string) {
+    const user = {
+      id: userEntity.id,
+      name: userEntity.name,
+      email: userEntity.email,
+      role: userEntity.userRole()?.name,
+      isActive: userEntity.isActive,
     }
+    return token ? { user, token }: user
   }
 };

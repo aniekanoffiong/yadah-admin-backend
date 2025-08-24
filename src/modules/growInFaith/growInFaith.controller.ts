@@ -42,7 +42,7 @@ export class GrowInFaithController {
     try {
       const id = Number(req.params.id);
       await this.service.delete(id);
-      res.status(204).send();
+      res.sendStatus(204);
     } catch (err) {
       next(err);
     }

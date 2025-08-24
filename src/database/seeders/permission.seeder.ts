@@ -3,6 +3,9 @@ import { AppDataSource } from '../data-source';
 
 export const permissionsToSeed: Array<Array<{name: string, description: string}>> = [
   [
+    { name: 'get.authUser', description: 'View heroes' },
+  ],
+  [
     // Hero module - Admin only
     { name: 'get.hero', description: 'View heroes' },
     { name: 'create.hero', description: 'Create hero' },
@@ -147,6 +150,10 @@ export const permissionsToSeed: Array<Array<{name: string, description: string}>
     { name: 'create.config', description: 'Create config (system admin only)' },
     { name: 'update.config', description: 'Update config (system admin only)' },
     { name: 'delete.config', description: 'Delete config (system admin only)' },
+    
+    // User Login History - Only system admin
+    { name: 'get.login', description: 'Login History for all users (system admin only)' },
+    { name: 'get.userLogin', description: 'Login History for specific user (system admin only)' },
   ]
 ];
 

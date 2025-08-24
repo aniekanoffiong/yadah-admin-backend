@@ -41,7 +41,7 @@ export class AuthService {
 
   async createToken(user: User): Promise<string> {
     const jwtSecretKey = process.env.JWT_SECRET_KEY as string;
-    const jwtValidity = Number(process.env.JWT_VALIDITY);
+    const jwtValidity = Number(process.env.COOKIE_VALIDITY);
     return jwt.sign({ id: user.id, email: user.email }, jwtSecretKey, {
       subject: user.email,
       expiresIn: jwtValidity,

@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import "express-async-errors";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import { heroRouter } from "./modules/hero/hero.routes";
 import { ministryRouter } from "./modules/ministries/ministry.routes";
@@ -28,9 +29,17 @@ import { paymentOptionRouter } from "./modules/payment/paymentOption.routes";
 import liveRouter from "./modules/live/live.routes";
 import { scheduledProgramRouter } from "./modules/scheduledPrograms/scheduledProgram.routes";
 
+dotenv.config();
+
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    process.env.ADMIN_FRONTEND_ENDPOINT!,
+    process.env.WEBSITE_FRONTEND_ENDPOINT!
+  ],
+  credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 

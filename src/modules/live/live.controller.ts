@@ -37,7 +37,7 @@ export class LiveController {
       const liveData = req.body as CreateWatchLiveDto;
       
       const live = await this.liveService.create(liveData);
-      res.status(201).json({ data: live });
+      res.status(201).json(live);
     } catch {
       res.status(400).json({ message: 'Failed to create watch live record' });
     }

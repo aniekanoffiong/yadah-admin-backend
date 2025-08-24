@@ -1,17 +1,19 @@
-import { randomBytes } from 'crypto';
 import { Response } from 'express';
-import dotenv from 'dotenv';
 
-dotenv.config();
-
-export function setCsrfCookie(res: Response) {
-  const csrfToken = randomBytes(24).toString('hex');
-  // Set non-HttpOnly cookie accessible to JS for frontend
-  res.cookie(process.env.CSRF_TOKEN_NAME!, csrfToken, {
-    httpOnly: false, // allow JS access
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 60 * 60 * 1000, // 1 hour expiration
+export function setResponseCookie(res: Response, cookieName: string, value: string, httpOnly: boolean = true) {
+  res.cookie(cookieName, value, {
+    httpOnly,
+    secure: true,
+    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'none',
+    domain: process.env.NODE_ENV === 'production' ? `.${process.env.ROOT_DOMAIN}` : undefined,
+    maxAge: Number(process.env.COOKIE_VALIDITY),
   });
-  return csrfToken;
+}
+
+export function clearCookie(res: Response, cookieName: string, httpOnly: boolean = true) {
+  res.clearCookie(cookieName, {
+    httpOnly,
+    secure: true,    
+    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'none',
+  });
 }

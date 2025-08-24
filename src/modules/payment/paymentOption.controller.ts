@@ -53,7 +53,7 @@ export class PaymentOptionController {
     try {
       const id = Number(req.params.id);
       await this.paymentService.delete(id);
-      res.status(204).send();
+      res.sendStatus(204);
     } catch (error) {
       next(error);
     }

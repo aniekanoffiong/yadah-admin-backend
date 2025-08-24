@@ -3,13 +3,17 @@ import { Role } from '../../modules/user/entities/role.entity';
 import { User } from '../../modules/user/entities/user.entity';
 import { AppDataSource } from '../data-source';
 import bcrypt from 'bcrypt';
+import dotenv from "dotenv"
+
+dotenv.config()
 
 const userData = [
   {
     name: 'Aniekan Offiong',
-    email: 'excellinginmotion@gmail.com',
-    password: 'RandomPassword@123',
+    email: process.env.SYSTEM_USER_EMAIL!,
+    password: process.env.SYSTEM_USER_PASSWORD!,
     roles: [RolesEnum.SYSTEM_ADMIN],
+    isActive: true
   },
 ];
 

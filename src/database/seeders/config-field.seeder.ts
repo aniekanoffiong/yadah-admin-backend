@@ -1308,7 +1308,7 @@ const questionNextStepConfigFields = [
   },
 ];
 
-const watchLiveCOnfigFields = [
+const watchLiveConfigFields = [
   {
     entityName: 'live',
     fieldName: 'videoUrl',
@@ -1353,7 +1353,7 @@ const configFields = [
   ...scheduleProgramConfigFields,
   ...nextStepConfigFields,
   ...questionNextStepConfigFields,
-
+  ...watchLiveConfigFields,
 ];
 
 export async function seedConfigFields() {

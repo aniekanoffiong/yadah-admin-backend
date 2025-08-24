@@ -82,7 +82,7 @@ export class HeroController {
     try {
       const id = parseInt(req.params.id, 10);
       await this.heroService.delete(id);
-      res.status(204).send();
+      res.sendStatus(204);
     } catch (error) {
       next(error);
     }

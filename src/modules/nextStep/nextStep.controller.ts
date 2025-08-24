@@ -78,7 +78,7 @@ export class NextStepController {
     try {
       const id = parseInt(req.params.id, 10);
       await this.nextStepService.deleteNextStepItem(id);
-      res.status(204).send();
+      res.sendStatus(204);
     } catch (error) {
       next(error);
     }

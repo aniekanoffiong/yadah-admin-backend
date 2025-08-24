@@ -1,7 +1,8 @@
-import { Entity, Column, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Role } from './role.entity';
 import { BaseEntity } from '../../base/base.entity';
 import { RolesEnum } from '../../../enum/roles.enum';
+import { LoginHistory } from '../../loginHistory/loginHistory.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -24,6 +25,10 @@ export class User extends BaseEntity {
   @JoinTable({ name: 'users_roles' })
   roles!: Role[];
 
+  @OneToMany(() => LoginHistory, (login) => login.user, { cascade: true })
+  loginHistory!: LoginHistory[];
+
+  // Return highest p[rivilege role available to user
   userRole() {
     return this.roles.find(role => Object.values(RolesEnum).map(r => r.valueOf()).includes(role.name))
   }

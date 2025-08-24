@@ -4,19 +4,20 @@ import { Role } from "../../modules/user/entities/role.entity";
 import { AppDataSource } from "../data-source";
 import { permissionsToSeed } from "./permission.seeder";
 
-const adminPermissions = permissionsToSeed[0].map(perm => perm.name)
-const superAdminPermissions = permissionsToSeed[1].map(perm => perm.name)
-const systemAdminPermissions = permissionsToSeed[2].map(perm => perm.name)
+const userPermissions = permissionsToSeed[0].map(perm => perm.name)
+const adminPermissions = permissionsToSeed[1].map(perm => perm.name)
+const superAdminPermissions = permissionsToSeed[2].map(perm => perm.name)
+const systemAdminPermissions = permissionsToSeed[3].map(perm => perm.name)
 
 export const rolePermissionsMap: Record<string, string[]> = {
-  [RolesEnum.USER]: [],
+  [RolesEnum.USER]: userPermissions,
   [RolesEnum.GUEST]: [],
-  [RolesEnum.ADMIN]: adminPermissions,
+  [RolesEnum.ADMIN]: [...userPermissions, ...adminPermissions],
   [RolesEnum.SUPER_ADMIN]: [
-    ...adminPermissions, ...superAdminPermissions,
+    ...userPermissions, ...adminPermissions, ...superAdminPermissions,
   ],
   [RolesEnum.SYSTEM_ADMIN]: [
-    ...adminPermissions, ...superAdminPermissions, ...systemAdminPermissions
+    ...userPermissions, ...adminPermissions, ...superAdminPermissions, ...systemAdminPermissions
   ],
 };
 

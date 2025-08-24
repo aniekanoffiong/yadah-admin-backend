@@ -10,7 +10,8 @@
     "migrate:revert": "npx typeorm-ts-node-commonjs migration:revert -d ./src/database/data-source.ts",
     "migrate:revert:all": "while true; do OUTPUT=$(npx typeorm-ts-node-commonjs migration:revert -d ./src/database/data-source.ts 2>&1) && echo \"$OUTPUT\"; if echo \"$OUTPUT\" | grep -q -i \"No migrations were found\"; then echo \"No more migrations to revert. Exiting.\"; break; elif echo \"$OUTPUT\" | grep -q -i \"No migration files were found\"; then echo \"No migration files found. Exiting.\"; break; fi; echo \"Reverted one migration. Continuing...\"; done",
     "migrate:drop": "ts-node src/database/migration-revert.ts",
-    "seed": "ts-node src/database/seeders/index.ts"
+    "seed": "ts-node src/database/seeders/index.ts",
+    "reset": "yarn migrate:drop && yarn migrate && yarn seed"
   },
   "dependencies": {
     "@types/cookie-parser": "^1.4.9",
@@ -28,7 +29,8 @@
     "node-cron": "^4.2.1",
     "pg": "^8.9.0",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.3.17"
+    "typeorm": "^0.3.17",
+    "ua-parser-js": "^2.0.4"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

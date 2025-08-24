@@ -3,6 +3,8 @@ import { AuthController } from './auth.controller';
 import validationMiddleware from '../../middlewares/validation.middleware';
 import { LoginDto } from './dtos/login.dto';
 import { RegisterDto } from './dtos/register.dto';
+import { authenticationMiddleware } from '../../middlewares/auth.middleware';
+import { authorizationMiddleware } from '../../middlewares/authorization.middleware';
 
 const authRouter = Router();
 const authController = new AuthController();
@@ -21,6 +23,8 @@ authRouter.post(
 
 authRouter.get(
   '/me',
+  authenticationMiddleware,
+  authorizationMiddleware('get.authUser'),
   authController.authUser.bind(authController)
 );
 
