@@ -24,15 +24,45 @@ export class Footer extends BaseEntity {
   description!: string;
 
   @ManyToMany(() => SocialLink, (social) => social.footers, { cascade: true, eager: true })
-  @JoinTable({ name: 'footer_social_social_links' })
+  @JoinTable({
+    name: 'footer_social_social_links',
+    joinColumn: {
+      name: "footerId",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+      name: "socialLinkId",
+      referencedColumnName: "id"
+    }
+  })
   socialLinks!: SocialLink[];
 
   @ManyToMany(() => SiteLink, (site) => site.footerQuickLinks, { cascade: true, eager: true })
-  @JoinTable({ name: 'footer_quick_links' })
+  @JoinTable({
+    name: 'footer_quick_links',
+    joinColumn: {
+      name: "footerId",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+      name: "siteLinkId",
+      referencedColumnName: "id"
+    }
+  })
   quickLinks!: SiteLink[];
 
   @ManyToMany(() => SiteLink, (site) => site.footerMinistriesLinks, { cascade: true, eager: true })
-  @JoinTable({ name: 'footer_ministries_links' })
+  @JoinTable({
+    name: 'footer_ministries_links',
+    joinColumn: {
+      name: "footerId",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+      name: "siteLinkId",
+      referencedColumnName: "id"
+    }
+  })
   ministriesLinks!: SiteLink[];
 
   @Column()
@@ -44,11 +74,18 @@ export class Footer extends BaseEntity {
   @Column()
   email!: string;
 
-  @Column('jsonb')
-  schedule!: Record<string, string>;
-
   @ManyToMany(() => SiteLink, (site) => site.footerLegalLinks, { cascade: true, eager: true })
-  @JoinTable({ name: 'footer_legal_links' })
+  @JoinTable({
+    name: 'footer_legal_links',
+    joinColumn: {
+      name: "footerId",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+      name: "siteLinkId",
+      referencedColumnName: "id"
+    }
+  })
   legalLinks!: SiteLink[];
 
   @Column()

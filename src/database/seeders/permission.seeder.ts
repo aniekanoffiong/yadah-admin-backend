@@ -120,6 +120,27 @@ export const permissionsToSeed: Array<Array<{name: string, description: string}>
     { name: 'create.live', description: 'Update Watch Live' },
     { name: 'update.live', description: 'View Watch Live' },
     { name: 'delete.live', description: 'Update Watch Live' },
+    
+    // Dropdown list - Admin can access
+    { name: 'get.dropdown-list', description: 'Access dropdown list content' },
+    
+    // Story Stat - Admin can access
+    { name: 'get.storyStat', description: 'Get Story Stat' },
+    { name: 'create.storyStat', description: 'Create Story Stat' },
+    { name: 'update.storyStat', description: 'Update Story Stat' },
+    { name: 'delete.storyStat', description: 'Delete Story Stat' },
+
+    // Scheduled Program - Admin can access
+    { name: 'get.scheduledProgram', description: 'Get Scheduled Program' },
+    { name: 'create.scheduledProgram', description: 'Create Scheduled Program' },
+    { name: 'update.scheduledProgram', description: 'Update Scheduled Program' },
+    { name: 'delete.scheduledProgram', description: 'Delete Scheduled Program' },
+
+    // Value Item - Admin can access
+    { name: 'get.valueItem', description: 'get Value Item' },
+    { name: 'create.valueItem', description: 'Create Value Item' },
+    { name: 'update.valueItem', description: 'Update Value Item' },
+    { name: 'delete.valueItem', description: 'Delete Value Item' },
   ],
   [
     // User Management - Only super_admin
@@ -139,14 +160,16 @@ export const permissionsToSeed: Array<Array<{name: string, description: string}>
     { name: 'create.permission', description: 'Create permission (super admin only)' },
     { name: 'update.permission', description: 'Update permission (super admin only)' },
     { name: 'delete.permission', description: 'Delete permission (super admin only)' },
+  
+    // Admin Config Read - Admin access
+    { name: 'get.config', description: 'View configs (system admin only)' },
   ],
   [
     // Create and Delete Payment Options
     { name: 'create.paymentOption', description: 'Create Payment Options' },
     { name: 'delete.paymentOption', description: 'Delete Payment Options' },
 
-    // Admin Config Managements - Only system_admin
-    { name: 'get.config', description: 'View configs (system admin only)' },
+    // Admin Config Managements  - Only system_admin
     { name: 'create.config', description: 'Create config (system admin only)' },
     { name: 'update.config', description: 'Update config (system admin only)' },
     { name: 'delete.config', description: 'Delete config (system admin only)' },

@@ -12,7 +12,7 @@ export class ContactInfoController {
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const infos = await this.contactInfoService.find();
-      res.json({ data: infos });
+      res.json({ data: [infos] });
     } catch (error) {
       next(error);
     }

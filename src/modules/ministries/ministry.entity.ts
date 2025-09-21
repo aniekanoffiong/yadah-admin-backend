@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { DayOfWeek } from '../../utils/dayOfWeek';
 
 @Entity()
 export class Ministry {
@@ -13,6 +14,9 @@ export class Ministry {
 
   @Column()
   description!: string;
+
+  @Column()
+  scheduledDay!: DayOfWeek;
 
   @Column({ nullable: true })
   meetingTime?: string;

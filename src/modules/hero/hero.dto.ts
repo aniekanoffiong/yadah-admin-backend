@@ -52,3 +52,10 @@ export class CreateHeroDto {
   @IsString()
   volunteerProgramLink?: string;
 }
+
+export class HeroResponseDto {
+  title!: string
+  subtitle?: string | null
+  backgroundImage!: string
+  volunteerProgram!: { text?: string | null }
+}

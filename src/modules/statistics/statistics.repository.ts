@@ -12,11 +12,11 @@ export class StatisticsRepository {
   }
 
   async findAll(): Promise<Statistics[]> {
-    return this.statisticsRepo.find({ relations: ['statItems'] });
+    return this.statisticsRepo.find({ relations: ['stats'] });
   }
 
   async findOne(id: number): Promise<Statistics | null> {
-    return this.statisticsRepo.findOne({ where: { id }, relations: ['statItems'] });
+    return this.statisticsRepo.findOne({ where: { id }, relations: ['stats'] });
   }
 
   async create(statistics: Statistics): Promise<Statistics> {

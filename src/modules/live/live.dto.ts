@@ -2,8 +2,14 @@ import { IsString, IsBoolean, IsOptional, IsUrl, IsNotEmpty, IsDateString } from
 
 export class WatchLiveDto {
   id!: number;
-  label!: string;
-  active!: boolean;
+  videoUrl!: string;
+  videoId!: string | null;
+  title!: string;
+  date!: Date;
+  startTime!: string;
+  endTime!: string;
+  isLive!: boolean;
+  featured!: boolean;
 }
 
 export class CreateWatchLiveDto {
@@ -26,6 +32,10 @@ export class CreateWatchLiveDto {
   @IsOptional()
   @IsString()
   endTime?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  featured?: boolean;
 
   @IsOptional()
   @IsBoolean()

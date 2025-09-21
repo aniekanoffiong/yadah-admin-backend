@@ -4,7 +4,7 @@ import { BaseEntity } from '../base/base.entity';
 @Entity({ name: "watch_live" })
 export class Live extends BaseEntity {
   @Column({ nullable: true })
-  videoId!: string;
+  videoUrl!: string;
 
   @Column({ nullable: true })
   title!: string;
@@ -12,11 +12,14 @@ export class Live extends BaseEntity {
   @Column()
   date!: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
-  startTime!: Date;
+  @Column({ type: 'time', nullable: true })
+  startTime!: string;
 
-  @Column({ type: 'timestamp', nullable: true })
-  endTime!: Date;
+  @Column({ type: 'time', nullable: true })
+  endTime!: string;
+
+  @Column({ default: false })
+  featured!: boolean;
 
   @Column({ default: false })
   isLive!: boolean;

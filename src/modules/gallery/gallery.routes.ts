@@ -8,33 +8,33 @@ const galleryRouter = Router();
 const galleryController = new GalleryController();
 
 galleryRouter.get(
-  '/items',
+  '/',
   authorizationMiddleware('get.gallery'),
   galleryController.getAllItems.bind(galleryController)
 );
 
 galleryRouter.get(
-  '/items/:id',
+  '/:id',
   authorizationMiddleware('get.gallery'),
   galleryController.getItemById.bind(galleryController)
 );
 
 galleryRouter.post(
-  '/items',
+  '/',
   authorizationMiddleware('create.gallery'),
   validationMiddleware(CreateGalleryItemDto),
   galleryController.createItem.bind(galleryController)
 );
 
 galleryRouter.put(
-  '/items/:id',
+  '/:id',
   authorizationMiddleware('update.gallery'),
   validationMiddleware(CreateGalleryItemDto),
   galleryController.updateItem.bind(galleryController)
 );
 
 galleryRouter.delete(
-  '/items/:id',
+  '/:id',
   authorizationMiddleware('delete.gallery'),
   galleryController.deleteItem.bind(galleryController)
 );

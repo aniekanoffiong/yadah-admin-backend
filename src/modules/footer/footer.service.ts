@@ -1,28 +1,40 @@
 import { FooterRepository } from './footer.repository';
-import { CreateFooterDto } from './footer.dto';
+import { CreateFooterDto, FooterResponseDto } from './footer.dto';
 import { Footer } from './footer.entity';
 import { SocialLinkService } from '../social/social.service';
 import { SiteLinkService } from '../siteLinks/siteLink.service';
+import { ScheduledProgramService } from '../scheduledPrograms/scheduledProgram.service';
+import { ScheduledProgram } from '../scheduledPrograms/scheduledProgram.entity';
+import { format, parse } from 'date-fns';
 
 export class FooterService {
   private footerRepository: FooterRepository;
   private socialLinkService: SocialLinkService;
   private siteLinkService: SiteLinkService;
+  private scheduleProgramService: ScheduledProgramService;
 
   constructor(
     footerRepository?: FooterRepository,
     socialLinkService?: SocialLinkService,
-    siteLinkService?: SiteLinkService
+    siteLinkService?: SiteLinkService,
+    scheduleProgramService?: ScheduledProgramService,
   ) {
     this.footerRepository = footerRepository || new FooterRepository();
     this.socialLinkService = socialLinkService || new SocialLinkService();
     this.siteLinkService = siteLinkService || new SiteLinkService();
+    this.scheduleProgramService = scheduleProgramService || new ScheduledProgramService();
   }
 
   async find(): Promise<Footer> {
     const footer = await this.footerRepository.findOne();
     if (!footer) throw new Error(`Footer data not found`);
     return footer;
+  }
+
+  async getFooter(): Promise<FooterResponseDto> {
+    const footer = await this.find()
+    const schedule = await this.scheduleProgramService.findAll()
+    return this.toDto(footer, schedule)
   }
 
   async create(dto: CreateFooterDto): Promise<Footer> {
@@ -51,5 +63,29 @@ export class FooterService {
     footer.ministriesLinks = ministriesLinks;
     footer.legalLinks = legalLinks;
     return this.footerRepository.update(footer);
+  }
+
+  private toDto(footer: Footer, schedules: ScheduledProgram[]): FooterResponseDto {
+    return {
+      newsletter: {
+        title: footer.newsletterTitle,
+        subtitle: footer.newsletterSubtitle
+      },
+      church: {
+        logo: { text: footer.logoAlt, icon: footer.logoSrc },
+        description: footer.description,
+        socialLinks: footer.socialLinks,
+      },
+      contact: {
+        email: footer.email,
+        phone: footer.phone,
+        address: footer.address,
+        schedule: schedules.map(schedule => ({ [schedule.title]: `${schedule.scheduledDay} ${format(parse(schedule.startTime, "HH:mm:ss", new Date()), "h:mm a")}` }))
+      },
+      quickLinks: footer.quickLinks,
+      ministries: footer.ministriesLinks,
+      legal: footer.legalLinks,
+      copyright: `© ${new Date().getFullYear()} Church. All rights reserved.`
+    }
   }
 }

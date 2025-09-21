@@ -1,6 +1,6 @@
 import { SiteLinkRepository } from './siteLink.repository';
 import { SiteLink } from './siteLink.entity';
-import { CreateSiteLinkDto } from './siteLink.dto';
+import { CreateSiteLinkDto, CreateSiteLinkOptionDto } from './siteLink.dto';
 
 export class SiteLinkService {
   private siteLinkRepository: SiteLinkRepository;
@@ -27,7 +27,7 @@ export class SiteLinkService {
     return this.siteLinkRepository.create(siteLink);
   }
 
-  async getOrCreateSiteLinks(siteLinks?: CreateSiteLinkDto[]): Promise<SiteLink[]> {
+  async getOrCreateSiteLinks(siteLinks?: CreateSiteLinkOptionDto[]): Promise<SiteLink[]> {
     if (!siteLinks || siteLinks.length === 0) {
       return [];
     }
@@ -36,8 +36,8 @@ export class SiteLinkService {
 
     const newLinks: SiteLink[] = [];
     for (const dto of siteLinks) {
-      if (!existingUrls.has(dto.url)) {
-        const newLink = await this.create(dto);
+      if (!existingUrls.has(dto.value)) {
+        const newLink = await this.create({ ...dto, url: dto.value });
         newLinks.push(newLink);
       }
     }

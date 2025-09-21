@@ -4,8 +4,8 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { SocialDto } from '../social/social.dto';
-import { CreateSiteLinkDto } from '../siteLinks/siteLink.dto';
+import { CreateSocialOptionDto, SocialDto } from '../social/social.dto';
+import { CreateSiteLinkOptionDto, SiteLinkDto } from '../siteLinks/siteLink.dto';
 
 export class FooterDto {
   id!: number;
@@ -38,8 +38,8 @@ export class FooterDto {
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => SocialDto)
-  socialLinks!: SocialDto[];
+  @Type(() => CreateSocialOptionDto)
+  socialLinks!: CreateSocialOptionDto[];
 }
 
 export class CreateFooterDto {
@@ -59,10 +59,14 @@ export class CreateFooterDto {
   description!: string;
 
   @IsArray()
-  quickLinks!: CreateSiteLinkDto[];
+  @ValidateNested({ each: true })
+  @Type(() => CreateSiteLinkOptionDto)  
+  quickLinks!: CreateSiteLinkOptionDto[];
 
   @IsArray()
-  ministries!: CreateSiteLinkDto[];
+  @ValidateNested({ each: true })
+  @Type(() => CreateSiteLinkOptionDto)
+  ministries!: CreateSiteLinkOptionDto[];
 
   @IsString()
   address!: string;
@@ -76,13 +80,40 @@ export class CreateFooterDto {
   schedule!: any;
 
   @IsArray()
-  legalLinks!: CreateSiteLinkDto[];
+  @ValidateNested({ each: true })
+  @Type(() => CreateSiteLinkOptionDto)
+  legalLinks!: CreateSiteLinkOptionDto[];
 
   @IsString()
   copyright!: string;
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => SocialDto)
-  socialLinks!: SocialDto[];
+  @Type(() => CreateSocialOptionDto)
+  socialLinks!: CreateSocialOptionDto[];
+}
+
+export class FooterResponseDto {
+  newsletter!: {
+    title: string,
+    subtitle: string,
+  }
+  church!: {
+    logo: {
+      text: string,
+      icon: string,
+    },
+    description: string,
+    socialLinks: Array<SocialDto>
+  }
+  contact!: {
+    email: string,
+    phone: string,
+    address: string,
+    schedule: Record<string, string>[],
+  }
+  quickLinks!: Array<SiteLinkDto>
+  ministries!: Array<SiteLinkDto>
+  legal!: Array<SiteLinkDto>
+  copyright!: string
 }

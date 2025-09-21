@@ -66,6 +66,7 @@ export class MinistryController {
       icon: ministry.icon,
       title: ministry.title,
       description: ministry.description,
+      scheduledDay: ministry.scheduledDay,
       meetingTime: ministry.meetingTime,
       location: ministry.location,
       leader: ministry.leader,

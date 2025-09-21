@@ -24,7 +24,7 @@ export class EventRepository {
   async getRecentEvents(limit: number): Promise<Event[]> {
     return this.repo
       .createQueryBuilder('event')
-      .orderBy("startDate", "DESC")
+      .orderBy("event.startDate", "DESC")
       .limit(limit)
       .getMany();
   }

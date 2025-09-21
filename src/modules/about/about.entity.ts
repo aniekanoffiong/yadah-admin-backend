@@ -75,11 +75,11 @@ export class About extends BaseEntity {
   @Column('text')
   description!: string;
 
-  @OneToOne(() => Story, { cascade: true })
+  @OneToOne(() => Story, { cascade: true, eager: true })
   @JoinColumn()
   story!: Story;
 
-  @OneToOne(() => Values, { cascade: true })
+  @OneToOne(() => Values, { cascade: true, eager: true })
   @JoinColumn()
   values!: Values;
 }

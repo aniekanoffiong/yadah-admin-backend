@@ -12,7 +12,7 @@ export class FooterController {
   get = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const footer = await this.footerService.find();
-      res.json({ data: footer });
+      res.json({ data: [footer] });
     } catch (error) {
       next(error);
     }

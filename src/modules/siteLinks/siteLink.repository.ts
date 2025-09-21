@@ -10,11 +10,11 @@ export class SiteLinkRepository {
   }
 
   async findAll(): Promise<SiteLink[]> {
-    return this.repo.find({ relations: ['footers', 'contacts'] });
+    return this.repo.find();
   }
 
   async findOne(id: number): Promise<SiteLink | null> {
-    return this.repo.findOne({ where: { id }, relations: ['footers', 'contacts'] });
+    return this.repo.findOne({ where: { id }, relations: ['footerQuickLinks', 'footerMinistriesLinks', 'footerLegalLinks'] });
   }
 
   async create(siteLink: SiteLink): Promise<SiteLink> {

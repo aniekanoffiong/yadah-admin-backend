@@ -1,6 +1,6 @@
 import { SocialLinkRepository } from './social.repository';
 import { SocialLink } from './social.entity';
-import { CreateSocialDto } from './social.dto';
+import { CreateSocialDto, CreateSocialOptionDto } from './social.dto';
 
 export class SocialLinkService {
   private socialLinkRepository: SocialLinkRepository;
@@ -29,7 +29,7 @@ export class SocialLinkService {
     return this.socialLinkRepository.create(socialLink);
   }
 
-  async getOrCreateSocialLinks(socialLinks?: CreateSocialDto[]): Promise<SocialLink[]> {
+  async getOrCreateSocialLinks(socialLinks?: CreateSocialOptionDto[]): Promise<SocialLink[]> {
     if (!socialLinks || socialLinks.length === 0) {
       return [];
     }
@@ -38,8 +38,11 @@ export class SocialLinkService {
 
     const newLinks: SocialLink[] = [];
     for (const dto of socialLinks) {
-      if (!existingUrls.has(dto.url)) {
-        const newLink = await this.create(dto);
+      if (!existingUrls.has(dto.value)) {
+        const newLink = await this.create({
+          ...dto,
+          url: dto.value,
+        });
         newLinks.push(newLink);
       }
     }

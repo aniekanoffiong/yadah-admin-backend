@@ -1,6 +1,7 @@
 import { google, youtube_v3 } from 'googleapis';
 import * as dotenv from 'dotenv';
 import { Live } from '../live.entity';
+import { format } from 'date-fns';
 
 dotenv.config();
 
@@ -39,10 +40,10 @@ export class YoutubeIntegrationService {
       if (liveVideos && liveVideos.length > 0) {
         const vid = liveVideos[0];
         const live = new Live();
-        live.videoId = vid.id?.videoId || '';
+        live.videoUrl = this.generateYoutubeUrl(vid.id?.videoId || '');
         live.title = vid.snippet?.title || '';
         live.isLive = true;
-        live.startTime = new Date();
+        live.startTime = format(new Date(), "HH:mm");
         return live;
       } else {
         return null;
@@ -51,5 +52,15 @@ export class YoutubeIntegrationService {
       console.error('Error polling YouTube live stream:', error);
       return null;
     }
+  }
+
+  generateYoutubeUrl(videoId: string, short?: boolean, embed?: boolean): string {
+    if (short) {
+      return `https://youtu.be/${videoId}`;
+    }
+    if (embed) {
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
+    return `https://www.youtube.com/watch?v=${videoId}`;
   }
 }

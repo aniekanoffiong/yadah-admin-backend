@@ -14,7 +14,7 @@ export class AboutRepository {
   }
 
   async find(): Promise<About | null> {
-    return this.aboutRepo.findOne({ relations: ['story', 'story.stats', 'values', 'values.items'] });
+    return this.aboutRepo.findOne({ where: { id: 1}, relations: ['story', 'story.stats', 'values', 'values.items'] });
   }
 
   async create(about: About): Promise<About> {
@@ -25,11 +25,45 @@ export class AboutRepository {
     return this.aboutRepo.save(about);
   }
 
-  async deleteStoryStatsByStoryId(storyId: number): Promise<void> {
-    await this.storyStatRepo.delete({ story: { id: storyId } });
+  // StoryStat
+  async findAllStoryStats(): Promise<StoryStat[]> {
+    return this.storyStatRepo.find();
   }
 
-  async deleteValueItemsByValuesId(valuesId: number): Promise<void> {
-    await this.valueItemRepo.delete({ values: { id: valuesId } });
+  async findStoryStat(id: number): Promise<StoryStat | null> {
+    return this.storyStatRepo.findOne({ where: { id }});
+  }
+
+  async createStoryStat(storyStat: StoryStat): Promise<StoryStat> {
+    return this.storyStatRepo.save(storyStat);
+  }
+
+  async updateStoryStat(storyStat: StoryStat): Promise<StoryStat> {
+    return this.storyStatRepo.save(storyStat);
+  }
+
+  async deleteStoryStat(id: number): Promise<void> {
+    await this.storyStatRepo.delete(id);
+  }
+
+  // ValueItem
+  async findAllValueItems(): Promise<ValueItem[]> {
+    return this.valueItemRepo.find();
+  }
+
+  async findValueItem(id: number): Promise<ValueItem | null> {
+    return this.valueItemRepo.findOne({ where: { id }});
+  }
+
+  async createValueItem(valueItem: ValueItem): Promise<ValueItem> {
+    return this.valueItemRepo.save(valueItem);
+  }
+
+  async updateValueItem(valueItem: ValueItem): Promise<ValueItem> {
+    return this.valueItemRepo.save(valueItem);
+  }
+
+  async deleteValueItem(id: number): Promise<void> {
+    await this.valueItemRepo.delete(id);
   }
 }

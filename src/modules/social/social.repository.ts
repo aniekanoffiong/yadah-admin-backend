@@ -10,11 +10,11 @@ export class SocialLinkRepository {
   }
 
   async findAll(): Promise<SocialLink[]> {
-    return this.repo.find({ relations: ['footers', 'contacts'] });
+    return this.repo.find();
   }
 
   async findOne(id: number): Promise<SocialLink | null> {
-    return this.repo.findOne({ where: { id }, relations: ['footers', 'contacts'] });
+    return this.repo.findOne({ where: { id }  });
   }
 
   async create(socialLink: SocialLink): Promise<SocialLink> {

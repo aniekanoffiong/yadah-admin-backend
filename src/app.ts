@@ -22,12 +22,14 @@ import { growInFaithRouter } from "./modules/growInFaith/growInFaith.routes";
 import { authRouter } from "./modules/auth/auth.routes";
 import { authenticationMiddleware } from "./middlewares/auth.middleware";
 import { eventRouter } from "./modules/event/event.routes";
-import { configFieldRouter } from "./modules/config/config.routes";
+import { configEntityRouter } from "./modules/config/config.routes";
 import { userRouter } from "./modules/user/user.routes";
 import { publicRouter } from "./modules/public/public-content.routes";
 import { paymentOptionRouter } from "./modules/payment/paymentOption.routes";
 import liveRouter from "./modules/live/live.routes";
 import { scheduledProgramRouter } from "./modules/scheduledPrograms/scheduledProgram.routes";
+import { dropdownListRouter } from "./modules/dropdownList/dropdownList.routes";
+import fileStorageRouter from "./modules/fileStorage/fileStorage.router";
 
 dotenv.config();
 
@@ -51,25 +53,27 @@ app.get("/api", (_req: Request, res: Response, _next: NextFunction) => {
 })
 app.use("/api/admin/hero", heroRouter);
 app.use("/api/admin/ministry", ministryRouter);
-app.use("/api/admin/sermon", sermonRouter);
+app.use("/api/admin/sermons", sermonRouter);
 app.use("/api/admin/item-tag", itemTagRouter);
 app.use("/api/admin/gallery", galleryRouter);
 app.use("/api/admin/about", aboutRouter);
-app.use("/api/admin/pastor", pastorRouter);
+app.use("/api/admin/pastors", pastorRouter);
 app.use("/api/admin/contact", contactInfoRouter);
 app.use("/api/admin/social", socialLinkRouter);
 app.use("/api/admin/cta", ctaRouter);
-app.use("/api/admin/site-link", siteLinkRouter);
+app.use("/api/admin/site-links", siteLinkRouter);
 app.use("/api/admin/footer", footerRouter);
 app.use("/api/admin/statistics", statisticsRouter);
-app.use("/api/admin/belief", beliefRouter);
+app.use("/api/admin/beliefs", beliefRouter);
 app.use("/api/admin/grow-in-faith", growInFaithRouter);
-app.use("/api/admin/event", eventRouter);
-app.use("/api/admin/config-fields", configFieldRouter);
+app.use("/api/admin/events", eventRouter);
+app.use("/api/admin/config-entities", configEntityRouter);
 app.use("/api/admin/users", userRouter);
 app.use("/api/admin/payment-options", paymentOptionRouter);
 app.use("/api/admin/watch-live", liveRouter);
 app.use("/api/admin/scheduled-program", scheduledProgramRouter);
+app.use("/api/admin/dropdown-list", dropdownListRouter);
+app.use('/api/admin/file-storage', fileStorageRouter);
 
 app.use("/api/v1/auth", authRouter);
 app.use('/api/v1/public', publicRouter)

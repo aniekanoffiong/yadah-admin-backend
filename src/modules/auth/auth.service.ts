@@ -6,6 +6,7 @@ import { RegisterDto } from './dtos/register.dto';
 import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
 import { RoleRepository } from '../user/repositories/role.repository';
+import { RolesEnum } from '../../enum/roles.enum';
 
 dotenv.config();
 
@@ -19,8 +20,8 @@ export class AuthService {
   }
 
   async register(data: RegisterDto): Promise<User> {
-    const roles = await this.roleRepository.findAllByNames(data.roles.map(role => role.name));
-    return await this.userRepository.create(data, roles);
+    const role = await this.roleRepository.findByName(data.role ?? RolesEnum.USER);
+    return await this.userRepository.create(data, role ? [role] : []);
   }
 
   async login(data: LoginDto): Promise<{user: User, token: string}> {

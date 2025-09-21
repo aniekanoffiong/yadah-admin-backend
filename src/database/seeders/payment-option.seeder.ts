@@ -1,8 +1,8 @@
-import { PaymentOption } from '../../modules/payment/paymentOption.entity';
+import { PaymentOption, PaymentOptionType } from '../../modules/payment/paymentOption.entity';
 import { AppDataSource } from '../data-source';
 
 const paymentOptionData = {
-  title: 'bank_transfer',
+  title: PaymentOptionType.BANK_TRANSFER,
   isEnabled: false,
   config: JSON.stringify({
     "account_number": "",
@@ -13,10 +13,10 @@ const paymentOptionData = {
 };
 
 export async function seedPaymentOption() {
-  const pastorRepo = AppDataSource.getRepository(PaymentOption);
+  const paymentRepo = AppDataSource.getRepository(PaymentOption);
 
-  const pastor = pastorRepo.create(paymentOptionData);
-  await pastorRepo.save(pastor);
+  const pastor = paymentRepo.create(paymentOptionData);
+  await paymentRepo.save(pastor);
 
   console.log('Seeded Payment Options');
 }

@@ -14,7 +14,6 @@ export class CreateFooterTables1680000000010 implements MigrationInterface {
         { name: "address", type: "varchar" },
         { name: "phone", type: "varchar" },
         { name: "email", type: "varchar" },
-        { name: "schedule", type: "jsonb" },
         { name: "copyright", type: "varchar" },
         { name: "createdAt", type: "timestamp", default: "now()" },
         { name: "updatedAt", type: "timestamp", default: "now()" },

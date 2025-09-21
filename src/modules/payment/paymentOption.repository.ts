@@ -10,11 +10,15 @@ export class PaymentOptionRepository {
   }
 
   async findAll(): Promise<PaymentOption[]> {
-    return this.paymentOptionRepo.find({ relations: ['achievements', 'ministry'] });
+    return this.paymentOptionRepo.find();
+  }
+
+  async findEnabledOptions(): Promise<PaymentOption[]> {
+    return this.paymentOptionRepo.find({ where: { isEnabled: true }});
   }
 
   async findOne(id: number): Promise<PaymentOption | null> {
-    return this.paymentOptionRepo.findOne({ where: { id }, relations: ['achievements', 'ministry'] });
+    return this.paymentOptionRepo.findOne({ where: { id } });
   }
 
   async create(paymentOption: PaymentOption): Promise<PaymentOption> {

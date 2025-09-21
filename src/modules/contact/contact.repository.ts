@@ -10,7 +10,7 @@ export class ContactInfoRepository {
   }
 
   async find(): Promise<ContactInfo | null> {
-    return this.repo.findOne({ relations: ["socialPlatforms"] });
+    return this.repo.findOne({ where: { id: 1 }, relations: ["socialPlatforms"] });
   }
 
   async create(contactInfo: ContactInfo): Promise<ContactInfo> {

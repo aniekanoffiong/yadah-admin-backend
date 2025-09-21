@@ -46,19 +46,6 @@ export class StoryStatCreateDto {
   text!: string;
 }
 
-export class StoryCreateDto {
-  @IsString()
-  title!: string;
-
-  @IsString()
-  content!: string;
-
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => StoryStatCreateDto)
-  stats!: StoryStatCreateDto[];
-}
-
 export class ValueItemCreateDto {
   @IsString()
   icon!: string;
@@ -68,19 +55,6 @@ export class ValueItemCreateDto {
 
   @IsString()
   description!: string;
-}
-
-export class ValuesCreateDto {
-  @IsString()
-  title!: string;
-
-  @IsString()
-  subtitle!: string;
-
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => ValueItemCreateDto)
-  items!: ValueItemCreateDto[];
 }
 
 export class CreateAboutDto {
@@ -93,13 +67,15 @@ export class CreateAboutDto {
   @IsString()
   description!: string;
 
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => StoryCreateDto)
-  story?: StoryCreateDto;
+  @IsString()
+  storyTitle!: string;
 
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ValuesCreateDto)
-  values?: ValuesCreateDto;
+  @IsString()
+  storyContent!: string;
+
+  @IsString()
+  valuesTitle!: string;
+
+  @IsString()
+  valuesSubtitle!: string;
 }

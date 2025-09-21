@@ -4,7 +4,7 @@ import {
   IsOptional,
 } from 'class-validator';
 
-export class SocialDto{
+export class SocialDto {
   id!: number;  
   platform?: string;
   icon?: string;
@@ -28,4 +28,14 @@ export class CreateSocialDto {
   @IsString()
   @IsUrl()
   url!: string;
+}
+
+export class CreateSocialOptionDto {
+  @IsOptional()
+  @IsString()
+  label?: string;
+  
+  @IsString()
+  @IsUrl()
+  value!: string;
 }

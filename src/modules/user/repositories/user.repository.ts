@@ -24,6 +24,7 @@ export class UserRepository {
     return this.repo
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.roles', 'role')
+      .leftJoinAndSelect('user.loginHistory', 'lastLogin')
       .where('role.name IN (:...permittedRoles)', { permittedRoles })
       .getMany();
   }
@@ -52,7 +53,7 @@ export class UserRepository {
       password: await this.hashPassword(data.password),
     });
     const user = await this.repo.save(userData);
-    console.info(`Successfully saved user data - ${user}`);
+    console.info(`Successfully saved user data - ${JSON.stringify(user)}`);
     return user;
   }
 

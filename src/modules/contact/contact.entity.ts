@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
 import { SocialLink } from "../social/social.entity";
 
@@ -22,7 +22,17 @@ export class ContactInfo extends BaseEntity {
   @Column('text', { array: true })
   phones!: string[];
 
-  @OneToMany(() => SocialLink, (social) => social.contacts, { cascade: true, eager: true })
-  @JoinTable({ name: 'contact_social_social_links' })
+  @ManyToMany(() => SocialLink, (social) => social.contacts, { cascade: true, eager: true })
+  @JoinTable({
+    name: 'contact_social_social_links',
+    joinColumn: {
+      name: "contactId",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+      name: "socialLinkId",
+      referencedColumnName: "id"
+    }
+  })
   socialPlatforms!: SocialLink[];
 }

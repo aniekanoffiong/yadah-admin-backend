@@ -1,4 +1,5 @@
 import { Ministry, MinistryActivity } from '../../modules/ministries/ministry.entity';
+import { DayOfWeek } from '../../utils/dayOfWeek';
 import { AppDataSource } from '../data-source';
 
 const ministriesData = [
@@ -6,7 +7,8 @@ const ministriesData = [
     externalId: 'youth',
     title: 'Youth Ministry',
     description: 'Empowering teenagers and young adults to discover their purpose in Christ through dynamic worship, relevant teaching, and authentic community.',
-    meetingTime: 'Fridays 6:00 PM',
+    scheduledDay: DayOfWeek.Friday,
+    meetingTime: '18:00',
     location: 'Youth Center',
     leader: 'Pastor Sarah Johnson',
     participants: '200+ Active Members',

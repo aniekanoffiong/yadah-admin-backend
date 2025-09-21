@@ -1,6 +1,6 @@
 import { HeroRepository } from './hero.repository';
 import { Hero } from './hero.entity';
-import { CreateHeroDto } from './hero.dto';
+import { CreateHeroDto, HeroDto, HeroResponseDto } from './hero.dto';
 import { SpecificPage } from '../../utils/enums';
 
 export class HeroService {
@@ -20,8 +20,8 @@ export class HeroService {
     return hero;
   }
 
-  async findByPage(page: SpecificPage): Promise<Hero | null> {
-    return this.heroRepository.findByPage(page) || null;
+  async findByPage(page: SpecificPage): Promise<HeroResponseDto | null> {
+    return this.toDto(await this.heroRepository.findByPage(page)) || null;
   }
 
   async create(dto: CreateHeroDto): Promise<Hero> {
@@ -52,5 +52,15 @@ export class HeroService {
 
   async delete(id: number): Promise<void> {
     await this.heroRepository.delete(id);
+  }
+
+  private toDto(heroData: Hero | null): HeroResponseDto | null {
+    if (!heroData) return null
+    return {
+      title: heroData.title,
+      subtitle: heroData.subtitle,
+      backgroundImage: heroData.backgroundImage,
+      volunteerProgram: { text: heroData.volunteerProgramText }
+    }
   }
 }

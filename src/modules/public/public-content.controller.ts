@@ -15,6 +15,13 @@ import { NextStepVariants } from '../nextStep/nextStep.entity';
 import { CallToActionService } from '../cta/cta.service';
 import { SpecificPage } from '../../utils/enums';
 import { LiveService } from '../live/live.service';
+import { SiteConfigResponse } from '../site-config/site-config.interface';
+import { SiteConfigService } from '../site-config/site.config.service';
+import { ScheduledProgram } from '../scheduledPrograms/scheduledProgram.entity';
+import { ScheduledProgramDto } from '../scheduledPrograms/scheduledProgram.dto';
+import { format, parse, parseISO } from 'date-fns';
+import { Sermon } from '../sermon/sermon.entity';
+import { SermonDto } from '../sermon/sermon.dto';
 
 export class PublicContentController {
   private heroService = new HeroService();
@@ -31,6 +38,7 @@ export class PublicContentController {
   private nextStepService = new NextStepService();
   private ctaService = new CallToActionService();
   private liveService = new LiveService();
+  private siteConfigService = new SiteConfigService();
 
   // GET /api/public/home
   home = async (_req: Request, res: Response, next: NextFunction) => {
@@ -43,6 +51,7 @@ export class PublicContentController {
         services,
         sermons,
         events,
+        contact,
         gallery,
         footer,
       ] = await Promise.all([
@@ -50,26 +59,27 @@ export class PublicContentController {
         this.aboutService.find(),
         this.pastorService.leadPastor(),
         this.ministryService.findAll(),
-        this.scheduleProgramService.findAllRegularPrograms(),
+        this.scheduleProgramService.findAll(),
         this.sermonService.findRecent(8),
         this.eventService.findUpcomingEvents(5),
+        this.contactService.find(),
         this.galleryService.findRecent(10),
-        this.footerService.find(),
+        this.footerService.getFooter(),
       ])
 
       // Compose response matching your attached data structure
       // Adjust and format as necessary for exact shape
-      res.json({ data: {
-          hero,
-          services,
-          about,
-          pastor,
-          ministries,
-          events,
-          sermons,
-          gallery,
-          footer,
-        }
+      res.json({
+        hero,
+        services: services.map(this.toScheduleProgramDto),
+        about,
+        pastor,
+        ministries,
+        events,
+        sermons,
+        contact,
+        gallery,
+        footer,
       });
     } catch (error) {
       next(error);
@@ -88,11 +98,10 @@ export class PublicContentController {
         this.pastorService.leadPastor(),
         this.ministryService.findAll(),
       ])
-      res.json({ data: { 
-          about,
-          pastor,
-          ministries,
-        }
+      res.json({
+        about,
+        pastor,
+        ministries,
       });
     } catch (error) {
       next(error);
@@ -113,12 +122,11 @@ export class PublicContentController {
         this.nextStepService.findOne(NextStepVariants.QuestionNextStep),
         this.ctaService.findByPage(SpecificPage.MINISTRY),
       ]);
-      res.json({ data: {
-          ministries,
-          upcomingEvents,
-          questionNextStep,
-          cta
-        }
+      res.json({
+        ministries,
+        upcomingEvents,
+        questionNextStep,
+        cta,
       });
     } catch (error) {
       next(error);
@@ -137,11 +145,10 @@ export class PublicContentController {
         this.itemTagService.findByRelation("event"),
         this.eventService.findUpcomingEvents(),
       ]);
-      res.json({ data: {
-          hero: eventHero,
-          filters,
-          events: upcomingEvents,
-        }
+      res.json({
+        hero: eventHero,
+        filters,
+        events: upcomingEvents,
       });
     } catch (error) {
       next(error);
@@ -161,11 +168,10 @@ export class PublicContentController {
         this.itemTagService.findByRelation("sermon"),
       ])
 
-      res.json({ data: {
-          hero,
-          filters,
-          sermons
-        }
+      res.json({
+        hero,
+        filters,
+        sermons,
       });
     } catch (error) {
       next(error);
@@ -183,10 +189,9 @@ export class PublicContentController {
         this.contactService.find(),
       ]);
       // Add call to a ContactService if exists or static data
-      res.json({ data: {
-          hero: contactHero,
-          contact,
-        }
+      res.json({
+        hero: contactHero,
+        contact,
       });
     } catch (error) {
       next(error);
@@ -200,13 +205,12 @@ export class PublicContentController {
         galleryData,
         filters,
       ] = await Promise.all([
-        this.galleryService.findAllItems(),
+        this.galleryService.galleryItemsForPage(),
         this.itemTagService.findByRelation("gallery"),
       ])
-      res.json({ data: {
-          galleryData,
-          filters,
-        }
+      res.json({
+        galleryData,
+        filters,
       });
     } catch (error) {
       next(error);
@@ -232,7 +236,7 @@ export class PublicContentController {
         liveStream = await this.liveService.getLastestLive()
       }
 
-      res.json({ data: { liveStream, upcomingServices, recentServices }});
+      res.json({ liveStream, upcomingServices, recentServices });
     } catch (error) {
       next(error);
     }
@@ -274,4 +278,52 @@ export class PublicContentController {
     });
   }
 
+  async siteConfig(_req: Request, res: Response) {
+    const isComingSoonMode = await this.siteConfigService.getConfig('comingSoon') as boolean || false;
+    const response: SiteConfigResponse = {
+      isComingSoonMode,
+      comingSoonConfig: isComingSoonMode ? {
+        title: "Something Amazing is Coming",
+        subtitle: "We're building something special for you",
+        message: "Our new website is under construction. We're working hard to give you the best experience possible.",
+        launchDate: "2024-12-31T00:00:00Z", // You can update this
+        contactEmail: "info@yourchurch.com",
+        socialLinks: {
+          facebook: "https://facebook.com/yourchurch",
+          twitter: "https://twitter.com/yourchurch",
+          instagram: "https://instagram.com/yourchurch"
+        }
+      } : undefined
+    };
+
+    res.json(response);
+  }
+
+  private toScheduleProgramDto(scheduleProgram: ScheduledProgram): ScheduledProgramDto {
+    return {
+      id: scheduleProgram.id,
+      title: scheduleProgram.title,
+      description: scheduleProgram.description,
+      scheduledDay: scheduleProgram.scheduledDay,
+      startTime: format(parse(scheduleProgram.startTime, "HH:mm:ss", new Date()), "h:mm a"),
+      endTime: format(parse(scheduleProgram.endTime, "HH:mm:ss", new Date()), "h:mm a"),
+      location: scheduleProgram.location,
+      icon: scheduleProgram.icon,
+      image: scheduleProgram.image,
+    };
+  }
+
+  private toSermonDto(sermon: Sermon): SermonDto {
+    return {
+      id: sermon.id,
+      title: sermon.title,
+      minister: sermon.minister,
+      duration: sermon.duration,
+      date: format(sermon.date, "iii. do MMM., yyyy"),
+      image: sermon.image,
+      featured: sermon.featured,
+      videoUrl: sermon.videoUrl,
+      tags: sermon.tags.map(t => t.label),
+    };
+  }
 }

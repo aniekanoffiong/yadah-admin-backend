@@ -12,8 +12,8 @@ export class UserController {
   getAll = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const user = req.user
-      const stats = await this.userService.findAll(user!.userRole());
-      res.json({ data: stats });
+      const users = await this.userService.findAll(user!.userRole());
+      res.json({ data: users.map(this.toDto) });
     } catch (error) {
       next(error);
     }
@@ -32,8 +32,8 @@ export class UserController {
   create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const dto = req.body as CreateUserDto;
-      const stats = await this.userService.create(dto);
-      res.status(201).json({ data: stats });
+      const user = await this.userService.create(dto);
+      res.status(201).json({ data: user });
     } catch (error) {
       next(error);
     }
@@ -43,8 +43,8 @@ export class UserController {
     try {
       const id = Number(req.params.id);
       const dto = req.body as CreateUserDto;
-      const stats = await this.userService.update(id, dto);
-      res.json({ data: stats });
+      const user = await this.userService.update(id, dto);
+      res.json({ data: this.toDto(user) });
     } catch (error) {
       next(error);
     }
@@ -65,7 +65,8 @@ export class UserController {
     userDto.id = user.id;
     userDto.name = user.name;
     userDto.email = user.email;
-    userDto.roles = user.roles.map(r => r.name);
+    userDto.role = user.roles[0].name;
+    userDto.lastLogin = user.loginHistory[0];
     return userDto;
   }
 }

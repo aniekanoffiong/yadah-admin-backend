@@ -7,11 +7,12 @@ export class CreateWatchLiveTable16800000000037 implements MigrationInterface {
         name: 'watch_live',
         columns: [
           { name: 'id', type: 'int', isPrimary: true, isGenerated: true, generationStrategy: 'increment' },
-          { name: 'videoId', type: 'varchar', isNullable: false },
+          { name: 'videoUrl', type: 'varchar', isNullable: false },
           { name: 'title', type: 'varchar', isNullable: false },
           { name: 'date', type: 'date', isNullable: true },
           { name: 'startTime', type: 'time', isNullable: false },
           { name: 'endTime', type: 'time', isNullable: false },
+          { name: 'featured', type: 'boolean', default: false },
           { name: 'isLive', type: 'boolean', default: false },
           { name: 'createdAt', type: 'timestamp', default: 'now()' },
           { name: 'updatedAt', type: 'timestamp', default: 'now()' },

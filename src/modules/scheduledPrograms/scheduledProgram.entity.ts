@@ -2,7 +2,6 @@ import { Entity, Column } from 'typeorm';
 import { BaseEntity } from '../base/base.entity';
 import { DayOfWeek } from '../../utils/dayOfWeek';
 
-
 @Entity()
 export class ScheduledProgram extends BaseEntity {
   @Column()

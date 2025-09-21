@@ -1,12 +1,14 @@
-import { IsString, IsEmail, IsArray, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
-import { RoleDto } from './role.dto';
+import { IsString, IsEmail, IsEnum } from 'class-validator';
+import { RolesEnum } from '../../../enum/roles.enum';
+import { User } from '../entities/user.entity';
+import { LoginHistory } from '../../loginHistory/loginHistory.entity';
 
 export class UserDto {
   id!: number;
   name!: string;
   email!: string;
-  roles!: string[];
+  role!: string;
+  lastLogin?: LoginHistory;
 }
 
 export class CreateUserDto {
@@ -19,8 +21,6 @@ export class CreateUserDto {
   @IsString()
   password!: string;
 
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => RoleDto)
-  roles!: RoleDto[];
+  @IsEnum(RolesEnum)
+  role!: RolesEnum;
 }

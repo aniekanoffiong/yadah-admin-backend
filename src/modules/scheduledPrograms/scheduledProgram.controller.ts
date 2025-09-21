@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { CreateScheduledProgramDto, ScheduledProgramDto } from './scheduledProgram.dto';
 import { ScheduledProgramService } from './scheduledProgram.service';
+import { ScheduledProgram } from './scheduledProgram.entity';
 
 export class ScheduledProgramController {
   private scheduledProgramService: ScheduledProgramService;
@@ -22,7 +23,11 @@ export class ScheduledProgramController {
     try {
       const id = Number(req.params.id);
       const scheduledProgram = await this.scheduledProgramService.findById(id);
-      res.json({ data: scheduledProgram });
+      if (scheduledProgram) {
+        res.json({ data: this.toDto(scheduledProgram) });
+        return;
+      }
+      res.status(404).json({ message: 'Scheduled Program not found' });
     } catch (error) {
       next(error);
     }
@@ -32,7 +37,7 @@ export class ScheduledProgramController {
     try {
       const dto = req.body as CreateScheduledProgramDto;
       const scheduledProgram = await this.scheduledProgramService.create(dto);
-      res.status(201).json({ data: scheduledProgram });
+      res.status(201).json({ data: this.toDto(scheduledProgram) });
     } catch (error) {
       next(error);
     }
@@ -43,7 +48,11 @@ export class ScheduledProgramController {
       const id = Number(req.params.id);
       const dto = req.body as Partial<ScheduledProgramDto>;
       const scheduledProgram = await this.scheduledProgramService.update(id, dto);
-      res.json({ data: scheduledProgram });
+      if (scheduledProgram) {
+        res.json({ data: this.toDto(scheduledProgram) });
+        return;
+      }
+      res.status(404).json({ message: 'Scheduled Program not found' });
     } catch (error) {
       next(error);
     }
@@ -58,4 +67,18 @@ export class ScheduledProgramController {
       next(error);
     }
   };
+
+  private toDto(entity: ScheduledProgram): ScheduledProgramDto {
+    return {
+      id: entity.id,
+      title: entity.title,
+      description: entity.description,
+      scheduledDay: entity.scheduledDay,
+      startTime: entity.startTime,
+      endTime: entity.endTime,
+      location: entity.location,
+      icon: entity.icon,
+      image: entity.image,
+    };
+  }
 }

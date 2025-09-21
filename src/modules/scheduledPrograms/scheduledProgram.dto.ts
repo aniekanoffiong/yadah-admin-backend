@@ -4,8 +4,8 @@ export class ScheduledProgramDto {
   id!: number;
   title!: string;
   scheduledDay?: string;
-  startTime!: Date;
-  endTime!: Date;
+  startTime!: string;
+  endTime!: string;
   location!: string;
   description?: string;
   icon?: string;

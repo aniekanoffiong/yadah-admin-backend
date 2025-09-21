@@ -5,7 +5,7 @@ import {
   ArrayUnique,
 } from 'class-validator';
 import { SocialLink } from '../social/social.entity';
-import { CreateSocialDto } from '../social/social.dto';
+import { CreateSocialOptionDto } from '../social/social.dto';
 
 export class ContactInfoDto {
   id!: number;
@@ -40,5 +40,5 @@ export class CreateContactInfoDto {
   @IsArray()
   @ArrayNotEmpty()
   @ArrayUnique()
-  socialPlatforms?: CreateSocialDto[];
+  socialPlatforms?: CreateSocialOptionDto[];
 }

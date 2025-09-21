@@ -3,6 +3,7 @@
 import { ItemTagRepository } from './itemTag.repository';
 import { ItemTag } from './itemTag.entity';
 import { CreateItemTagDto } from './itemTag.dto';
+import { SelectOption } from '../gallery/gallery.dto';
 
 export class ItemTagService {
   private itemTagRepository: ItemTagRepository;
@@ -37,10 +38,10 @@ export class ItemTagService {
     return this.itemTagRepository.createTag(tag);
   }
 
-  async getOrCreateTags(tags: string[] | undefined): Promise<ItemTag[]> {
-    return tags ? Promise.all(tags.map(async label => 
-      await this.findOneTagByLabel(label) ||
-      await this.createTag({ label, active: true }))
+  async getOrCreateTags(tags: SelectOption[] | undefined): Promise<ItemTag[]> {
+    return tags ? Promise.all(tags.map(async option => 
+      await this.findOneTagByLabel(option.label) ||
+      await this.createTag({ label: option.label, active: true }))
     ) : []
   }
 

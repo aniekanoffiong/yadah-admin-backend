@@ -10,7 +10,7 @@ export class GalleryRepository {
   }
 
   async findAllItems(): Promise<GalleryItem[]> {
-    return this.itemRepo.find();
+    return this.itemRepo.find({ relations: ['tags'] });
   }
 
   async findRecent(limit: number): Promise<GalleryItem[]> {

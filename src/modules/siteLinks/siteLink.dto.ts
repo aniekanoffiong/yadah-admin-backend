@@ -19,3 +19,13 @@ export class CreateSiteLinkDto {
   @IsUrl()
   url!: string;
 }
+
+export class CreateSiteLinkOptionDto {
+  @IsOptional()
+  @IsString()
+  label!: string;
+
+  @IsString()
+  @IsUrl()
+  value!: string;
+}

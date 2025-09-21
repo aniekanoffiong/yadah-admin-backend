@@ -1,7 +1,6 @@
 import { UserRepository } from './repositories/user.repository';
 import { CreateUserDto } from './dtos/user.dto';
 import { User } from './entities/user.entity';
-import * as bcrypt from 'bcrypt';
 import { RoleRepository } from './repositories/role.repository';
 import { RolesEnum } from '../../enum/roles.enum';
 import { Role } from './entities/role.entity';
@@ -21,12 +20,8 @@ export class UserService {
   ) {}
 
   async create(dto: CreateUserDto): Promise<User> {
-    const roles = await this.roleRepository.findAllByNames(dto.roles.map(role => role.name));
-    const user = new User();
-    user.name = dto.name;
-    user.email = dto.email;
-    user.password = await bcrypt.hash(dto.password, 10);
-    return this.userRepository.create(user, roles);
+    const role = await this.roleRepository.findByName(dto.role ?? RolesEnum.ADMIN);
+    return this.userRepository.create(dto, role ? [role] : []);
   }
 
   async findAll(userRole: Role | undefined): Promise<User[]> {

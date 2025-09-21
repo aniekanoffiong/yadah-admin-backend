@@ -1,4 +1,6 @@
-import { IsString, IsBoolean, IsDateString, IsArray } from 'class-validator';
+import { IsString, IsBoolean, IsDateString, IsArray, ValidateNested } from 'class-validator';
+import { SelectOption } from '../gallery/gallery.dto';
+import { Type } from 'class-transformer';
 
 export class SermonDto {
   id!: number;
@@ -15,7 +17,9 @@ export class SermonDto {
   
   featured!: boolean;
 
-  videoUrl!: string;
+  videoUrl?: string;
+
+  tags!: string[];
 }
 
 export class CreateSermonDto {
@@ -41,6 +45,7 @@ export class CreateSermonDto {
   videoUrl!: string;
 
   @IsArray()
-  @IsString({ each: true })
-  tags?: string[];
+  @ValidateNested({ each: true })
+  @Type(() => SelectOption)
+  tags?: SelectOption[];
 }
