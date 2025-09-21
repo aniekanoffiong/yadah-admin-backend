@@ -1,8 +1,8 @@
-import { UserModel } from '../user.model';
+import { User } from '../entities/user.entity';
 
 class UserPasswordResetDataDto {
-  user: UserModel;
-  hashPassword: string;
+  user!: User;
+  hashPassword!: string;
 }
 
 export default UserPasswordResetDataDto;

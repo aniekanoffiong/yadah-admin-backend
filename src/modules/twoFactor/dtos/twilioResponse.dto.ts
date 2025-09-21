@@ -1,4 +1,4 @@
 export class TwilioResponseDto {
-  sid: string;
-  status: string;
+  sid!: string;
+  status!: string;
 }

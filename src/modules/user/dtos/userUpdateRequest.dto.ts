@@ -3,11 +3,11 @@ import { IsEmail, IsOptional, IsString } from 'class-validator';
 class UserUpdateRequestDto {
   @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
 
   @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 }
 
 export default UserUpdateRequestDto;

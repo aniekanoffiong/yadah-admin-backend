@@ -2,13 +2,14 @@ import 'jest';
 import express from 'express';
 import request from 'supertest';
 import { StatusCodes } from 'http-status-codes';
-import IntegrationHelpers from '../../../../../test/helpers/Integration-helpers';
-import { AppDataSource } from '../../../../db/data-source';
-import userRepository from '../../../user/user.repository';
+import IntegrationHelpers from '../../../../test/helpers/Integration-helpers';
+import { AppDataSource } from '../../../../database/data-source';
 import bcrypt from 'bcrypt';
 import { enableFetchMocks } from 'jest-fetch-mock';
+import { User } from '../../../user/entities/user.entity';
 
 enableFetchMocks();
+const userRepository = AppDataSource.getRepository(User);
 
 describe('auth integration tests', () => {
   let app: express.Application;
@@ -26,7 +27,7 @@ describe('auth integration tests', () => {
       .then(() => console.log('Typeorm successfully initialized'))
       .catch((error) => console.log(`unable to initialize typeorm ${error}`));
 
-    userRepository.deleteMany({});
+    userRepository.deleteAll();
 
     fetchMock.mockResponse(
       JSON.stringify({

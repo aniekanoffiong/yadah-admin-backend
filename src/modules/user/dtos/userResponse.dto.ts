@@ -1,16 +1,16 @@
 import { ObjectId } from 'typeorm';
-import { UserModel } from '../user.model';
+import { User } from '../entities/user.entity';
 
 export class UserResponseDTO {
-  id: ObjectId;
-  name: string;
-  email: string;
-  mobile: string;
+  id!: number;
+  name!: string;
+  email!: string;
+  mobile?: string;
   token?: string;
 
-  static toResponse(user: UserModel, token?: string | undefined): UserResponseDTO {
+  static toResponse(user: User, token?: string | undefined): UserResponseDTO {
     const userDTO = new UserResponseDTO();
-    userDTO.id = user._id;
+    userDTO.id = user.id;
     userDTO.name = user.name;
     userDTO.email = user.email;
     userDTO.mobile = user.mobile;
