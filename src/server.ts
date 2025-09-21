@@ -3,6 +3,7 @@ import { AppDataSource } from "./database/data-source";
 import dotenv from "dotenv";
 import fs from "fs";
 import https from "https";
+import http from "http";
 
 dotenv.config();
 
@@ -17,9 +18,15 @@ AppDataSource.initialize()
   .then(() => {
     console.log("Data Source has been initialized.");
 
-    https.createServer(options, app).listen(PORT, () => {
-      console.log(`Server running on https://localhost:${PORT}`);
-    });
+    if (process.env.NODE_ENV !== 'production') {
+      https.createServer(options, app).listen(PORT, () => {
+        console.log(`Server running on https://localhost:${PORT}`);
+      });
+    } else {
+      http.createServer(app).listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+      });
+    }
   })
   .catch((err) => {
     console.error("Error during Data Source initialization:", err);
