@@ -38,7 +38,7 @@ export const AppDataSource = new DataSource({
       ssl: {
         rejectUnauthorized: false, // Required for some environments, adjust as needed
       },
-      options: `-c sslmode=${process.env.DB_SSL_MODE} -c channel_binding=${process.env.CHANNEL_BINDING}`
+      // options: '-c sslmode=require -c channel_binding=require'
     },
   })
 });
