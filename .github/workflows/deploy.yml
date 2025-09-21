@@ -44,6 +44,6 @@ jobs:
             yarn build || exit 1
 
             echo "Restarting services..."
-            pm2 restart all || pm2 start src/server.ts --name admin-dashboard
+            pm2 restart all || pm2 start ecosystem.config.js
 
             echo "Deployment completed successfully!"
