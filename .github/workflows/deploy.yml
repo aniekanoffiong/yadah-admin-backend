@@ -35,7 +35,7 @@ jobs:
             git pull origin main || exit 1
 
             echo "Installing dependencies..."
-            yarn install --production || exit 1
+            yarn install || exit 1
 
             echo "Install new migrations"
             yarn migrate || exit 1
