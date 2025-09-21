@@ -7,9 +7,18 @@ dotenv.config();
 
 const isLocal = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'local';
 
+const isMigration =
+  process.argv.some(arg =>
+    arg.includes('migration') || arg.includes('typeorm')
+  );
+
+const host = isMigration
+  ? process.env.DB_MIGRATE_HOST
+  : process.env.DB_HOST;
+
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: process.env.DB_HOST,
+  host: host,
   port: +(process.env.DB_PORT || 5432),
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
