@@ -5,6 +5,8 @@ import { join } from "path";
 
 dotenv.config();
 
+const isLocal = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'local';
+
 export const AppDataSource = new DataSource({
   type: "postgres",
   host: process.env.DB_HOST,
@@ -22,4 +24,12 @@ export const AppDataSource = new DataSource({
     join(__dirname, './migrations/*.{ts,js}')
   ],
   subscribers: [],
+  ...(isLocal ? {} : {
+    extra: {
+      ssl: {
+        rejectUnauthorized: false, // Required for some environments, adjust as needed
+      },
+      options: `-c sslmode=${process.env.DB_SSL_MODE} -c channel_binding=${process.env.CHANNEL_BINDING}`
+    },
+  })
 });

@@ -1,0 +1,49 @@
+name: Deploy Node.js to Digital Ocean
+on:
+  push:
+    branches:
+      - main  # or your preferred branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22' # or your preferred version
+
+      - name: Install Dependencies
+        run: yarn install --production
+
+      # Optionally run tests
+      # - name: Run Tests
+      #   run: npm test
+
+      - name: Deploy to Digital Ocean
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USERNAME }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          script: |
+            cd /var/www/yadah-admin-backend || exit 1
+
+            echo "Pulling latest changes..."
+            git pull origin main || exit 1
+
+            echo "Installing dependencies..."
+            yarn install --production || exit 1
+
+            echo "Install new migrations"
+            yarn migrate || exit 1
+
+            echo "Building project..."
+            yarn build || exit 1
+
+            echo "Restarting services..."
+            pm2 restart all || pm2 start src/server.ts --name admin-dashboard
+
+            echo "Deployment completed successfully!"
