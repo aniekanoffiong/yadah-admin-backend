@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/server.js",
   "scripts": {
-    "start": "ts-node src/server.ts",
+    "start": "NODE_OPTIONS='--max-old-space-size=2048' ts-node src/server.ts",
     "build": "NODE_OPTIONS='--max-old-space-size=2048' npx tsc --build --verbose",
     "dev": "nodemon --watch src --exec ts-node src/server.ts",
     "migrate": "npx typeorm-ts-node-commonjs migration:run -d ./src/database/data-source.ts",
