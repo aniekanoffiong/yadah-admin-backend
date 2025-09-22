@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'yadah-admin',
-      script: './dist/index.js',
+      script: './dist/server.js',
       instances: 1,
       max_memory_restart: '2G', // Increased from 1G
       exp_backoff_restart_delay: 100,
