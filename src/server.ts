@@ -16,7 +16,7 @@ const options = {
 
 AppDataSource.initialize()
   .then(() => {
-    console.log("Data Source has been initialized.");
+    console.log("Data Source has been initialized for environment: ", process.env.NODE_ENV);
 
     if (process.env.NODE_ENV !== 'production') {
       https.createServer(options, app).listen(PORT, () => {
