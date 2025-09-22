@@ -38,7 +38,7 @@ const app = express();
 app.use(cors({
   origin: [
     ...process.env.ADMIN_FRONTEND_ENDPOINT!.split(","),
-    process.env.WEBSITE_FRONTEND_ENDPOINT!
+    ...process.env.WEBSITE_FRONTEND_ENDPOINT!.split(","),
   ],
   credentials: true
 }));
