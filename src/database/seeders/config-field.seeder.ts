@@ -339,9 +339,38 @@ const valuesEntityFields = {
   ]
 }
 
+const beliefItemConfigFields = {
+  entityName: 'beliefItem',
+  multipleOccurrence: true,
+  maxOccurrence: 6,
+  fields: [
+    {
+      fieldName: 'title',
+      label: 'Belief Item Title',
+      fieldType: 'text',
+      editable: true,
+      displayOrder: 1,
+      validationRulesJson: JSON.stringify({ required: true, maxLength: 100 }),
+      helpText: 'Title for the belief item',
+    },
+    {
+      fieldName: 'content',
+      label: 'Belief Item Content',
+      fieldType: 'textarea',
+      editable: true,
+      displayOrder: 2,
+      validationRulesJson: JSON.stringify({ required: true, maxLength: 1000 }),
+      helpText: 'Content for the belief item',
+    },
+  ]
+}
+
 const beliefConfigFields = {
   entityName: 'belief',
-  multipleOccurrence: true,
+  multipleOccurrence: false,
+  subEntities: [
+    beliefItemConfigFields
+  ],
   fields: [
     {
       fieldName: 'title',
@@ -353,13 +382,13 @@ const beliefConfigFields = {
       helpText: 'Title for the belief section',
     },
     {
-      fieldName: 'content',
-      label: 'Belief Content',
-      fieldType: 'textarea',
+      fieldName: 'subtitle',
+      label: 'Belief Subtitle',
+      fieldType: 'text',
       editable: true,
       displayOrder: 2,
       validationRulesJson: JSON.stringify({ required: true, maxLength: 1000 }),
-      helpText: 'Content for the belief section',
+      helpText: 'Subtitle for the belief section',
     },
   ]
 }
@@ -484,8 +513,7 @@ const ctaButtonConfigFields = {
         endpoint: "dropdown-list/icons",
       }),
       editable: true,
-      displayOrder: 3,
-      validationRulesJson: JSON.stringify({ required: true }),
+      displayOrder: 1,
       helpText: 'Icon for the CTA Button',
       multipleOccurrence: true,
       maxOccurrence: 2
@@ -495,7 +523,7 @@ const ctaButtonConfigFields = {
       label: 'CTA Text',
       fieldType: 'text',
       editable: true,
-      displayOrder: 4,
+      displayOrder: 2,
       validationRulesJson: JSON.stringify({ required: true }),
       helpText: 'Text for the CTA Button',
     },
@@ -511,9 +539,18 @@ const ctaButtonConfigFields = {
         ]
       }),
       editable: true,
-      displayOrder: 5,
+      displayOrder: 3,
       validationRulesJson: JSON.stringify({ required: true }),
       helpText: 'Variant for the CTA Button',
+    },
+    {
+      fieldName: 'url',
+      label: 'Relative URL link to a site page e.g. /ministries',
+      fieldType: 'text',
+      editable: true,
+      displayOrder: 4,
+      validationRulesJson: JSON.stringify({ required: true }),
+      helpText: 'URL link of the CTA Button',
     },
   ]
 }
@@ -1039,10 +1076,19 @@ const statItemConfigFields = {
         endpoint: "dropdown-list/icons",
       }),
       editable: true,
-      displayOrder: 2,
+      displayOrder: 1,
       styling: JSON.stringify({ colSpan: 1 }),
       validationRulesJson: JSON.stringify({ required: true }),
       helpText: 'Icon for Specific statistic',
+    },
+    {
+      fieldName: 'number',
+      label: 'Statistic Number',
+      fieldType: 'text',
+      editable: true,
+      displayOrder: 2,
+      validationRulesJson: JSON.stringify({ required: true }),
+      helpText: 'Number value of Statistic',
     },
     {
       fieldName: 'label',
@@ -1054,21 +1100,12 @@ const statItemConfigFields = {
       validationRulesJson: JSON.stringify({ required: true }),
       helpText: 'Label for Statistic Item',
     },
-    {
-      fieldName: 'number',
-      label: 'Statistic Number',
-      fieldType: 'text',
-      editable: true,
-      displayOrder: 4,
-      validationRulesJson: JSON.stringify({ required: true }),
-      helpText: 'Number value of Statistic',
-    },
   ]
 }
 
 const statisticsConfigFields = {
   entityName: 'statistics',
-  multipleOccurrence: true,
+  multipleOccurrence: false,
   subEntities: [
     statItemConfigFields,
   ],

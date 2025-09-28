@@ -4,19 +4,40 @@ import {
   ArrayNotEmpty,
   ArrayUnique,
 } from 'class-validator';
-import { SocialLink } from '../social/social.entity';
-import { CreateSocialOptionDto } from '../social/social.dto';
+import { CreateSocialOptionDto, SocialDto } from '../social/social.dto';
 
 export class ContactInfoDto {
   id!: number;
   title!: string;
   subtitle!: string;
-  addressTitle!: string;
-  location!: string;
+  address!: string;
   email!: string;
   phones!: string[];
-  chat!: string;
-  socialPlatforms!: SocialLink[];
+  socialPlatforms?: SocialDto[];
+  social?: {
+    title: string,
+    platforms: SocialDto[],
+  }
+}
+
+export class ContactInfoPublicDto {
+  id!: number;
+  title!: string;
+  subtitle!: string;
+  address!: {
+    title: string;
+    location: string;
+    email: string
+  }
+  contact!: {
+    title: string;
+    phones: Array<string>;
+    chat: string;
+  }
+  social?: {
+    title: string,
+    platforms: SocialDto[],
+  }
 }
 
 export class CreateContactInfoDto {

@@ -15,29 +15,6 @@ export class AboutService {
     return about;
   }
 
-  async create(dto: CreateAboutDto): Promise<About> {
-    const about = new About();
-    about.mainTitle = dto.mainTitle;
-    about.highlightedTitle = dto.highlightedTitle;
-    about.description = dto.description;
-
-    if (dto.storyTitle && dto.storyContent) {
-      const story = new Story();
-      story.title = dto.storyTitle;
-      story.content = dto.storyContent;
-      about.story = story;
-    }
-
-    if (dto.valuesTitle && dto.valuesSubtitle) {
-      const values = new Values();
-      values.title = dto.valuesTitle;
-      values.subtitle = dto.valuesSubtitle;
-      about.values = values;
-    }
-
-    return this.aboutRepository.create(about);
-  }
-
   async update(dto: CreateAboutDto): Promise<About> {
     const about = await this.find();
     about.mainTitle = dto.mainTitle;
@@ -86,7 +63,7 @@ export class AboutService {
   }
   
   async updateStoryStat(id: number, dto: StoryStatCreateDto): Promise<StoryStat> {
-    const about = await this.find();
+    await this.find();
     const storyStat = await this.aboutRepository.findStoryStat(id)
     if (!storyStat) throw Error(`StoryStat with id ${id} not found`)
     storyStat.text = dto.text;

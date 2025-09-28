@@ -20,9 +20,9 @@ export class FooterDto {
 
   description!: string;
 
-  quickLinks!: string[];
+  quickLinks!: SiteLinkDto[];
 
-  ministries!: string[];
+  ministries!: SiteLinkDto[];
 
   address!: string;
 
@@ -32,14 +32,11 @@ export class FooterDto {
 
   schedule!: any;
 
-  legalLinks!: string[];
+  legalLinks!: SiteLinkDto[];
 
   copyright!: string;
 
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CreateSocialOptionDto)
-  socialLinks!: CreateSocialOptionDto[];
+  socialLinks!: SiteLinkDto[];
 }
 
 export class CreateFooterDto {
@@ -112,6 +109,7 @@ export class FooterResponseDto {
     address: string,
     schedule: Record<string, string>[],
   }
+  socialLinks!: Array<SiteLinkDto>
   quickLinks!: Array<SiteLinkDto>
   ministries!: Array<SiteLinkDto>
   legal!: Array<SiteLinkDto>

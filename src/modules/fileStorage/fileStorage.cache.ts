@@ -1,14 +1,9 @@
-const cache = new Map<string, { url: string; expiresAt: number }>();
+import redis from "../../external/redis.client";
 
 export function setCache(key: string, url: string, expiresIn: number) {
-  cache.set(key, { url, expiresAt: Date.now() + expiresIn * 1000 });
+  redis.set(key, url, 'EX', expiresIn);
 }
 
-export function getCache(key: string): string | null {
-  const entry = cache.get(key);
-  if (entry && entry.expiresAt > Date.now()) {
-    return entry.url;
-  }
-  cache.delete(key);
-  return null;
+export async function getCache(key: string): Promise<string | null> {
+  return await redis.get(key);
 }

@@ -19,16 +19,6 @@ export class AboutController {
     }
   };
 
-  create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const dto = req.body as CreateAboutDto;
-      const about = await this.aboutService.create(dto);
-      res.status(201).json({ data: this.toAboutDto(about) });
-    } catch (error) {
-      next(error);
-    }
-  };
-
   update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const dto = req.body as CreateAboutDto;

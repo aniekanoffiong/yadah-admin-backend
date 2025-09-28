@@ -35,7 +35,7 @@ export class ConfigFieldService {
       return configField;
     });
 
-    config.subEntities = data.subEntities?.map(this.createConfigData.bind(this)) || [];
+    config.subEntities = data.subEntities?.map((s) => this.createConfigData({ ...s, parentEntityId: config.id })) || [];
 
     return config;
   }

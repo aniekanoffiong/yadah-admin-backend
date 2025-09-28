@@ -2,11 +2,11 @@ import { NextFunction, Request, Response } from "express";
 
 export const errorHandler = (
   err: any,
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  console.error(err);
+  console.error(err, err.status, err.messagew);
   const errStatus = err.status
   const errMessage = err.message
 

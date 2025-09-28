@@ -14,11 +14,7 @@ export class AboutRepository {
   }
 
   async find(): Promise<About | null> {
-    return this.aboutRepo.findOne({ where: { id: 1}, relations: ['story', 'story.stats', 'values', 'values.items'] });
-  }
-
-  async create(about: About): Promise<About> {
-    return this.aboutRepo.save(about);
+    return this.aboutRepo.findOne({ where: { id: 1 }, relations: ['story', 'story.stats', 'values', 'values.items'] });
   }
 
   async update(about: About): Promise<About> {

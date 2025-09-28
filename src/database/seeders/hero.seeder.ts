@@ -36,7 +36,7 @@ const heroData = [
   {
     page: SpecificPage.MINISTRY,
     title: "Discover Your Ministry Calling",
-    subtitle: "Acme makes running global teams simple. HR, Payroll, International Employment, contractor management and more.",
+    subtitle: "Become all God ordained for you... discover the uniqueness of God's call on your life",
     backgroundImage: "https://cdn.builder.io/api/v1/image/assets%2F7623954293324d3290a21d8b4b503517%2Fa7fb664fc8694d8fa2560a42a85d9d24?format=webp&width=800",
     buttons: [
       { text: "Join as a Member", type: "primary", href: "/join" },

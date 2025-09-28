@@ -47,6 +47,9 @@ export class CreateConfigEntityDto {
   fields: CreateConfigFieldDto[] = [];
 
   @IsOptional()
+  parentEntityId?: number;
+
+  @IsOptional()
   @IsArray()
   subEntities?: CreateConfigEntityDto[] = [];
 }

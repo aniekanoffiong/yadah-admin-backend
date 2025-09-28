@@ -33,7 +33,6 @@ export class ValuesDto {
 }
 
 export class AboutDto {
-  id!: number;
   mainTitle!: string;
   highlightedTitle!: string;
   description!: string;

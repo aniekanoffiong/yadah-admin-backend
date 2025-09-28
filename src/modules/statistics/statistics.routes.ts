@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { StatisticsController } from './statistics.controller';
 import { authorizationMiddleware } from '../../middlewares/authorization.middleware';
 import validationMiddleware from '../../middlewares/validation.middleware';
-import { CreateStatisticsDto } from './statistics.dto';
+import { CreateStatisticsDto, CreateStatItemDto, UpdateStatItemDto } from './statistics.dto';
 
 const statisticsRouter = Router();
 const statisticsController = new StatisticsController();
@@ -10,20 +10,7 @@ const statisticsController = new StatisticsController();
 statisticsRouter.get(
   '/',
   authorizationMiddleware('get.statistics'),
-  statisticsController.getAll.bind(statisticsController)
-);
-
-statisticsRouter.get(
-  '/:id',
-  authorizationMiddleware('get.statistics'),
-  statisticsController.getById.bind(statisticsController)
-);
-
-statisticsRouter.post(
-  '/',
-  authorizationMiddleware('create.statistics'),
-  validationMiddleware(CreateStatisticsDto),
-  statisticsController.create.bind(statisticsController)
+  statisticsController.get.bind(statisticsController)
 );
 
 statisticsRouter.put(
@@ -33,10 +20,30 @@ statisticsRouter.put(
   statisticsController.update.bind(statisticsController)
 );
 
+statisticsRouter.get(
+  '/stat-items',
+  authorizationMiddleware('get.statistics'),
+  statisticsController.allStatItems.bind(statisticsController)
+);
+
+statisticsRouter.post(
+  '/stat-items',
+  authorizationMiddleware('create.statistics'),
+  validationMiddleware(CreateStatItemDto),
+  statisticsController.createStatItem.bind(statisticsController)
+);
+
+statisticsRouter.put(
+  '/stat-items/:id',
+  authorizationMiddleware('update.statistics'),
+  validationMiddleware(UpdateStatItemDto),
+  statisticsController.updateStatItem.bind(statisticsController)
+);
+
 statisticsRouter.delete(
-  '/:id',
+  '/stat-items/:id',
   authorizationMiddleware('delete.statistics'),
-  statisticsController.remove.bind(statisticsController)
+  statisticsController.deleteStatItem.bind(statisticsController)
 );
 
 export { statisticsRouter };

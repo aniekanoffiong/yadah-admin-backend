@@ -30,6 +30,9 @@ export class CTAButton {
   @Column()
   variant!: string;
 
+  @Column()
+  url!: string;
+
   @Column({ nullable: true })
   icon?: string;
 

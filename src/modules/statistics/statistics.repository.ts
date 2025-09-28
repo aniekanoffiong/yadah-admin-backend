@@ -11,27 +11,32 @@ export class StatisticsRepository {
     this.statItemRepo = AppDataSource.getRepository(StatItem);
   }
 
-  async findAll(): Promise<Statistics[]> {
-    return this.statisticsRepo.find({ relations: ['stats'] });
-  }
-
-  async findOne(id: number): Promise<Statistics | null> {
-    return this.statisticsRepo.findOne({ where: { id }, relations: ['stats'] });
-  }
-
-  async create(statistics: Statistics): Promise<Statistics> {
-    return this.statisticsRepo.save(statistics);
+  async find(): Promise<Statistics | null> {
+    return this.statisticsRepo.findOne({ where: { id: 1 }, relations: ['statItems'] });
   }
 
   async update(statistics: Statistics): Promise<Statistics> {
     return this.statisticsRepo.save(statistics);
   }
 
-  async delete(id: number): Promise<void> {
-    await this.statisticsRepo.delete(id);
+  // StateItem
+  async findAllStatItems(): Promise<StatItem[]> {
+    return this.statItemRepo.find();
   }
 
-  async deleteStatItems(statisticsId: number): Promise<void> {
-    await this.statItemRepo.delete({ statistics: { id: statisticsId } });
+  async findStatItem(id: number): Promise<StatItem | null> {
+    return this.statItemRepo.findOne({ where: { id }});
+  }
+
+  async createStatItem(statItem: StatItem): Promise<StatItem> {
+    return this.statItemRepo.save(statItem);
+  }
+
+  async updateStatItem(statItem: StatItem): Promise<StatItem> {
+    return this.statItemRepo.save(statItem);
+  }
+
+  async deleteStatItem(statItemId: number): Promise<void> {
+    await this.statItemRepo.delete({ id: statItemId });
   }
 }

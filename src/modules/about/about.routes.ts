@@ -58,7 +58,7 @@ aboutRouter.post(
   '/value-items',
   authorizationMiddleware('create.valueItem'),
   validationMiddleware(ValueItemCreateDto),
-  aboutController.create.bind(aboutController)
+  aboutController.createValueItem.bind(aboutController)
 );
 
 aboutRouter.put(

@@ -21,6 +21,7 @@ export class CreateCallToActionTables1680000000009 implements MigrationInterface
         { name: "text", type: "varchar" },
         { name: "variant", type: "varchar" },
         { name: "icon", type: "varchar", isNullable: true },
+        { name: "url", type: "varchar", isNullable: false },
         { name: "callToActionId", type: "int" }
       ]
     }));

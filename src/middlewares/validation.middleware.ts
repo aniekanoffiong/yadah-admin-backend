@@ -8,6 +8,7 @@ const validationMiddleware = (schema: ClassConstructor<object>) => {
     const transformedClass: object = plainToInstance(schema, { ...req.body });
     const errors = await validate(transformedClass);
     if (errors.length > 0) {
+      console.log("validation errors", JSON.stringify(errors))
       next(new ValidationException(errors.map((c) => Object.values(c.constraints || {}).join(', ')).join(', ')));
     }
     next();

@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner, Table } from "typeorm";
 export class CreateGrowingInFaithTable1680000000005 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(new Table({
-      name: "growing_in_faith",
+      name: "grow_in_faith",
       columns: [
         { name: "id", type: "serial", isPrimary: true },
         { name: "title", type: "varchar" },
@@ -17,6 +17,6 @@ export class CreateGrowingInFaithTable1680000000005 implements MigrationInterfac
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("growing_in_faith");
+    await queryRunner.dropTable("grow_in_faith");
   }
 }

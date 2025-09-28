@@ -1,14 +1,11 @@
-import { IsString, IsOptional, IsArray, ValidateNested } from 'class-validator';
+import { IsString, IsOptional, IsArray, ValidateNested, IsUrl } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CTAButtonDto {
   id!: number;
-
   text!: string;
-
   variant!: string;
-
-  @IsOptional()
+  url!: string;
   icon?: string;
 }
 
@@ -32,6 +29,9 @@ export class CreateCTAButtonDto {
   @IsOptional()
   @IsString()
   icon?: string;
+
+  @IsUrl()
+  url!: string;
 }
 
 export class CreateCallToActionDto {

@@ -5,14 +5,15 @@ import {
   IsArray,
   ValidateNested,
 } from 'class-validator';
+import { ItemTagDto } from '../itemTag/itemTag.dto';
 
 export class GalleryItemDto {
   id!: number;
   src!: string;
   alt!: string;
   caption!: string;
-  date!: Date;
-  tags: {value: number, label: string}[] = [];
+  date!: string;
+  tags: ItemTagDto[] = [];
 }
 
 export class CreateGalleryItemDto {

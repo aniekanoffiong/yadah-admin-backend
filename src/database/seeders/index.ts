@@ -16,6 +16,10 @@ import { seedConfigFields } from "./config-field.seeder";
 import { seedPaymentOption } from "./payment-option.seeder";
 import { seedNextSteps } from "./next-step.seeder";
 import { seedScheduledPrograms } from "./scheduled-program.seeder";
+import { seedStatistics } from "./statistics.seeder";
+import { seedGrowInFaith } from "./growInFaith.seeder";
+import { seedBelief } from "./belief.seeder";
+import { seedLive } from "./live.seeder";
 
 async function runSeeders() {
   const connection = await AppDataSource.initialize();
@@ -35,7 +39,12 @@ async function runSeeders() {
   await seedConfigFields();
   await seedPaymentOption();
   await seedNextSteps();
+  await seedGrowInFaith();
+  await seedBelief();
+  await seedLive();
   await seedScheduledPrograms();
+  await seedStatistics();
+  await seedStatistics();
   console.log('All seeders done');
   connection.destroy();
 }

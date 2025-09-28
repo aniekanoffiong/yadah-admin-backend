@@ -17,7 +17,7 @@ export class GalleryItem extends BaseEntity {
   caption!: string;
 
   @Column()
-  date!: Date;
+  date!: string;
 
   @ManyToMany(() => ItemTag, tag => tag.galleryItems, { cascade: true })
   @JoinTable()

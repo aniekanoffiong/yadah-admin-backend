@@ -1,27 +1,26 @@
 import { Live } from './live.entity';
-import { Repository } from 'typeorm';
 import { YoutubeIntegrationService } from './external/youtube.integration.service';
-import { AppDataSource } from '../../database/data-source';
 import { EventEmitter } from 'events';
 import { CreateWatchLiveDto } from './live.dto';
 import { parse } from 'date-fns';
+import { LiveRepository } from './live.repository';
 
 export class LiveService extends EventEmitter {
-  private liveRepository: Repository<Live>;
+  private liveRepository: LiveRepository;
   private youtubeService: YoutubeIntegrationService;
 
   constructor() {
     super()
-    this.liveRepository = AppDataSource.getRepository(Live);
+    this.liveRepository = new LiveRepository;
     this.youtubeService = new YoutubeIntegrationService();
   }
 
   async getAll(): Promise<Live[]> {
-    return this.liveRepository.find();
+    return this.liveRepository.findAll();
   }
 
   async getById(id: number): Promise<Live | null> {
-    return this.liveRepository.findOne({ where: { id } });
+    return this.liveRepository.findOne(id);
   }
 
   async create(liveData: CreateWatchLiveDto): Promise<Live> {
@@ -30,37 +29,33 @@ export class LiveService extends EventEmitter {
       throw Error("Video URL is not valid... please provide in format: https://www.youtube.com/watch?v=VIDEO_ID, https://youtu.be/VIDEO_ID, https://www.youtube.com/embed/VIDEO_ID")
     }
     if (liveData.isLive) {
-      const existingLive = await this.liveRepository.findOne({ where: { isLive: true } });
+      const existingLive = await this.liveRepository.latestLive();
       if (existingLive) {
         existingLive.isLive = false;
         await this.liveRepository.save(existingLive);
       }
     }
     if (liveData.featured) {
-      const existingFeatured = await this.liveRepository.findOne({ where: { featured: true } });
+      const existingFeatured = await this.liveRepository.featuredLive();
       if (existingFeatured) {
         existingFeatured.featured = false;
         await this.liveRepository.save(existingFeatured);
       }
     }
-    const live = this.liveRepository.create(liveData);
-    live.isLive = live.isLive ?? false;
+    const live = new Live()
+    
+    live.isLive = liveData.isLive ?? false;
     const saved = this.liveRepository.save(live);
     this.emit('liveUpdated', saved);
     return saved;
   }
 
   async getLastestLive(): Promise<Live> {
-    const latestLive = await this.liveRepository
-      .createQueryBuilder("live")
-      .orderBy("date", "DESC")
-      .getOne();
-    if (!latestLive) throw Error("Cannot find live")
-    return latestLive
+    return this.liveRepository.latestLive()
   }
 
   async update(id: number, liveData: Partial<Live>): Promise<Live | null> {
-    const live = await this.liveRepository.findOne({ where: { id } });
+    const live = await this.liveRepository.findOne(id);
     if (!live) return null;
 
     Object.assign(live, liveData);
@@ -74,7 +69,7 @@ export class LiveService extends EventEmitter {
   }
 
   async getCachedLiveEvent(): Promise<Live | null> {
-    const liveEvent = await this.liveRepository.findOne({ where: { isLive: true } });
+    const liveEvent = await this.liveRepository.latestLive();
     if (!liveEvent) return null;
 
     const now = new Date();
@@ -103,7 +98,7 @@ export class LiveService extends EventEmitter {
     const currentLive = await this.youtubeService.checkLiveStream();
 
     if (currentLive) {
-      const existing = await this.liveRepository.findOne({ where: { isLive: true } });
+      const existing = await this.liveRepository.latestLive();
       if (existing && existing.videoUrl === currentLive.videoUrl) {
         existing.videoUrl = currentLive.videoUrl;
         existing.title = currentLive.title;
@@ -117,7 +112,7 @@ export class LiveService extends EventEmitter {
         return currentLive;
       }
     } else {
-      const existing = await this.liveRepository.findOne({ where: { isLive: true } });
+      const existing = await this.liveRepository.latestLive();
       if (existing) {
         existing.isLive = false;
         await this.liveRepository.save(existing);

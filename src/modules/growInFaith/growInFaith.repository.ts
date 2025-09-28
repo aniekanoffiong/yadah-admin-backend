@@ -10,7 +10,7 @@ export class GrowInFaithRepository {
   }
 
   async findOne(): Promise<GrowInFaith | null> {
-    return this.repo.findOne({});
+    return this.repo.findOne({ where: { id: 1 }});
   }
 
   async create(entity: GrowInFaith): Promise<GrowInFaith> {

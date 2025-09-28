@@ -16,19 +16,21 @@ export class MinistryDto {
   @IsNumber()
   id!: number;
 
+  icon!: string;
+
   title!: string;
 
   description!: string;
 
-  meetingTime!: string;
+  meetingTime?: string;
 
-  location!: string;
+  location?: string;
 
-  leader!: string;
+  leader?: string;
 
-  participants!: string;
+  members?: string;
 
-  activities!: MinistryActivityDto[];
+  activities?: MinistryActivityDto[];
 }
 
 export class CreateMinistryDto {

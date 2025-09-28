@@ -36,9 +36,7 @@ export class ScheduledProgramRepository {
   async getUpcomingServices(limit: number): Promise<ScheduledProgram[]> {
     return this.repo
       .createQueryBuilder('scheduledProgram')
-      .where("regularScheduledProgram = :regularScheduledProgram", { regularScheduledProgram: true })
-      .orderBy(`
-        CASE scheduledProgram.scheduledDay
+      .addOrderBy(`CASE "scheduledProgram"."scheduledDay"
           WHEN 'Monday' THEN 1
           WHEN 'Tuesday' THEN 2
           WHEN 'Wednesday' THEN 3
@@ -47,8 +45,7 @@ export class ScheduledProgramRepository {
           WHEN 'Saturday' THEN 6
           WHEN 'Sunday' THEN 7
           ELSE 8
-        END
-      `)
+        END`, 'ASC')
       .limit(limit)
       .getMany();
   }

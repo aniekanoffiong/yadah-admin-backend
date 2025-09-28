@@ -5,20 +5,24 @@ import { ItemTagService } from '../itemTag/itemTag.service';
 import { HeroService } from '../hero/hero.service';
 import { SpecificPage } from '../../utils/enums';
 import { HeroResponseDto } from '../hero/hero.dto';
+import { FileStorageService } from '../fileStorage/fileStorage.service';
 
 export class GalleryService {
   private galleryRepository: GalleryRepository;
   private itemTagService: ItemTagService;
   private heroService: HeroService;
+  private fileStorageService: FileStorageService;
 
   constructor(
     galleryRepository?: GalleryRepository,
     itemTagService?: ItemTagService,
     heroService?: HeroService,
+    fileStorageService?: FileStorageService,
   ) {
     this.galleryRepository = galleryRepository || new GalleryRepository();
     this.itemTagService = itemTagService || new ItemTagService()
     this.heroService = heroService || new HeroService()
+    this.fileStorageService = fileStorageService || new FileStorageService()
   }
 
   async galleryHero(): Promise<HeroResponseDto | null> {
@@ -29,10 +33,8 @@ export class GalleryService {
     return this.galleryRepository.findAllItems()
   }
 
-  async galleryItemsForPage(): Promise<GalleryItemResponseDto> {
-    const hero = await this.galleryHero()
-    const items = await this.galleryRepository.findAllItems()
-    return this.toListDto(hero!, items);
+  async galleryItemsForPage(): Promise<GalleryItem[]> {    
+    return this.galleryRepository.findAllItems()
   }
 
   async findRecent(limit: number): Promise<GalleryItemResponseDto> {
@@ -76,11 +78,11 @@ export class GalleryService {
     return {
       title: hero.title,
       subtitle: hero.subtitle!,
-      images: galleryItems.map(item => ({
-        src: item.src,
+      images: await Promise.all(galleryItems.map(async (item) => ({
+        src: await this.fileStorageService.getDownloadUrl(item.src),
         alt: item.alt,
         text: item.caption
-      }))
+      })))
     }
   }
 }

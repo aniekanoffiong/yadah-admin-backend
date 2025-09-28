@@ -1,13 +1,14 @@
 import { IsString, IsNotEmpty, IsDateString } from 'class-validator';
+import { ItemTagDto } from '../itemTag/itemTag.dto';
 
 export class EventDto {
   id!: number;
   title!: string;
-  startDate!: Date;
-  endDate!: Date;
+  date!: string;
   location!: string;
   description?: string;
   image!: string;
+  tags!: ItemTagDto[];
 }
 
 export class CreateEventDto {

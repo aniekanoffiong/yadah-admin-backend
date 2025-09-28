@@ -9,7 +9,7 @@ export class Statistics extends BaseEntity {
   @OneToMany(() => StatItem, (statItem) => statItem.statistics, {
     cascade: true,
   })
-  stats!: StatItem[];
+  statItems!: StatItem[];
 
   @Column({ nullable: true })
   backgroundImage?: string;
@@ -21,7 +21,7 @@ export class StatItem {
   id!: number;
 
   @Column()
-  number!: string;
+  number!: number;
 
   @Column()
   label!: string;
@@ -29,6 +29,9 @@ export class StatItem {
   @Column({ nullable: true })
   icon?: string;
 
-  @ManyToOne(() => Statistics, (statistics) => statistics.stats)
+  @Column()
+  statisticsId!: number;
+
+  @ManyToOne(() => Statistics, (statistics) => statistics.statItems)
   statistics!: Statistics;
 }

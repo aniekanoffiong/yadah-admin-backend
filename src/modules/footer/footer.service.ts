@@ -6,6 +6,8 @@ import { SiteLinkService } from '../siteLinks/siteLink.service';
 import { ScheduledProgramService } from '../scheduledPrograms/scheduledProgram.service';
 import { ScheduledProgram } from '../scheduledPrograms/scheduledProgram.entity';
 import { format, parse } from 'date-fns';
+import { SiteLink } from '../siteLinks/siteLink.entity';
+import { SiteLinkDto } from '../siteLinks/siteLink.dto';
 
 export class FooterService {
   private footerRepository: FooterRepository;
@@ -82,10 +84,19 @@ export class FooterService {
         address: footer.address,
         schedule: schedules.map(schedule => ({ [schedule.title]: `${schedule.scheduledDay} ${format(parse(schedule.startTime, "HH:mm:ss", new Date()), "h:mm a")}` }))
       },
-      quickLinks: footer.quickLinks,
-      ministries: footer.ministriesLinks,
-      legal: footer.legalLinks,
+      socialLinks: footer.socialLinks.map(this.toLinksDto.bind(this)),
+      quickLinks: footer.quickLinks.map(this.toLinksDto.bind(this)),
+      ministries: footer.ministriesLinks.map(this.toLinksDto.bind(this)),
+      legal: footer.legalLinks.map(this.toLinksDto.bind(this)),
       copyright: `© ${new Date().getFullYear()} Church. All rights reserved.`
     }
+  }
+
+  private toLinksDto(socialLink: Partial<SiteLink>): SiteLinkDto {
+    return {
+      id: socialLink.id!,
+      label: socialLink.label!,
+      url: socialLink.url!,
+    };
   }
 }

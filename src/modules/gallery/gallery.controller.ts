@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { GalleryService } from './gallery.service';
 import { CreateGalleryItemDto, GalleryItemDto } from './gallery.dto';
 import { GalleryItem } from './gallery.entity';
+import { format } from 'date-fns';
 
 export class GalleryController {
   private galleryService: GalleryService;
@@ -66,7 +67,12 @@ export class GalleryController {
   private toDto(item: GalleryItem): GalleryItemDto {
     return {
       ...item,
-      tags: item.tags.map(tag => ({ value: tag.id, label: tag.label })),
+      date: format(item.date, "iii. do MMM., yyyy"),
+      tags: item.tags.map(tag => ({
+        id: tag.id,
+        label: tag.label,
+        active: tag.isActive,
+      })),
     }
   }
 }
