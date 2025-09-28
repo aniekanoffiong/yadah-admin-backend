@@ -10,41 +10,32 @@ export class ConfigFieldService {
   }
 
   async create(dto: CreateConfigEntityDto): Promise<ConfigEntity> {
-    const configData = this.createConfigData(dto);
-    const config = await this.configFieldRepository.create(configData);
+    const config = await this.createConfig(dto);
     // create config fields
-    dto.fields?.map(data => this.createConfigFieldData(config, data));
+    if (dto.fields && dto.fields.length > 0) {
+      for (const data of dto.fields) {
+        await this.createField(config.id, data);
+      }
+    }
+
     // create subEntities
-    dto.subEntities?.map(this.create.bind(this))
+    if (dto.subEntities && dto.subEntities.length > 0) {
+      for (const subEntityData of dto.subEntities) {
+        await this.create({ ...subEntityData, parentEntityId: config.id })
+      }
+    }
     return config;
   }
 
-  private createConfigData(data: CreateConfigEntityDto): ConfigEntity {
+  private async createConfig(data: CreateConfigEntityDto): Promise<ConfigEntity> {
     const config = new ConfigEntity();
     config.entityName = data.entityName;
     config.multipleOccurrence = data.multipleOccurrence;
     config.maxOccurrence = data.maxOccurrence;
     config.authorizations = data.authorizations;
+    config.parentEntityId = data.parentEntityId
 
-    config.subEntities = data.subEntities?.map((s) => this.createConfigData({ ...s, parentEntityId: config.id })) || [];
-
-    return config;
-  }
-
-  private createConfigFieldData(config: ConfigEntity, field: CreateConfigFieldDto) {
-    const configField = new ConfigEntityField();
-    configField.configEntity = config;
-    configField.fieldName = field.fieldName;
-    configField.label = field.label;
-    configField.fieldType = field.fieldType;
-    configField.optionsJson = field.optionsJson;
-    configField.editable = field.editable;
-    configField.validationRulesJson = field.validationRulesJson;
-    configField.displayOrder = field.displayOrder;
-    configField.helpText = field.helpText;
-    configField.multipleOccurrence = field.multipleOccurrence;
-
-    this.configFieldRepository.createField(configField);
+    return this.configFieldRepository.save(config);
   }
 
   async createField(id: number, dto: CreateConfigFieldDto): Promise<ConfigEntityField> {
@@ -65,7 +56,7 @@ export class ConfigFieldService {
     configField.helpText = dto.helpText;
     configField.multipleOccurrence = dto.multipleOccurrence;
 
-    return this.configFieldRepository.createField(configField);
+    return this.configFieldRepository.saveField(configField);
   }
 
   async findAll(): Promise<ConfigEntity[]> {

@@ -1439,7 +1439,7 @@ const configEntities = [
 export async function seedConfigFields() {
   const configEntityService = new ConfigFieldService();
   for (const entity of configEntities) {
-    configEntityService.create(entity);
+    await configEntityService.create(entity);
   }
   console.log('Seeded Config Fields successfully!');
 }

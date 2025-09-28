@@ -6,7 +6,7 @@ export class ConfigEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @OneToMany(() => ConfigEntity, (item) => item.parentEntity, { cascade: true })
+  @OneToMany(() => ConfigEntity, (item) => item.parentEntity)
   subEntities?: ConfigEntity[];
 
   @Column({ nullable: true })
@@ -16,7 +16,7 @@ export class ConfigEntity extends BaseEntity {
   parentEntity?: ConfigEntity;
 
   // The field/column name in the target entity, e.g., 'title', 'subtitle'
-  @OneToMany(() => ConfigEntityField, (item) => item.configEntity, { cascade: true, eager: true })
+  @OneToMany(() => ConfigEntityField, (item) => item.configEntity, { eager: true })
   fields!: ConfigEntityField[];
 
   // The name of the target entity/table this field config applies to, e.g., 'hero', 'event'

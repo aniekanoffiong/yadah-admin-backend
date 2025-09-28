@@ -42,11 +42,11 @@ export class ConfigFieldRepository {
     });
   }
 
-  async create(config: ConfigEntity): Promise<ConfigEntity> {
+  async save(config: ConfigEntity): Promise<ConfigEntity> {
     return this.repo.save(config);
   }
 
-  async createField(config: ConfigEntityField): Promise<ConfigEntityField> {
+  async saveField(config: ConfigEntityField): Promise<ConfigEntityField> {
     return this.fieldRepo.save(config);
   }
 
