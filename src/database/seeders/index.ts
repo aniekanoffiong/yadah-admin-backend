@@ -20,6 +20,7 @@ import { seedStatistics } from "./statistics.seeder";
 import { seedGrowInFaith } from "./growInFaith.seeder";
 import { seedBelief } from "./belief.seeder";
 import { seedLive } from "./live.seeder";
+import { seedGiveData } from "./give.seeder";
 
 async function runSeeders() {
   const connection = await AppDataSource.initialize();
@@ -39,11 +40,11 @@ async function runSeeders() {
   await seedConfigFields();
   await seedPaymentOption();
   await seedNextSteps();
+  await seedGiveData();
   await seedGrowInFaith();
   await seedBelief();
   await seedLive();
   await seedScheduledPrograms();
-  await seedStatistics();
   await seedStatistics();
   console.log('All seeders done');
   connection.destroy();

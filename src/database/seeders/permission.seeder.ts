@@ -137,10 +137,16 @@ export const permissionsToSeed: Array<Array<{name: string, description: string}>
     { name: 'delete.scheduledProgram', description: 'Delete Scheduled Program' },
 
     // Value Item - Admin can access
-    { name: 'get.valueItem', description: 'get Value Item' },
+    { name: 'get.valueItem', description: 'Get Value Item' },
     { name: 'create.valueItem', description: 'Create Value Item' },
     { name: 'update.valueItem', description: 'Update Value Item' },
     { name: 'delete.valueItem', description: 'Delete Value Item' },
+
+    // Give Data - Admin can access
+    { name: 'get.give', description: 'Get Give Data' },
+    { name: 'create.give', description: 'Create Give Data' },
+    { name: 'update.give', description: 'Update Give Data' },
+    { name: 'delete.give', description: 'Delete Give Data' },
   ],
   [
     // User Management - Only super_admin

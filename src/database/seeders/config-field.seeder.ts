@@ -1132,7 +1132,7 @@ const bankConfigFields = {
       editable: true,
       displayOrder: 1,
       styling: JSON.stringify({ colSpan: 1 }),
-      helpText: 'Bank Account Number for Bank Transfer',
+      helpText: 'Account Number',
     },
     {
       fieldName: 'account_name',
@@ -1141,7 +1141,7 @@ const bankConfigFields = {
       editable: true,
       displayOrder: 2,
       styling: JSON.stringify({ colSpan: 1 }),
-      helpText: 'Bank Account Name for Bank Transfer',
+      helpText: 'Account Name for Transfer',
     },
     {
       fieldName: 'bank_name',
@@ -1150,7 +1150,7 @@ const bankConfigFields = {
       editable: true,
       displayOrder: 3,
       styling: JSON.stringify({ colSpan: 1 }),
-      helpText: 'Bank for Bank Transfer',
+      helpText: 'Bank Name for Account',
     },
     {
       fieldName: 'sort_code',
@@ -1160,6 +1160,24 @@ const bankConfigFields = {
       displayOrder: 4,
       styling: JSON.stringify({ colSpan: 1 }),
       helpText: 'Sort code for Bank',
+    },
+    {
+      fieldName: 'iban',
+      label: 'IBAN',
+      fieldType: 'text',
+      editable: true,
+      displayOrder: 5,
+      styling: JSON.stringify({ colSpan: 1 }),
+      helpText: 'IBAN for Bank Account',
+    },
+    {
+      fieldName: 'swift_code',
+      label: 'Swift Code',
+      fieldType: 'text',
+      editable: true,
+      displayOrder: 6,
+      styling: JSON.stringify({ colSpan: 1 }),
+      helpText: 'Swift Code for Bank Account',
     },
   ]
 }
@@ -1412,6 +1430,72 @@ const watchLiveConfigFields = {
   ]
 }
 
+const currenciesConfigFields = {
+  entityName: "currencies",
+  multipleOccurrence: true,
+  fields: [
+    {
+      fieldName: 'symbol',
+      label: 'Currency',
+      fieldType: 'select',
+      optionsJson: JSON.stringify({
+        type: "dynamic",
+        endpoint: "dropdown-list/currencies",
+      }),
+      editable: true,
+      displayOrder: 2,
+      styling: JSON.stringify({ colSpan: 1 }),
+      validationRulesJson: JSON.stringify({ required: true }),
+      helpText: "Accpeted currencies for giving"
+    },
+  ]
+}
+
+const supportedGivingOptionsConfigFields = {
+  entityName: "givingArea",
+  multipleOccurrence: true,
+  fields: [
+    {
+      fieldName: 'title',
+      label: 'Title of Giving Option',
+      fieldType: 'text',
+      editable: true,
+      displayOrder: 1,
+      validationRulesJson: JSON.stringify({ required: true }),
+      helpText: "Title for Giving Option"
+    },
+    {
+      fieldName: 'description',
+      label: 'Description',
+      fieldType: 'text',
+      editable: true,
+      displayOrder: 2,
+      validationRulesJson: JSON.stringify({ required: true }),
+      helpText: "Description for Giving Option"
+    },
+  ]
+}
+
+const giveConfigFields = {
+  entityName: 'give',
+  multipleOccurrence: false,
+  subEntities: [
+    currenciesConfigFields,
+    supportedGivingOptionsConfigFields,
+  ],
+  fields: [
+    {
+      fieldName: 'optionsHeading',
+      label: 'Giving Options Heading',
+      fieldType: 'text',
+      editable: true,
+      displayOrder: 1,
+      validationRulesJson: JSON.stringify({ required: true }),
+      helpText: "Heading Text for Give Options Section"
+    },
+  ]
+}
+
 const configEntities = [
   heroConfigFields,
   eventConfigFields,
@@ -1434,6 +1518,7 @@ const configEntities = [
   nextStepConfigFields,
   questionNextStepConfigFields,
   watchLiveConfigFields,
+  giveConfigFields,
 ];
 
 export async function seedConfigFields() {

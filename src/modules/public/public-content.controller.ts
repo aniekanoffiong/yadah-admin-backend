@@ -52,6 +52,9 @@ import { CallToAction, CTAButton } from '../cta/cta.entity';
 import { CallToActionDto, CTAButtonDto } from '../cta/cta.dto';
 import { PaymentOptionService } from '../payment/paymentOption.service';
 import { PaymentOption } from '../payment/paymentOption.entity';
+import { GiveService } from '../give/give.service';
+import { Give } from '../give/give.entity';
+import { GiveDto, toCurrencyDto, toGivingAreaDto } from '../give/give.dto';
 
 export class PublicContentController {
   private heroService = new HeroService();
@@ -74,6 +77,7 @@ export class PublicContentController {
   private growingInFaithService = new GrowInFaithService();
   private beliefService = new BeliefService();
   private paymentOptionService = new PaymentOptionService();
+  private giveService = new GiveService();
 
   // GET /api/public/home
   home = async (_req: Request, res: Response, next: NextFunction) => {
@@ -268,15 +272,18 @@ export class PublicContentController {
     try {
       const [
         giveHero,
+        giveData,
         paymentOptions,
         footer,
       ] = await Promise.all([
         this.heroService.findByPage(SpecificPage.GIVE),
+        this.giveService.find(),
         this.paymentOptionService.findEnabledOptions(),
         this.footerService.getFooter(),
       ]);
       res.json({
         hero: giveHero,
+        giveData: this.giveDataDto(giveData),
         paymentOptions: paymentOptions.map(this.toPaymentOptionsDto.bind(this)),
         footer,
       });
@@ -661,6 +668,15 @@ export class PublicContentController {
     return {
       title: paymentOption.title,
       details: JSON.parse(paymentOption.config),
+    }
+  }
+
+  private giveDataDto(giveData: Give): GiveDto {
+    return {
+      id: giveData.id,
+      optionsHeading: giveData.optionsHeading,
+      currencies: giveData.currencies?.map(toCurrencyDto.bind(this)),
+      givingArea: giveData.givingArea?.map(toGivingAreaDto.bind(this)),
     }
   }
 }

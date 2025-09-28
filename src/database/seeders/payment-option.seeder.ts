@@ -3,7 +3,7 @@ import { AppDataSource } from '../data-source';
 
 const paymentOptionData = {
   title: PaymentOptionType.BANK_TRANSFER,
-  isEnabled: false,
+  isEnabled: true,
   config: JSON.stringify({
     "account_number": "",
     "bank_name": "",

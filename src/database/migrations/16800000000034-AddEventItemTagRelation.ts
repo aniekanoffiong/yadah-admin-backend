@@ -26,6 +26,13 @@ export class AddEventTagsRelation16800000000034 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const entityTagItemTable = await queryRunner.getTable("event_tags_item_tag");
+        const fkItemTagId = entityTagItemTable!.foreignKeys.find(fk => fk.columnNames.includes("itemTagId"));
+        if (fkItemTagId) await queryRunner.dropForeignKey("event_tags_item_tag", fkItemTagId);
+        
+        const fkEventId = entityTagItemTable!.foreignKeys.find(fk => fk.columnNames.includes("eventId"));
+        if (fkEventId) await queryRunner.dropForeignKey("event_tags_item_tag", fkEventId);
+        
         await queryRunner.dropTable("event_tags_item_tag");
     }
 }

@@ -20,7 +20,7 @@ export class CreatePaymentOptionDto {
 }
 
 export const paymentOptionTypeToFieldMap: Record<PaymentOptionType, Array<string>> = {
-  [PaymentOptionType.BANK_TRANSFER]: ['account_number', 'account_name', 'bank_name', 'sort_code'],
+  [PaymentOptionType.BANK_TRANSFER]: ['account_number', 'account_name', 'bank_name', 'sort_code', 'iban', 'swift_code'],
   [PaymentOptionType.CREDIT_CARD]: ['creditCard'],
   [PaymentOptionType.PAYPAL]: ['paypal'],
 };

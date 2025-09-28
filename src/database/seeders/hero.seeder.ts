@@ -6,7 +6,7 @@ const heroData = [
   {
     page: SpecificPage.HOME,
     backgroundImage: 'https://api.builder.io/api/v1/image/assets/TEMP/2bcbb4495b901fec7f6c0d07609652a829ac1170?width=2880',
-    title: 'Welcome To Yadah',
+    title: 'City of Yadah',
     subtitle: 'A place where faith grows, community thrives, and everyone belongs. Join us for worship, fellowship, and life-changing encounters with God.',
     showControls: false,
     volunteerProgramText: 'Join Our Volunteer Program',
@@ -42,6 +42,12 @@ const heroData = [
       { text: "Join as a Member", type: "primary", href: "/join" },
       { text: "Watch Us Live", type: "secondary", href: "/live", icon: "play" }
     ]
+  },
+  {
+    page: SpecificPage.GIVE,
+    title: "Give to Support our Ministry",
+    subtitle: "Your generous giving helps us spread God's love, support our community, and advance His kingdom both locally and around the world.",
+    backgroundImage: "",
   },
 ];
 
