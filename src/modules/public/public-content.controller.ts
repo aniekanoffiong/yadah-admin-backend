@@ -250,16 +250,19 @@ export class PublicContentController {
       const [
         contactHero,
         contact,
+        callToAction,
         footer,
       ] = await Promise.all([
         this.heroService.findByPage(SpecificPage.CONTACT),
         this.contactService.find(),
+        this.ctaService.findByPage(SpecificPage.CONTACT),
         this.footerService.getFooter(),
       ]);
       // Add call to a ContactService if exists or static data
       res.json({
         hero: contactHero,
         contact,
+        callToAction: this.toCallToActionDto(callToAction),
         footer,
       });
     } catch (error) {

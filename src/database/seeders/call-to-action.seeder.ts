@@ -44,6 +44,19 @@ const callToActionData = [
       },
     ]
   },
+  {
+    title: "Join Us",
+    subtitle: "Take your next step with us. Whether you're exploring faith or looking to grow deeper, we have a place for you in our church family.",
+    page: SpecificPage.CONTACT,
+    "buttons": [
+      {
+        "text": "Join a Small Group",
+        "variant": "primary",
+        "icon": "calendar",
+        "url": "/ministries"
+      },
+    ]
+  },
 ];
 
 export async function seedCallToAction() {
