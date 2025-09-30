@@ -21,10 +21,6 @@ export class GiveRepository {
     return this.giveRepo.save(give);
   }
 
-  async delete(id: number): Promise<void> {
-    await this.giveRepo.delete(id);
-  }
-
   // Currency
   async findAllCurrencies(): Promise<SupportedCurrency[]> {
     return this.currencyRepo.find();

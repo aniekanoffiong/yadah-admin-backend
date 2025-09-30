@@ -3,6 +3,7 @@ import { SocialLinkService } from '../social/social.service';
 import { SiteLinkService } from '../siteLinks/siteLink.service';
 import { ItemTagService } from '../itemTag/itemTag.service';
 import { PaymentOptionService } from '../payment/paymentOption.service';
+import { CurrencySymbol } from '../give/give.dto';
 
 export class DropdownListController {
   private socialLinkService: SocialLinkService;
@@ -100,6 +101,19 @@ export class DropdownListController {
     try {
       const options = await this.paymentOptionService.findEnabledOptions();
       res.json({ data: options.map(option => ({ label: option.title, value: option.id }))});
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getCurrencies = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const symbolToNameMap = {
+        [CurrencySymbol.GBP.valueOf()]: "British Pound",
+        [CurrencySymbol.USD.valueOf()]: "US Dollars",
+        [CurrencySymbol.EUR.valueOf()]: "Euros",
+      }
+      res.json({ data: Object.values(CurrencySymbol).map((key: string) => ({ label: symbolToNameMap[key], value: key }))});
     } catch (error) {
       next(error);
     }

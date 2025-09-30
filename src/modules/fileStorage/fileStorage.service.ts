@@ -38,6 +38,10 @@ export class FileStorageService {
   }
 
   async getDownloadUrl(fileKey: string): Promise<string> {
+    // skip generating link for existing URLs
+    if (fileKey.includes("http://") || fileKey.includes("https://")) {
+      return fileKey
+    }
     const cached = await getCache(fileKey);
     if (cached) return cached;
     const command = new GetObjectCommand({

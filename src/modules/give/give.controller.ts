@@ -10,11 +10,11 @@ export class GiveController {
     this.giveService = giveService || new GiveService();
   }
 
-  async getById(req: Request, res: Response) {
+  async find(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
       const give = await this.giveService.find();
-      res.json({ data: this.toDto(give) });
+      res.json({ data: [this.toDto(give)] });
     } catch {
       res.status(400).json({ message: 'Unable to retrieve give data' });
     }
@@ -35,18 +35,9 @@ export class GiveController {
     }
   }
 
-  async delete(req: Request, res: Response) {
-    try {
-      const id = Number(req.params.id);
-      await this.giveService.delete(id);
-      res.sendStatus(204);
-    } catch {
-      res.status(400).json({ message: 'Failed to delete give record' });
-    }
-  }
-
   // Currencies
   allCurrencies = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    console.log("received request to get currencies")
     try {
       const about = await this.giveService.findAllCurrencies();
       res.json({ data: about.map(toCurrencyDto.bind(this)) });

@@ -1433,6 +1433,7 @@ const watchLiveConfigFields = {
 const currenciesConfigFields = {
   entityName: "currencies",
   multipleOccurrence: true,
+  maxOccurrence: 4,
   fields: [
     {
       fieldName: 'symbol',
@@ -1454,6 +1455,7 @@ const currenciesConfigFields = {
 const supportedGivingOptionsConfigFields = {
   entityName: "givingArea",
   multipleOccurrence: true,
+  maxOccurrence: 6,
   fields: [
     {
       fieldName: 'title',

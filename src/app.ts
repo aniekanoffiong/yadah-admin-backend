@@ -30,6 +30,7 @@ import liveRouter from "./modules/live/live.routes";
 import { scheduledProgramRouter } from "./modules/scheduledPrograms/scheduledProgram.routes";
 import { dropdownListRouter } from "./modules/dropdownList/dropdownList.routes";
 import fileStorageRouter from "./modules/fileStorage/fileStorage.router";
+import giveRouter from "./modules/give/give.routes";
 
 dotenv.config();
 
@@ -74,6 +75,7 @@ app.use("/api/admin/watch-live", liveRouter);
 app.use("/api/admin/scheduled-program", scheduledProgramRouter);
 app.use("/api/admin/dropdown-list", dropdownListRouter);
 app.use('/api/admin/file-storage', fileStorageRouter);
+app.use('/api/admin/give-data', giveRouter);
 
 app.use("/api/v1/auth", authRouter);
 app.use('/api/v1/public', publicRouter)

@@ -7,59 +7,68 @@ import { CreateCurrencyDto, CreateGivingAreaDto } from './give.dto';
 const giveRouter = Router();
 const giveController = new GiveController();
 
-giveRouter.get('/:id', authorizationMiddleware("get.give"), giveController.getById.bind(giveController));
-giveRouter.put('/:id', authorizationMiddleware("update.give"), giveController.update.bind(giveController));
-giveRouter.delete('/:id', authorizationMiddleware("delete.give"), giveController.delete.bind(giveController));
+giveRouter.get(
+  '/',
+  authorizationMiddleware("get.give"),
+  giveController.find.bind(giveController)
+);
 
-giveRouter.post(
-  'currencies',
+giveRouter.put(
+  '/:id',
+  authorizationMiddleware("update.give"),
+  giveController.update.bind(giveController)
+);
+
+// Currencies
+giveRouter.get(
+  '/currencies',
   authorizationMiddleware("get.give"),
   giveController.allCurrencies.bind(giveController)
 );
 
 giveRouter.post(
-  'currencies/:id',
+  '/currencies',
   authorizationMiddleware("create.give"),
   validationMiddleware(CreateCurrencyDto),
   giveController.createCurrency.bind(giveController)
 );
 
 giveRouter.put(
-  'currencies/:id',
+  '/currencies/:id',
   authorizationMiddleware("update.give"),
   validationMiddleware(CreateCurrencyDto),
   giveController.updateCurrency.bind(giveController)
 );
 
 giveRouter.delete(
-  'currencies/:id',
+  '/currencies/:id',
   authorizationMiddleware("delete.give"),
   giveController.deleteCurrency.bind(giveController)
 );
 
-
-giveRouter.post(
-  'giving-area',
+// Giving Areas
+giveRouter.get(
+  '/giving-areas',
   authorizationMiddleware("get.give"),
   giveController.allGivingAreas.bind(giveController)
 );
 
 giveRouter.post(
-  'giving-area/:id',
+  'giving-areas',
   authorizationMiddleware("create.give"),
   validationMiddleware(CreateGivingAreaDto),
   giveController.createGivingArea.bind(giveController)
 );
 
 giveRouter.put(
-  'giving-area/:id',
+  '/giving-areas/:id',
   authorizationMiddleware("update.give"),
   validationMiddleware(CreateGivingAreaDto),
   giveController.updateGivingArea.bind(giveController)
 );
 
 giveRouter.delete(
-  'giving-area/:id',
+  '/giving-areas/:id',
   authorizationMiddleware("delete.give"),
   giveController.deleteGivingArea.bind(giveController)
 );

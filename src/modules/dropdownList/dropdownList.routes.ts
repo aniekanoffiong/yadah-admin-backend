@@ -41,4 +41,10 @@ dropdownListRouter.get(
   dropdownListController.getEnabledPaymentOptions.bind(dropdownListController)
 );
 
+dropdownListRouter.get(
+  '/currencies',
+  authorizationMiddleware('get.dropdown-list'),
+  dropdownListController.getCurrencies.bind(dropdownListController)
+);
+
 export { dropdownListRouter };
