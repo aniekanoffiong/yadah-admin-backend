@@ -21,6 +21,18 @@ const s3 = new S3Client({
 });
 
 export class FileStorageService {
+  async uploadFile(fileName: string, fileContent: Buffer, contentType: string): Promise<string> {
+    const command = new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: fileName,
+      Body: fileContent,
+      ContentType: contentType,
+    });
+    await s3.send(command);
+
+    return fileName;
+  }
+
   async generatePresignedUrl(fileName: string, contentType: string): Promise<string> {
     console.log('Generating presigned URL for:', { fileName, contentType, bucket: BUCKET });
     // Validate and normalize the content type

@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
 
 export class CreateWatchLiveTable16800000000037 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -11,7 +11,7 @@ export class CreateWatchLiveTable16800000000037 implements MigrationInterface {
           { name: 'title', type: 'varchar', isNullable: false },
           { name: 'date', type: 'date', isNullable: true },
           { name: 'startTime', type: 'time', isNullable: false },
-          { name: 'endTime', type: 'time', isNullable: false },
+          { name: 'endTime', type: 'time', isNullable: true },
           { name: 'featured', type: 'boolean', default: false },
           { name: 'isLive', type: 'boolean', default: false },
           { name: 'createdAt', type: 'timestamp', default: 'now()' },
@@ -19,6 +19,16 @@ export class CreateWatchLiveTable16800000000037 implements MigrationInterface {
         ],
       }),
     );
+
+    await queryRunner.createIndex("watch_live", new TableIndex({
+      columnNames: ["title"],
+      name: "IDX_WATCH_LIVE_TITLE",
+    }));
+
+    await queryRunner.createIndex("watch_live", new TableIndex({
+      columnNames: ["featured", "isLive"],
+      name: "IDX_WATCH_LIVE_FEATURED_IS_LIVE",
+    }));
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

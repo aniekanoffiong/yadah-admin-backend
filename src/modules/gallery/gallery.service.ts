@@ -3,25 +3,30 @@ import { GalleryItem } from './gallery.entity';
 import { CreateGalleryItemDto, GalleryItemResponseDto } from './gallery.dto';
 import { ItemTagService } from '../itemTag/itemTag.service';
 import { HeroService } from '../hero/hero.service';
-import { SpecificPage } from '../../utils/enums';
+import { Platform, SpecificPage } from '../../utils/enums';
 import { HeroResponseDto } from '../hero/hero.dto';
 import { FileStorageService } from '../fileStorage/fileStorage.service';
+import { SocialLinkService } from '../social/social.service';
+import { SocialLink } from '../social/social.entity';
 
 export class GalleryService {
   private galleryRepository: GalleryRepository;
   private itemTagService: ItemTagService;
   private heroService: HeroService;
+  private socialLinkService: SocialLinkService;
   private fileStorageService: FileStorageService;
 
   constructor(
     galleryRepository?: GalleryRepository,
     itemTagService?: ItemTagService,
     heroService?: HeroService,
+    socialLinkService?: SocialLinkService,
     fileStorageService?: FileStorageService,
   ) {
     this.galleryRepository = galleryRepository || new GalleryRepository();
     this.itemTagService = itemTagService || new ItemTagService()
     this.heroService = heroService || new HeroService()
+    this.socialLinkService = socialLinkService || new SocialLinkService()
     this.fileStorageService = fileStorageService || new FileStorageService()
   }
 
@@ -40,7 +45,8 @@ export class GalleryService {
   async findRecent(limit: number): Promise<GalleryItemResponseDto> {
     const hero = await this.galleryHero()
     const items = await this.galleryRepository.findRecent(limit)
-    return this.toListDto(hero!, items);
+    const instagramLink = await this.socialLinkService.findByPlatform(Platform.INSTAGRAM)
+    return this.toListDto(hero!, items, instagramLink);
   }
 
   async findItemById(id: number): Promise<GalleryItem> {
@@ -74,10 +80,11 @@ export class GalleryService {
     await this.galleryRepository.deleteItem(id);
   }
 
-  private async toListDto(hero: HeroResponseDto, galleryItems: GalleryItem[]): Promise<GalleryItemResponseDto> {
+  private async toListDto(hero: HeroResponseDto, galleryItems: GalleryItem[], instagramLink: SocialLink | null): Promise<GalleryItemResponseDto> {
     return {
       title: hero.title,
       subtitle: hero.subtitle!,
+      instagramLink: instagramLink?.url,
       images: await Promise.all(galleryItems.map(async (item) => ({
         src: await this.fileStorageService.getDownloadUrl(item.src),
         alt: item.alt,

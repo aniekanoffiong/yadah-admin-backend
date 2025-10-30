@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import fs from "fs";
 import https from "https";
 import http from "http";
+import { YoutubeCronScheduler } from "./modules/live/external/youtube.cron-scheduler";
 
 dotenv.config();
 
@@ -20,10 +21,16 @@ AppDataSource.initialize()
       };
 
       https.createServer(options, app).listen(PORT, () => {
+        const scheduler = new YoutubeCronScheduler();
+        scheduler.start();
+        
         console.log(`Server running on https://localhost:${PORT}`);
       });
     } else {
       http.createServer(app).listen(PORT, () => {
+        const scheduler = new YoutubeCronScheduler();
+        scheduler.start();
+
         console.log(`Server running on http://localhost:${PORT}`);
       });
     }

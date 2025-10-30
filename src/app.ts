@@ -31,6 +31,8 @@ import { scheduledProgramRouter } from "./modules/scheduledPrograms/scheduledPro
 import { dropdownListRouter } from "./modules/dropdownList/dropdownList.routes";
 import fileStorageRouter from "./modules/fileStorage/fileStorage.router";
 import giveRouter from "./modules/give/give.routes";
+import { siteConfigRouter } from "./modules/site-config/siteConfig.routes";
+import contactMessageRouter from "./modules/contactMessage/contactMessage.routes";
 
 dotenv.config();
 
@@ -76,6 +78,8 @@ app.use("/api/admin/scheduled-program", scheduledProgramRouter);
 app.use("/api/admin/dropdown-list", dropdownListRouter);
 app.use('/api/admin/file-storage', fileStorageRouter);
 app.use('/api/admin/give-data', giveRouter);
+app.use('/api/admin/site-config', siteConfigRouter);
+app.use('/api/admin/contact-messages', contactMessageRouter);
 
 app.use("/api/v1/auth", authRouter);
 app.use('/api/v1/public', publicRouter)

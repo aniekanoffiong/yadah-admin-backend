@@ -1,6 +1,7 @@
 import { SocialLinkRepository } from './social.repository';
 import { SocialLink } from './social.entity';
 import { CreateSocialDto, CreateSocialOptionDto } from './social.dto';
+import { Platform } from '../../utils/enums';
 
 export class SocialLinkService {
   private socialLinkRepository: SocialLinkRepository;
@@ -16,6 +17,11 @@ export class SocialLinkService {
   async findOne(id: number): Promise<SocialLink> {
     const socialLink = await this.socialLinkRepository.findOne(id);
     if (!socialLink) throw new Error(`SocialLink with id ${id} not found`);
+    return socialLink;
+  }
+
+  async findByPlatform(platform: Platform): Promise<SocialLink | null> {
+    const socialLink = await this.socialLinkRepository.findByPlatform(platform);
     return socialLink;
   }
 

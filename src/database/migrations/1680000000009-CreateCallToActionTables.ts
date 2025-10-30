@@ -9,6 +9,8 @@ export class CreateCallToActionTables1680000000009 implements MigrationInterface
         { name: "title", type: "varchar" },
         { name: "subtitle", type: "varchar" },
         { name: "page", type: "varchar" },
+        { name: "pageSection", type: "varchar", isNullable: true },
+        { name: "backgroundImage", type: "varchar", isNullable: true },
         { name: "createdAt", type: "timestamp", default: "now()" },
         { name: "updatedAt", type: "timestamp", default: "now()" },
       ]
@@ -26,6 +28,22 @@ export class CreateCallToActionTables1680000000009 implements MigrationInterface
       ]
     }));
 
+    await queryRunner.createTable(new Table({
+      name: "cta_added_info",
+      columns: [
+        { name: "id", type: "serial", isPrimary: true },
+        { name: "value", type: "varchar" },
+        { name: "description", type: "varchar" },
+        { name: "callToActionId", type: "int" }
+      ]
+    }));
+    await queryRunner.createForeignKey("cta_added_info", new TableForeignKey({
+      columnNames: ["callToActionId"],
+      referencedColumnNames: ["id"],
+      referencedTableName: "call_to_action",
+      onDelete: "CASCADE"
+    }));
+  
     await queryRunner.createForeignKey("cta_button", new TableForeignKey({
       columnNames: ["callToActionId"],
       referencedColumnNames: ["id"],
@@ -35,11 +53,16 @@ export class CreateCallToActionTables1680000000009 implements MigrationInterface
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    const table = await queryRunner.getTable("cta_button");
-    const fk = table!.foreignKeys.find(fk => fk.columnNames.includes("callToActionId"));
-    if (fk) await queryRunner.dropForeignKey("cta_button", fk);
+    const tableCTAButton = await queryRunner.getTable("cta_button");
+    const fkButton = tableCTAButton!.foreignKeys.find(fk => fk.columnNames.includes("callToActionId"));
+    if (fkButton) await queryRunner.dropForeignKey("cta_button", fkButton);
+
+    const tableCTAAddedInfo = await queryRunner.getTable("cta_added_info");
+    const fkAddedInfo = tableCTAAddedInfo!.foreignKeys.find(fk => fk.columnNames.includes("callToActionId"));
+    if (fkAddedInfo) await queryRunner.dropForeignKey("cta_added_info", fkAddedInfo);
 
     await queryRunner.dropTable("cta_button");
+    await queryRunner.dropTable("cta_added_info");
     await queryRunner.dropTable("call_to_action");
   }
 }

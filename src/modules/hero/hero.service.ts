@@ -1,6 +1,6 @@
 import { HeroRepository } from './hero.repository';
 import { Hero } from './hero.entity';
-import { CreateHeroDto, HeroDto, HeroResponseDto } from './hero.dto';
+import { CreateHeroDto, HeroResponseDto } from './hero.dto';
 import { SpecificPage } from '../../utils/enums';
 
 export class HeroService {
@@ -27,7 +27,8 @@ export class HeroService {
   async create(dto: CreateHeroDto): Promise<Hero> {
     const hero = new Hero();
     hero.page = dto.page;
-    hero.backgroundImage = dto.backgroundImage;
+    hero.image = dto.image;
+    hero.video = dto.video;
     hero.title = dto.title;
     hero.subtitle = dto.subtitle;
     hero.showControls = dto.showControls;
@@ -40,7 +41,8 @@ export class HeroService {
   async update(id: number, dto: CreateHeroDto): Promise<Hero> {
     const hero = await this.findOne(id);
     hero.page = dto.page;
-    hero.backgroundImage = dto.backgroundImage;
+    hero.image = dto.image;
+    hero.video = dto.video;
     hero.title = dto.title;
     hero.subtitle = dto.subtitle;
     hero.showControls = dto.showControls;
@@ -59,7 +61,8 @@ export class HeroService {
     return {
       title: heroData.title,
       subtitle: heroData.subtitle,
-      backgroundImage: heroData.backgroundImage,
+      backgroundImage: heroData.image,
+      video: heroData.video,
       volunteerProgram: { text: heroData.volunteerProgramText }
     }
   }

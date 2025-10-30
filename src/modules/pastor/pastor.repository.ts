@@ -18,11 +18,15 @@ export class PastorRepository {
   }
 
   async findOne(id: number): Promise<Pastor | null> {
-    return this.pastorRepo.findOne({ where: { id }, relations: ['achievements', 'ministry'] });
+    return this.pastorRepo.findOne({ where: { id }, relations: ['achievements', 'focus', 'journey'] });
+  }
+
+  async findBySlug(slug: string): Promise<Pastor | null> {
+    return this.pastorRepo.findOne({ where: { slug }, relations: ['achievements', 'focus', 'journey'] });
   }
 
   async getLeadPastor(): Promise<Pastor | null> {
-    return this.pastorRepo.findOne({ where: { isLeadPastor: true }, relations: ['achievements', 'ministry']});
+    return this.pastorRepo.findOne({ where: { isLeadPastor: true }, relations: ['achievements', 'focus', 'journey']});
   }
 
   async create(pastor: Pastor): Promise<Pastor> {

@@ -10,3 +10,18 @@ export enum SpecificPage {
   EVENT = "event",
   PASTOR = "pastor",
 }
+
+export enum SpecificPageSection {
+  GIVING = "giving",
+  JOIN_US = "join-us",
+  PASTOR_DETAILS = "pastor-details",
+}
+
+export enum Platform {
+  FACEBOOK = "facebook",
+  TWITTER = "twitter",
+  INSTAGRAM = "instagram",
+  LINKEDIN = "linkedin",
+  YOUTUBE = "youtube",
+  TIKTOK = "tiktok",
+}

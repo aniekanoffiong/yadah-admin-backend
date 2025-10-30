@@ -88,7 +88,7 @@ export class FooterService {
       quickLinks: footer.quickLinks.map(this.toLinksDto.bind(this)),
       ministries: footer.ministriesLinks.map(this.toLinksDto.bind(this)),
       legal: footer.legalLinks.map(this.toLinksDto.bind(this)),
-      copyright: `© ${new Date().getFullYear()} Church. All rights reserved.`
+      copyright: footer.copyright?.replace('{year}', `${new Date().getFullYear()}`) || `© ${new Date().getFullYear()} City of Yadah. All rights reserved.`
     }
   }
 

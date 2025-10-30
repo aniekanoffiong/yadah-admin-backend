@@ -1,7 +1,7 @@
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { CallToAction, CTAButton } from './cta.entity';
 import { AppDataSource } from '../../database/data-source';
-import { SpecificPage } from '../../utils/enums';
+import { SpecificPage, SpecificPageSection } from '../../utils/enums';
 
 export class CallToActionRepository {
   private ctaRepo: Repository<CallToAction>;
@@ -21,7 +21,11 @@ export class CallToActionRepository {
   }
 
   async findByPage(page: SpecificPage): Promise<CallToAction | null> {
-    return this.ctaRepo.findOne({ where: { page }, relations: ['buttons'] });
+    return this.ctaRepo.findOne({ where: { page, pageSection: IsNull() }, relations: ['buttons'] });
+  }
+
+  async findByPageSection(page: SpecificPage, pageSection: SpecificPageSection): Promise<CallToAction | null> {
+    return this.ctaRepo.findOne({ where: { page, pageSection }, relations: ['buttons', 'addedInfo'] });
   }
 
   async create(cta: CallToAction): Promise<CallToAction> {

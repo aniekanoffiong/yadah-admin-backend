@@ -26,7 +26,7 @@ export class EventService {
   }
 
   async findUpcomingEvents(limit: number = 8): Promise<Event[]> {
-    return this.eventRepository.getRecentEvents(limit);
+    return this.eventRepository.getUpcomingEvents(limit);
   }
 
   async currentEvent(date: Date): Promise<Event | null> {

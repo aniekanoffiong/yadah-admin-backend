@@ -15,6 +15,15 @@ export class CallToAction extends BaseEntity {
   @Column()
   page!: string;
 
+  @Column()
+  pageSection?: string;
+
+  @Column()
+  backgroundImage?: string;
+
+  @OneToMany(() => CTAAddedInfo, (info) => info.callToAction, { cascade: true })
+  addedInfo?: CTAAddedInfo[];
+
   @OneToMany(() => CTAButton, (button) => button.callToAction, { cascade: true })
   buttons!: CTAButton[];
 }
@@ -37,5 +46,20 @@ export class CTAButton {
   icon?: string;
 
   @ManyToOne(() => CallToAction, (cta) => cta.buttons)
+  callToAction!: CallToAction;
+}
+
+@Entity()
+export class CTAAddedInfo {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column()
+  value!: string;
+
+  @Column()
+  description!: string;
+
+  @ManyToOne(() => CallToAction, (cta) => cta.addedInfo)
   callToAction!: CallToAction;
 }

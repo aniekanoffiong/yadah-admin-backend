@@ -168,7 +168,11 @@ export const permissionsToSeed: Array<Array<{name: string, description: string}>
     { name: 'delete.permission', description: 'Delete permission (super admin only)' },
   
     // Admin Config Read - Admin access
-    { name: 'get.config', description: 'View configs (system admin only)' },
+    { name: 'get.config', description: 'View configs (super admin only)' },
+  
+    // Admin Contact Message - Super Admin access
+    { name: 'get.contactMessage', description: 'View contact messages (super admin only)' },
+    { name: 'create.contactMessage', description: 'Create contact messages (super admin only)' },
   ],
   [
     // Create and Delete Payment Options
@@ -183,6 +187,14 @@ export const permissionsToSeed: Array<Array<{name: string, description: string}>
     // User Login History - Only system admin
     { name: 'get.login', description: 'Login History for all users (system admin only)' },
     { name: 'get.userLogin', description: 'Login History for specific user (system admin only)' },
+
+    // Site Config Managements  - Only system_admin
+    { name: 'get.siteConfig', description: 'Create site config (system admin only)' },
+    { name: 'create.siteConfig', description: 'Create site config (system admin only)' },
+    { name: 'delete.siteConfig', description: 'Delete site config (system admin only)' },
+
+    // Delete Contact Messages - Only system admin
+    { name: 'delete.contactMessage', description: 'Delete contact messages (system admin only)' },
   ]
 ];
 

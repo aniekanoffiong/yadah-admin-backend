@@ -17,8 +17,16 @@ export class EventRepository {
     return await this.repo
       .createQueryBuilder("event")
       .andWhere("startDate >= :date", { date })
-      .andWhere("endDate <= :date", { date })
       .getOne();
+  }
+
+  async getUpcomingEvents(limit: number): Promise<Event[]> {
+    return this.repo
+      .createQueryBuilder('event')
+      .orderBy("event.startDate", "DESC")
+      .andWhere("event.startDate >= :date", { date: new Date() })
+      .limit(limit)
+      .getMany();
   }
 
   async getRecentEvents(limit: number): Promise<Event[]> {

@@ -1,5 +1,59 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { BaseEntity } from "../base/base.entity";
+
+@Entity()
+export class Pastor extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column()
+  slug!: string;
+
+  @Column()
+  image!: string;
+
+  @Column()
+  role!: string;
+
+  @Column()
+  name!: string;
+  
+  @Column()
+  about!: string;
+
+  @Column('text')
+  description!: string;
+
+  @Column('text')
+  quote!: string;
+
+  @Column('text')
+  others!: string;
+  
+  @Column()
+  isLeadPastor: boolean = false;
+
+  @Column({ nullable: true })
+  focusTitle?: string
+
+  @Column({ nullable: true, type: 'text' })
+  focusContent?: string
+
+  @OneToMany(() => Achievement, (achievement) => achievement.pastor, {
+    cascade: true,
+  })
+  achievements!: Achievement[];
+
+  @OneToMany(() => MinistryJourneyItem, (journey) => journey.pastor, {
+    cascade: true,
+  })
+  journey!: MinistryJourneyItem[];
+
+  @OneToMany(() => MinistryFocus, (focus) => focus.pastor, { 
+    cascade: true 
+  })
+  focus!: MinistryFocus[];
+}
 
 @Entity()
 export class MinistryFocus {
@@ -11,39 +65,9 @@ export class MinistryFocus {
 
   @Column('text')
   content!: string;
-}
 
-@Entity()
-export class Pastor extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
-  @Column()
-  image!: string;
-
-  @Column()
-  role!: string;
-
-  @Column()
-  name!: string;
-
-  @Column('text')
-  description!: string;
-
-  @Column('text')
-  quote!: string;
-  
-  @Column()
-  isLeadPastor: boolean = false;
-
-  @OneToMany(() => Achievement, (achievement) => achievement.pastor, {
-    cascade: true,
-  })
-  achievements!: Achievement[];
-
-  @OneToOne(() => MinistryFocus, { cascade: true })
-  @JoinColumn()
-  ministry?: MinistryFocus;
+  @ManyToOne(() => Pastor, (pastor) => pastor.focus)
+  pastor!: Pastor;
 }
 
 @Entity()
@@ -58,5 +82,23 @@ export class Achievement {
   text!: string;
 
   @ManyToOne(() => Pastor, (pastor) => pastor.achievements)
+  pastor!: Pastor;
+}
+
+@Entity()
+export class MinistryJourneyItem extends BaseEntity {
+  @Column()
+  title!: string;
+
+  @Column()
+  subtitle!: string;
+
+  @Column()
+  year!: number;
+
+  @Column('text')
+  content!: string;
+
+  @ManyToOne(() => Pastor, (pastor) => pastor.journey)
   pastor!: Pastor;
 }

@@ -13,6 +13,7 @@ export class ContactInfoDto {
   address!: string;
   email!: string;
   phones!: string[];
+  letLong!: number[];
   socialPlatforms?: SocialDto[];
   social?: {
     title: string,
@@ -32,6 +33,8 @@ export class ContactInfoPublicDto {
   contact!: {
     title: string;
     phones: Array<string>;
+    latLong: Array<number>;
+    mapAddress: string;
     chat: string;
   }
   social?: {
@@ -57,6 +60,10 @@ export class CreateContactInfoDto {
   @ArrayNotEmpty()
   @ArrayUnique()
   phones!: string[];
+
+  @IsArray()
+  @ArrayNotEmpty()
+  letLong!: number[];
 
   @IsArray()
   @ArrayNotEmpty()

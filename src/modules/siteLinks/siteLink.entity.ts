@@ -11,11 +11,11 @@ export class SiteLink extends BaseEntity {
   url!: string;
 
   @ManyToMany(() => Footer, (footer) => footer.quickLinks)
-  footerQuickLinks!: Footer;
+  footerQuickLinks!: Footer[];
 
   @ManyToMany(() => Footer, (footer) => footer.ministriesLinks)
-  footerMinistriesLinks!: Footer;
+  footerMinistriesLinks!: Footer[];
 
   @ManyToMany(() => Footer, (footer) => footer.legalLinks)
-  footerLegalLinks!: Footer;
+  footerLegalLinks!: Footer[];
 }

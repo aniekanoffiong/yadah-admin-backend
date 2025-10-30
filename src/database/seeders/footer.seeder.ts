@@ -1,8 +1,8 @@
-import { url } from 'inspector';
 import { Footer } from '../../modules/footer/footer.entity';
 import { SocialLink } from '../../modules/social/social.entity';
 import { AppDataSource } from '../data-source';
 import { SiteLink } from '../../modules/siteLinks/siteLink.entity';
+import { Platform } from '../../utils/enums';
 
 const footerData = {
   newsletterTitle: 'Welcome to the Yadah family',
@@ -31,52 +31,46 @@ const footerData = {
       label: 'Contact',
       url: '/contact'
     },
-    {
-      label: 'Gallery',
-      url: '/gallery'
-    }
   ],
   ministries: [
     {
       label: 'Children\'s Ministry',
-      url: '/ministries'
+      url: '/ministries?category=children'
     },
     {
       label: 'Youth Ministry',
-      url: '/ministries'
+      url: '/ministries?category=youth'
     },
     {
       label: 'Small Groups',
-      url: '/ministries'
+      url: '/ministries?category=small-groups'
     },
     {
       label: 'Community Outreach',
-      url: '/ministries'
+      url: '/ministries?category=community-outreach'
     },
     {
       label: 'Bible Studies',
-      url: '/ministries'
+      url: '/ministries?category=bible-studies'
     },
     {
       label: 'Worship Team',
-      url: '/ministries'
+      url: '/ministries?category=worship-team'
     }
   ],
   address: 'Bournemouth Carlton Hotel, East Over Cliff Grove Rd, bh1 3dn.',
   phone: '+447985533064',
-  email: 'info@yadah.co.uk',
+  email: 'info@cityofyadah.co.uk',
   schedule: { sunday: 'Sunday Service: 10:30 AM', wednesday: 'Bible Study: Wed 7:00 PM' },
   legalLinks: [
-    { label: 'Privacy Policy', url: '/privacy-policy' },
-    { label: 'Terms of Service', url: '/terms-of-service' },
-    { label: 'Cookies Settings', url: '/cookies-settings' },
+    { label: 'Privacy Policy', url: '#' },
+    { label: 'Terms of Service', url: '#' },
+    { label: 'Cookies Settings', url: '#' },
   ],
-  copyright: 'Copyright © 2025 Yadah.co.uk. All Rights Reserved.',
+  copyright: 'Copyright © {year} City of Yadah. All Rights Reserved.',
   socialLinks: [
-    { url: '#', icon: 'facebook', platform: 'facebook', name: 'facebook' },
-    { url: '#', icon: 'instagram', platform: 'instagram', name: 'instagram' },
-    { url: '#', icon: 'tiktok', platform: 'tiktok', name: 'tiktok' },
-    { url: '#', icon: 'youtube', platform: 'youtube', name: 'youtube' }
+    { url: 'https://www.instagram.com/cityofyadah_/', icon: 'instagram', platform: Platform.INSTAGRAM, name: 'instagram' },
+    { url: 'https://www.youtube.com/@CityofYadah/streams', icon: 'youtube', platform: Platform.YOUTUBE, name: 'youtube' }
   ],
 };
 
@@ -106,7 +100,7 @@ export async function seedFooter() {
   for (const link of quickLinks) {
     const siteLink = siteLinkRepo.create({
       ...link,
-      footerQuickLinks: footer,
+      footerQuickLinks: [footer],
     });
     await siteLinkRepo.save(siteLink);
   }
@@ -114,7 +108,7 @@ export async function seedFooter() {
   for (const link of ministries) {
     const siteLink = siteLinkRepo.create({
       ...link,
-      footerMinistriesLinks: footer,
+      footerMinistriesLinks: [footer],
     });
     await siteLinkRepo.save(siteLink);
   }
@@ -122,7 +116,7 @@ export async function seedFooter() {
   for (const link of legalLinks) {
     const siteLink = siteLinkRepo.create({
       ...link,
-      footerLegalLinks: footer,
+      footerLegalLinks: [footer],
     });
     await siteLinkRepo.save(siteLink);
   }

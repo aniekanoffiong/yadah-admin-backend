@@ -30,8 +30,13 @@ export class CreateHeroDto {
   @IsString()
   page!: SpecificPage;
 
+  @IsOptional()
   @IsString()
-  backgroundImage!: string;
+  image!: string;
+
+  @IsOptional()
+  @IsString()
+  video!: string;
 
   @IsString()
   title!: string;
@@ -56,6 +61,7 @@ export class CreateHeroDto {
 export class HeroResponseDto {
   title!: string
   subtitle?: string | null
-  backgroundImage!: string
+  backgroundImage?: string
+  video?: string
   volunteerProgram!: { text?: string | null }
 }

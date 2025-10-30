@@ -2,11 +2,13 @@ import {
   IsString,
   IsUrl,
   IsOptional,
+  IsEnum,
 } from 'class-validator';
+import { Platform } from '../../utils/enums';
 
 export class SocialDto {
   id!: number;  
-  platform?: string;
+  platform?: Platform;
   icon?: string;
   name?: string;
   url!: string;
@@ -14,8 +16,8 @@ export class SocialDto {
 
 export class CreateSocialDto {
   @IsOptional()
-  @IsString()
-  platform?: string;
+  @IsEnum(Platform)
+  platform?: Platform;
 
   @IsOptional()
   @IsString()

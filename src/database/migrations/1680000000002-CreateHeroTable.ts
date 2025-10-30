@@ -6,7 +6,8 @@ export class CreateHeroTable1680000000002 implements MigrationInterface {
       name: "hero",
       columns: [
         { name: "id", type: "serial", isPrimary: true },
-        { name: "backgroundImage", type: "varchar" },
+        { name: "image", type: "varchar", isNullable: true },
+        { name: "video", type: "varchar", isNullable: true },
         { name: "title", type: "varchar" },
         { name: "subtitle", type: "varchar", isNullable: true },
         { name: "isActive", type: "boolean", default: true },

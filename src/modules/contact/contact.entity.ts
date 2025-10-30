@@ -22,6 +22,12 @@ export class ContactInfo extends BaseEntity {
   @Column('text', { array: true })
   phones!: string[];
 
+  @Column('text', { array: true })
+  latLong!: number[];
+
+  @Column()
+  mapAddress!: string;
+
   @ManyToMany(() => SocialLink, (social) => social.contacts, { cascade: true, eager: true })
   @JoinTable({
     name: 'contact_social_social_links',

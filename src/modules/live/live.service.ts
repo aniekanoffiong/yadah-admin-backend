@@ -1,5 +1,5 @@
 import { Live } from './live.entity';
-import { YoutubeIntegrationService } from './external/youtube.integration.service';
+import { YoutubeIntegrationService } from './external/youtube-integration.service';
 import { EventEmitter } from 'events';
 import { CreateWatchLiveDto } from './live.dto';
 import { parse } from 'date-fns';
@@ -21,6 +21,14 @@ export class LiveService extends EventEmitter {
 
   async getById(id: number): Promise<Live | null> {
     return this.liveRepository.findOne(id);
+  }
+
+  async findRecent(limit: number): Promise<Live[]> {
+    return this.liveRepository.findRecent(limit);
+  }
+
+  async findFeatured(): Promise<Live | null> {
+    return this.liveRepository.latestLive();
   }
 
   async create(liveData: CreateWatchLiveDto): Promise<Live> {

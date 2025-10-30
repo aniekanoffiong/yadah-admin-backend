@@ -11,12 +11,12 @@ import { ItemTagService } from '../itemTag/itemTag.service';
 import { ContactInfoService } from '../contact/contact.service';
 import { ScheduledProgramService } from '../scheduledPrograms/scheduledProgram.service';
 import { NextStepService } from '../nextStep/nextStep.service';
-import { NextStepVariants } from '../nextStep/nextStep.entity';
+import { NextStep, NextStepItem, NextStepVariants } from '../nextStep/nextStep.entity';
 import { CallToActionService } from '../cta/cta.service';
-import { SpecificPage } from '../../utils/enums';
+import { Platform, SpecificPage, SpecificPageSection } from '../../utils/enums';
 import { LiveService } from '../live/live.service';
-import { SiteConfigResponse } from '../site-config/site-config.interface';
-import { SiteConfigService } from '../site-config/site.config.service';
+import { SiteConfigResponse } from '../site-config/siteConfig.interface';
+import { CONFIG_ITEM_KEYS, SiteConfigService } from '../site-config/siteConfig.service';
 import { ScheduledProgram } from '../scheduledPrograms/scheduledProgram.entity';
 import { ScheduledProgramDto } from '../scheduledPrograms/scheduledProgram.dto';
 import { format, parse, parseISO } from 'date-fns';
@@ -28,15 +28,15 @@ import { StatisticsDto, StatItemDto } from '../statistics/statistics.dto';
 import { About, Story, StoryStat, ValueItem, Values } from '../about/about.entity';
 import { AboutDto, StoryDto, StoryStatDto, ValueItemDto, ValuesDto } from '../about/about.dto';
 import { GalleryItem } from '../gallery/gallery.entity';
-import { GalleryItemDto } from '../gallery/gallery.dto';
+import { GalleryItemDto, GalleryItemPublicResponseDto } from '../gallery/gallery.dto';
 import { ItemTag } from '../itemTag/itemTag.entity';
-import { ItemTagDto } from '../itemTag/itemTag.dto';
+import { ItemTagDto, ItemTagResponseDto } from '../itemTag/itemTag.dto';
 import { Ministry, MinistryActivity } from '../ministries/ministry.entity';
 import { MinistryActivityDto, MinistryDto } from '../ministries/ministry.dto';
 import { Pastor } from '../pastor/pastor.entity';
-import { PastorDto } from '../pastor/pastor.dto';
+import { PastorDetailsDto, PastorDto } from '../pastor/pastor.dto';
 import { Event } from '../event/event.entity';
-import { EventDto } from '../event/event.dto';
+import { EventDto, EventResponseDto } from '../event/event.dto';
 import { ContactInfo } from '../contact/contact.entity';
 import { ContactInfoPublicDto } from '../contact/contact.dto';
 import { SocialLink } from '../social/social.entity';
@@ -48,13 +48,21 @@ import { GrowingInFaithDto } from '../growInFaith/growInFaith.dto';
 import { BeliefService } from '../belief/belief.service';
 import { BeliefDto, BeliefItemDto } from '../belief/belief.dto';
 import { Belief } from '../belief/belief.entity';
-import { CallToAction, CTAButton } from '../cta/cta.entity';
-import { CallToActionDto, CTAButtonDto } from '../cta/cta.dto';
+import { CallToAction, CTAAddedInfo, CTAButton } from '../cta/cta.entity';
+import { CallToActionDto, CTAAddedInfoDto, CTAButtonDto } from '../cta/cta.dto';
 import { PaymentOptionService } from '../payment/paymentOption.service';
 import { PaymentOption } from '../payment/paymentOption.entity';
 import { GiveService } from '../give/give.service';
 import { Give } from '../give/give.entity';
 import { GiveDto, toCurrencyDto, toGivingAreaDto } from '../give/give.dto';
+import { YoutubeCronScheduler } from '../live/external/youtube.cron-scheduler';
+import { SocialLinkService } from '../social/social.service';
+import { Live } from '../live/live.entity';
+import { WatchLiveDto } from '../live/live.dto';
+import { YoutubeIntegrationService } from '../live/external/youtube-integration.service';
+import { isoDurationToHuman } from '../../utils/isoDuration';
+import { NextStepDto, NextStepItemDto } from '../nextStep/nextStep.dto';
+import { toSlug } from '../../utils/toSlug';
 
 export class PublicContentController {
   private heroService = new HeroService();
@@ -78,8 +86,11 @@ export class PublicContentController {
   private beliefService = new BeliefService();
   private paymentOptionService = new PaymentOptionService();
   private giveService = new GiveService();
+  private youtubeCronScheduler = new YoutubeCronScheduler();
+  private socialLinkService = new SocialLinkService();
+  private youtubeIntegrationService = new YoutubeIntegrationService();
 
-  // GET /api/public/home
+  // GET /api/v1/public/home
   home = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const [
@@ -88,8 +99,12 @@ export class PublicContentController {
         pastor,
         ministries,
         services,
+        givingImpact,
         sermons,
+        featuredSermon,
+        socialYoutube,
         events,
+        nextSteps,
         contact,
         gallery,
         footer,
@@ -99,8 +114,12 @@ export class PublicContentController {
         this.pastorService.leadPastor(),
         this.ministryService.findAll(),
         this.scheduleProgramService.findAll(),
-        this.sermonService.findRecent(8),
+        this.ctaService.findByPageSection(SpecificPage.HOME, SpecificPageSection.GIVING),
+        this.liveService.findRecent(6),
+        this.liveService.findFeatured(),
+        this.socialLinkService.findByPlatform(Platform.YOUTUBE),
         this.eventService.findUpcomingEvents(5),
+        this.nextStepService.findOne(NextStepVariants.StandardNextStep),
         this.contactService.find(),
         this.galleryService.findRecent(10),
         this.footerService.getFooter(),
@@ -113,10 +132,12 @@ export class PublicContentController {
         services: await Promise.all(services.map(this.toScheduleProgramDto)),
         about: this.toAboutDto(about),
         pastor: await this.toPastorDto(pastor),
-        ministries: ministries.map(this.toMinistryDto.bind(this)),
+        givingImpact: await this.toCallToActionDto(givingImpact),
+        ministries: this.toMinistriesDto(ministries),
         events: await Promise.all(events.map(this.toEventDto.bind(this))),
-        sermons: await Promise.all(sermons.map(this.toSermonDto.bind(this))),
+        sermons: await this.toSermonDataDto(sermons, featuredSermon!, socialYoutube),
         contact: this.toContactDto(contact),
+        nextSteps,
         gallery,
         footer,
       });
@@ -125,10 +146,11 @@ export class PublicContentController {
     }
   };
 
-  // GET /api/public/about
+  // GET /api/v1/public/about
   about = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const [
+        hero,
         about,
         pastor,
         ministries,
@@ -139,6 +161,7 @@ export class PublicContentController {
         callToAction,
         footer,
       ] = await Promise.all([
+        this.heroService.findByPage(SpecificPage.ABOUT),
         this.aboutService.find(),
         this.pastorService.leadPastor(),
         this.ministryService.findAll(),
@@ -150,6 +173,7 @@ export class PublicContentController {
         this.footerService.getFooter(),
       ])
       res.json({
+        hero,
         about: this.toAboutDto(about),
         pastor: await this.toPastorDto(pastor),
         ministries: ministries.map(this.toMinistryDto.bind(this)),
@@ -157,7 +181,7 @@ export class PublicContentController {
         growingInFaith: this.toGrowInFaithDto(growingInFaith),
         beliefs: this.toBeliefsDto(belief),
         findUs: this.toContactDto(contact),
-        callToAction: this.toCallToActionDto(callToAction),
+        callToAction: await this.toCallToActionDto(callToAction),
         footer,
       });
     } catch (error) {
@@ -165,27 +189,62 @@ export class PublicContentController {
     }
   };
 
-  // GET /api/public/ministries
+  // GET /api/v1/public/about/:slug
+  pastorBySlug = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { slug } = req.params;
+      const [
+        hero,
+        pastor,
+        sermons,
+        cta,
+        mainCta,
+      ] = await Promise.all([
+        this.heroService.findByPage(SpecificPage.PASTOR),
+        this.pastorService.findBySlug(slug),
+        this.liveService.findRecent(4),
+        this.ctaService.findByPageSection(SpecificPage.PASTOR, SpecificPageSection.PASTOR_DETAILS),
+        this.ctaService.findByPage(SpecificPage.PASTOR),
+      ]);
+
+      res.json({
+        hero,
+        sermons: await Promise.all(sermons.map(this.toLiveDto.bind(this))),
+        pastor: await this.toPastorDetailsDto(pastor!),
+        cta: await this.toCallToActionDto(cta),
+        mainCta: await this.toCallToActionDto(mainCta),
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // GET /api/v1/public/ministries
   ministries = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const [
+        hero,
         ministries,
         upcomingEvents,
         questionNextStep,
-        cta,
         footer,
       ] = await Promise.all([
+        this.heroService.findByPage(SpecificPage.MINISTRY),
         this.ministryService.findAll(),
         this.eventService.findUpcomingEvents(),
         this.nextStepService.findOne(NextStepVariants.QuestionNextStep),
-        this.ctaService.findByPage(SpecificPage.MINISTRY),
         this.footerService.getFooter(),
       ]);
       res.json({
+        hero,
         ministries,
-        upcomingEvents: await Promise.all(upcomingEvents.map(this.toEventDto.bind(this))),
-        questionNextStep,
-        cta,
+        events: {
+          title: "Upcoming Events",
+          subtitle: upcomingEvents.length > 0 ? "See our upcoming Events" : "There are no upcoming events at this time",
+          images: await Promise.all(upcomingEvents.map(this.toEventDto.bind(this))),
+          button: { text: "View All Events", link: "/events" },
+        },
+        questionNextStep: this.toNextStepDto(questionNextStep),
         footer,
       });
     } catch (error) {
@@ -193,58 +252,58 @@ export class PublicContentController {
     }
   };
 
-  // GET /api/public/events
+  // GET /api/v1/public/events
   events = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const [
-        eventHero,
+        hero,
         filters,
         upcomingEvents,
-        footer,
+        nextStep,
       ] = await Promise.all([
         this.heroService.findByPage(SpecificPage.EVENT),
         this.itemTagService.findByRelation("event"),
         this.eventService.findUpcomingEvents(),
-        this.footerService.getFooter(),
+        this.nextStepService.findOne(NextStepVariants.StandardNextStep)
       ]);
-      res.json({
-        hero: eventHero,
-        filters,
-        events: await Promise.all(upcomingEvents.map(this.toEventDto.bind(this))),
-        footer,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  // GET /api/public/sermons
-  sermons = async (_req: Request, res: Response, next: NextFunction) => {
-    try {
-      const [
-        hero,
-        sermons,
-        filters,
-        footer,
-      ] = await Promise.all([
-        this.heroService.findByPage(SpecificPage.SERMON),
-        this.sermonService.findAllSermons(),
-        this.itemTagService.findByRelation("sermon"),
-        this.footerService.getFooter(),
-      ])
-
       res.json({
         hero,
         filters: filters.map(this.toTagDto.bind(this)),
-        sermons: await Promise.all(sermons.map(this.toSermonDto.bind(this))),
-        footer,
+        events: await Promise.all(upcomingEvents.map(this.toEventDto.bind(this))),
+        nextStep: this.toNextStepDto(nextStep) 
       });
     } catch (error) {
       next(error);
     }
   };
 
-  // GET /api/public/contact
+  // GET /api/v1/public/sermons
+  sermons = async (_req: Request, res: Response, next: NextFunction) => {
+    try {
+      const [
+        featured,
+        sermons,
+        cta,
+        socialYoutube
+      ] = await Promise.all([
+        this.liveService.findFeatured(),
+        this.liveService.findRecent(12),
+        this.ctaService.findByPage(SpecificPage.SERMON),
+        this.socialLinkService.findByPlatform(Platform.YOUTUBE),
+      ])
+
+      res.json({
+        hero: await this.toLiveDto(featured!),
+        sermons: await Promise.all(sermons.map(this.toLiveDto.bind(this))),
+        cta: await this.toCallToActionDto(cta),
+        youtubeLink: socialYoutube?.url,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // GET /api/v1/public/contact
   contact = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const [
@@ -262,7 +321,7 @@ export class PublicContentController {
       res.json({
         hero: contactHero,
         contact,
-        callToAction: this.toCallToActionDto(callToAction),
+        callToAction: await this.toCallToActionDto(callToAction),
         footer,
       });
     } catch (error) {
@@ -270,7 +329,18 @@ export class PublicContentController {
     }
   };
 
-  // GET /api/public/give
+  // POST /api/v1/public/contact
+  saveContactRequest = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const contactData = req.body;
+      // Validate and process contactData
+      res.status(201).json({ message: 'Contact request saved successfully', data: contactData });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // GET /api/v1/public/give
   give = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const [
@@ -295,19 +365,23 @@ export class PublicContentController {
     }
   };
 
-  // GET /api/public/gallery
+  // GET /api/v1/public/gallery
   gallery = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const [
         hero,
         galleryData,
         filters,
+        socialInstagram,
         events,
+        footer,
       ] = await Promise.all([
         this.galleryService.galleryHero(),
         this.galleryService.galleryItemsForPage(),
         this.itemTagService.findByRelation("gallery"),
+        this.socialLinkService.findByPlatform(Platform.INSTAGRAM),
         this.eventService.findUpcomingEvents(),
+        this.footerService.getFooter(),
       ])
       res.json({
         hero,
@@ -315,6 +389,7 @@ export class PublicContentController {
           ...hero,
           images: galleryData.map(this.toGalleryDto.bind(this)),
           filters: filters.map(this.toTagDto.bind(this)),
+          socialInstagram,
         },
         events: {
           title: "Upcoming Events",
@@ -322,13 +397,14 @@ export class PublicContentController {
           images: events.map(e => e.image),
           button: { text: "View All Events", href: "/events" }
         },
+        footer,
       });
     } catch (error) {
       next(error);
     }
   };
 
-  // GET /api/public/watch-live
+  // GET /api/v1/public/watch-live
   watchLive = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const [
@@ -368,7 +444,7 @@ export class PublicContentController {
           services: recentServices,
           message: "Recent recordings will be available soon."
         },
-        callToAction: this.toCallToActionDto(callToAction),
+        callToAction: await this.toCallToActionDto(callToAction),
         footer,
       });
     } catch (error) {
@@ -393,6 +469,7 @@ export class PublicContentController {
 
     // Subscribe to liveUpdated events
     this.liveService.on('liveUpdated', onLiveUpdate);
+    this.youtubeCronScheduler.on('liveUpdated', onLiveUpdate);
     
     // Optionally, send latest cached event immediately on connection
     const cachedLive = await this.liveService.getCachedLiveEvent();
@@ -412,20 +489,22 @@ export class PublicContentController {
     });
   }
 
-  async siteConfig(_req: Request, res: Response) {
-    const isComingSoonMode = await this.siteConfigService.getConfig('comingSoon') as boolean || false;
+  async siteConfig(req: Request, res: Response) {
+    const isComingSoonConfig = await this.siteConfigService.getConfig(CONFIG_ITEM_KEYS.COMING_SOON);
+    const clientUrl = req.header('Referer')?.replace(/https?:\/\/(www\.)?/, '').split('/')[0] || 'default';
+    const isComingSoonMode = isComingSoonConfig?.[clientUrl] as boolean || false;
+    // const isComingSoonMode = false;
     const response: SiteConfigResponse = {
       isComingSoonMode,
       comingSoonConfig: isComingSoonMode ? {
         title: "Something Amazing is Coming",
         subtitle: "We're building something special for you",
         message: "Our new website is under construction. We're working hard to give you the best experience possible.",
-        launchDate: "2024-12-31T00:00:00Z", // You can update this
-        contactEmail: "info@yourchurch.com",
+        launchDate: "2025-10-05T00:00:00Z", // You can update this
+        contactEmail: "info@cityofyadah.com",
         socialLinks: {
-          facebook: "https://facebook.com/yourchurch",
-          twitter: "https://twitter.com/yourchurch",
-          instagram: "https://instagram.com/yourchurch"
+          instagram: "https://instagram.com/cityofyadah_",
+          youtube: "https://youtube.com/@CityofYadah/streams",
         }
       } : undefined
     };
@@ -522,7 +601,7 @@ export class PublicContentController {
     };
   }
 
-  private async toGalleryDto(gallery: GalleryItem): Promise<GalleryItemDto> {
+  private async toGalleryDto(gallery: GalleryItem): Promise<GalleryItemPublicResponseDto> {
     return {
       id: gallery.id,
       src: await this.fileStorageService.getDownloadUrl(gallery.src),
@@ -533,11 +612,10 @@ export class PublicContentController {
     };
   }
 
-  private toTagDto(tag: ItemTag): ItemTagDto {
+  private toTagDto(tag: ItemTag): ItemTagResponseDto {
     return {
-      id: tag.id,
+      id: toSlug(tag.label),
       label: tag.label,
-      active: tag.isActive,
     };
   }
 
@@ -565,17 +643,39 @@ export class PublicContentController {
     if (!pastor) return null;
     return {
       id: pastor.id,
+      slug: `/about/${pastor.slug}`,
       image: await this.fileStorageService.getDownloadUrl(pastor.image),
       role: pastor.role,
       name: pastor.name,
       description: pastor.description,
       quote: pastor.quote,
       achievements: pastor.achievements,
-      ministry: pastor.ministry,
+      ministry: {
+        title: pastor.focusTitle,
+        content: pastor.focusContent,
+      }
     };
   }
 
-  private async toEventDto(event: Event): Promise<EventDto> {
+  private async toPastorDetailsDto(pastor: Pastor | null): Promise<PastorDetailsDto | null> {
+    if (!pastor) return null;
+    return {
+      id: pastor.id,
+      slug: `/about/${pastor.slug}`,
+      image: await this.fileStorageService.getDownloadUrl(pastor.image),
+      role: pastor.role,
+      about: pastor.about,
+      name: pastor.name,
+      description: pastor.description,
+      others: pastor.others,
+      quote: pastor.quote,
+      achievements: pastor.achievements,
+      journey: pastor.journey,
+      focus: pastor.focus,
+    };
+  }
+
+  private async toEventDto(event: Event): Promise<EventResponseDto> {
     return {
       id: event.id,
       title: event.title,
@@ -604,6 +704,8 @@ export class PublicContentController {
       contact: {
         title: "Our Hot Lines",
         phones: contact.phones,
+        latLong: contact.latLong,
+        mapAddress: contact.mapAddress,
         chat: "Chat here",
       },
     };
@@ -648,12 +750,14 @@ export class PublicContentController {
     }
   }
 
-  private toCallToActionDto(cta: CallToAction): CallToActionDto {
+  private async toCallToActionDto(cta: CallToAction): Promise<CallToActionDto> {
     return {
       id: cta.id,
       title: cta.title,
       subtitle: cta.subtitle,
+      backgroundImage: cta.backgroundImage ? await this.fileStorageService.getDownloadUrl(cta.backgroundImage) : undefined,
       buttons: cta.buttons?.map(this.toCTAButtonDto.bind(this)),
+      stats: cta.addedInfo?.map(this.toCTAAddedInfoDto.bind(this)),
     }
   }
 
@@ -664,6 +768,14 @@ export class PublicContentController {
       variant: button.variant,
       url: button.url,
       icon: button.icon,
+    }
+  }
+
+  private toCTAAddedInfoDto(info: CTAAddedInfo): CTAAddedInfoDto {
+    return {
+      id: info.id,
+      number: info.value,
+      label: info.description,
     }
   }
 
@@ -680,6 +792,97 @@ export class PublicContentController {
       optionsHeading: giveData.optionsHeading,
       currencies: giveData.currencies?.map(toCurrencyDto.bind(this)),
       givingArea: giveData.givingArea?.map(toGivingAreaDto.bind(this)),
+    }
+  }
+
+  private toMinistriesDto(ministries: Ministry[]) {
+    return {
+      title: "Our Ministries",
+      subtitle: "Discover where God is calling you to serve and make a lasting impact in the lives of others. Every ministry is an opportunity to grow, connect, and transform lives.",
+      items: ministries.map(this.toMinistryDto.bind(this)),
+      callToAction: {
+        title: "Get Involved",
+        subtitle: "Whether you're looking to serve, grow spiritually, or connect with others, we have a place for you. Join a ministry that matches your passion and calling.",
+        buttons: [
+          {
+            text: "View All Ministries",
+            link: "/ministries",
+            variant: "primary"
+          }
+        ]
+      }
+    }
+  }
+
+  private async toSermonDataDto(lives: Live[], featured: Live, youtube: SocialLink | null): Promise<{
+    title: string;
+    highlightedTitle: string;
+    subtitle: string;
+    featured: {
+      id: number;
+      title: string;
+      pastor?: string;
+      date: Date;
+      duration: string;
+      thumbnailUrl: string;
+      videoUrl: string;
+      videoId: string | null;
+    };
+    sermonList: WatchLiveDto[];
+    allVideosUrl?: string;
+  }> {
+    return {
+      title: "Recent",
+      highlightedTitle: "Sermons",
+      subtitle: "Discover biblical truth through powerful messages that inspire, challenge, and encourage your faith journey.",
+      featured: {
+        id: featured.id,
+        title: this.youtubeIntegrationService.stripTrailingDate(featured.title) ?? "",
+        date: featured.date,
+        duration: featured?.duration ? isoDurationToHuman(featured.duration) : "0:00",
+        thumbnailUrl: await this.fileStorageService.getDownloadUrl(featured.thumbnailUrl),
+        videoUrl: featured.videoUrl,
+        videoId: this.liveService.extractYoutubeVideoId(featured.videoUrl),
+      },
+      sermonList: await Promise.all(lives.map(this.toLiveDto.bind(this))),
+      allVideosUrl: youtube?.url,
+    };
+  }
+
+  private async toLiveDto(live: Live): Promise<WatchLiveDto> {
+    return {
+      id: live.id,
+      title: this.youtubeIntegrationService.stripTrailingDate(live.title),
+      date: live.date,
+      description: live.description,
+      thumbnailUrl: await this.fileStorageService.getDownloadUrl(live.thumbnailUrl),
+      duration: isoDurationToHuman(live.duration),
+      videoUrl: live.videoUrl,
+      videoId: this.liveService.extractYoutubeVideoId(live.videoUrl),
+      featured: live.featured,
+      isLive: live.isLive,
+      startTime: live.startTime,
+      endTime: live.endTime,
+      viewCount: live.viewCount,
+    }
+  }
+
+  private toNextStepDto(nextStep: NextStep): NextStepDto {
+    return {
+      id: nextStep.id,
+      title: nextStep.title,
+      subtitle: nextStep.subtitle,
+      items: nextStep.items.map(this.toNextStepItemDto.bind(this)),
+    }
+  }
+
+  private toNextStepItemDto(nextStepItem: NextStepItem): NextStepItemDto {
+    return {
+      id: nextStepItem.id,
+      icon: nextStepItem.icon,
+      title: nextStepItem.title,
+      buttonText: nextStepItem.buttonText,
+      buttonLink: nextStepItem.buttonLink,
     }
   }
 }

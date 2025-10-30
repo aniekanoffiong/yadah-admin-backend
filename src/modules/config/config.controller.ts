@@ -128,7 +128,7 @@ export class ConfigFieldController {
     configDto.multipleOccurrence = configData.multipleOccurrence ?? false
     configDto.maxOccurrence = configData.maxOccurrence
     configDto.authorizations = configData.authorizations
-    configDto.fields = configData.fields.map(this.processEntityField)
+    configDto.fields = configData.fields?.map(this.processEntityField) ?? []
     if (configData.subEntities) {
       configDto.subEntities = configData.subEntities.map(this.processEntityDto.bind(this)).filter(e => e !== null);
     }

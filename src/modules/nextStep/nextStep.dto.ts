@@ -9,13 +9,13 @@ export class NextStepDto {
   title!: string;
 
   @IsString()
-  subtitle!: string;
+  subtitle!: string | null;
 
   @IsString()
   variant?: string;
 
   @IsOptional()
-  items?: NextStepItemDto;
+  items?: NextStepItemDto[];
 }
 
 export class NextStepItemDto {

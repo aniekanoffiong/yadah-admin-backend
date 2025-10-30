@@ -1,5 +1,5 @@
 import { SermonRepository } from './sermon.repository';
-import { Sermon } from './sermon.entity'; // You can separate imports if needed
+import { Sermon } from './sermon.entity';
 import { CreateSermonDto } from './sermon.dto';
 import { ItemTagService } from '../itemTag/itemTag.service';
 

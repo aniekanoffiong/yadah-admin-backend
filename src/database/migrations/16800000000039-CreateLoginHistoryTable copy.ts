@@ -21,7 +21,6 @@ export class CreateLoginHistoryTable16800000000039 implements MigrationInterface
         referencedTableName: "user",
         onDelete: "CASCADE"
     }));
-
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
 
 export class ConfigEntityDTO {
   id!: number;
@@ -31,7 +31,7 @@ export class CreateConfigEntityDto {
   entityName!: string;
 
   @IsOptional()
-  @IsString()
+  @IsBoolean()
   multipleOccurrence?: boolean = false
 
   @IsOptional()
@@ -39,8 +39,8 @@ export class CreateConfigEntityDto {
   maxOccurrence?: number;
 
   @IsOptional()
-  @IsString()
-  authorizations?: string;
+  @IsObject()
+  authorizations?: object;
 
   @IsOptional()
   @IsArray()
@@ -94,7 +94,7 @@ export class CreateConfigFieldDto {
   optionsJson?: string;
   
   @IsNotEmpty()
-  @IsString()
+  @IsBoolean()
   editable!: boolean;
 
   @IsOptional()
@@ -102,7 +102,7 @@ export class CreateConfigFieldDto {
   validationRulesJson?: string;
   
   @IsNotEmpty()
-  @IsString()
+  @IsNumber()
   displayOrder!: number;
 
   @IsOptional()
@@ -110,7 +110,7 @@ export class CreateConfigFieldDto {
   helpText?: string;
 
   @IsOptional()
-  @IsString()
+  @IsBoolean()
   multipleOccurrence?: boolean = false
 }
 

@@ -7,8 +7,11 @@ export class Hero extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
-  backgroundImage!: string;
+  @Column({ nullable: true })
+  image?: string;
+
+  @Column({ nullable: true })
+  video?: string;
 
   @Column()
   title!: string;

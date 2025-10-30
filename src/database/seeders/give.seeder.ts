@@ -20,7 +20,7 @@ const giveData = {
   ],
   givingArea: [
     {
-      title: "General Fund",
+      title: "General",
       description: "Supports overall church operations, staff, and ministries",
     },
     {

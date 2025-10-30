@@ -32,7 +32,7 @@ export class ConfigFieldService {
     config.entityName = data.entityName;
     config.multipleOccurrence = data.multipleOccurrence;
     config.maxOccurrence = data.maxOccurrence;
-    config.authorizations = data.authorizations;
+    config.authorizations = JSON.stringify(data.authorizations);
     config.parentEntityId = data.parentEntityId
 
     return this.configFieldRepository.save(config);

@@ -10,7 +10,7 @@ export class FooterRepository {
   }
 
   async findOne(): Promise<Footer | null> {
-    return this.repo.findOne({ where: {id: 1}, relations: ['socialLinks'] });
+    return this.repo.findOne({ where: { id: 1 }, relations: ['socialLinks', 'quickLinks', 'ministriesLinks', 'legalLinks'] });
   }
 
   async create(footer: Footer): Promise<Footer> {

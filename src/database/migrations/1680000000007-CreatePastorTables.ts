@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } from "typeorm";
 
 export class CreatePastorTables1680000000007 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -7,10 +7,15 @@ export class CreatePastorTables1680000000007 implements MigrationInterface {
       columns: [
         { name: "id", type: "serial", isPrimary: true },
         { name: "image", type: "varchar" },
+        { name: "slug", type: "varchar" },
         { name: "role", type: "varchar" },
         { name: "name", type: "varchar" },
-        { name: "description", type: "text" },
-        { name: "quote", type: "text" },
+        { name: "about", type: "text" },
+        { name: "focusTitle", type: "varchar", isNullable: true },
+        { name: "focusContent", type: "text", isNullable: true },
+        { name: "description", type: "text", isNullable: true },
+        { name: "quote", type: "text", isNullable: true },
+        { name: "others", type: "text", isNullable: true },
         { name: "isLeadPastor", type: "boolean", default: false },
         { name: "ministryId", type: "int", isNullable: true },
         { name: "createdAt", type: "timestamp", default: "now()" },
@@ -33,7 +38,22 @@ export class CreatePastorTables1680000000007 implements MigrationInterface {
       columns: [
         { name: "id", type: "serial", isPrimary: true },
         { name: "title", type: "varchar" },
-        { name: "content", type: "text" }
+        { name: "content", type: "text" },
+        { name: "pastorId", type: "int" }
+      ]
+    }));
+
+    await queryRunner.createTable(new Table({
+      name: "ministry_journey_item",
+      columns: [
+        { name: "id", type: "serial", isPrimary: true },
+        { name: "pastorId", type: "int" },
+        { name: "title", type: "varchar" },
+        { name: "subtitle", type: "varchar" },
+        { name: "year", type: "int" },
+        { name: "content", type: "text" },
+        { name: "createdAt", type: "timestamp", default: "now()" },
+        { name: "updatedAt", type: "timestamp", default: "now()" },
       ]
     }));
 
@@ -50,6 +70,25 @@ export class CreatePastorTables1680000000007 implements MigrationInterface {
       referencedColumnNames: ["id"],
       referencedTableName: "pastor",
       onDelete: "CASCADE"
+    }));
+
+    await queryRunner.createForeignKey("ministry_focus", new TableForeignKey({
+      columnNames: ["pastorId"],
+      referencedColumnNames: ["id"],
+      referencedTableName: "pastor",
+      onDelete: "CASCADE"
+    }));
+
+    await queryRunner.createForeignKey("ministry_journey_item", new TableForeignKey({
+      columnNames: ["pastorId"],
+      referencedColumnNames: ["id"],
+      referencedTableName: "pastor",
+      onDelete: "CASCADE"
+    }));
+
+    await queryRunner.createIndex("pastor", new TableIndex({
+      columnNames: ["slug"],
+      name: "IDX_PASTOR_SLUG",
     }));
   }
 

@@ -6,10 +6,14 @@ export class WatchLiveDto {
   videoId!: string | null;
   title!: string;
   date!: Date;
-  startTime!: string;
-  endTime!: string;
-  isLive!: boolean;
-  featured!: boolean;
+  description?: string;
+  thumbnailUrl?: string;
+  duration?: string;
+  viewCount?: number;
+  startTime?: string;
+  endTime?: string;
+  isLive?: boolean;
+  featured?: boolean;
 }
 
 export class CreateWatchLiveDto {

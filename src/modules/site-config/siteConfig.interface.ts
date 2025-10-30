@@ -13,8 +13,9 @@ export interface SiteConfigResponse {
       facebook?: string;
       twitter?: string;
       instagram?: string;
+      youtube?: string;
     };
   };
 }
 
-export type ConfigData = Record<string, Object>
+export type ConfigData = Record<string, Record<string, any>>;

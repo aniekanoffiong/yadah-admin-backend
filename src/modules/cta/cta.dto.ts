@@ -9,14 +9,19 @@ export class CTAButtonDto {
   icon?: string;
 }
 
+export class CTAAddedInfoDto {
+  id!: number;
+  number!: string;
+  label!: string;
+}
+
 export class CallToActionDto {
   id!: number;
-
   title!: string;
-
   subtitle!: string;
-
+  backgroundImage?: string;
   buttons!: CTAButtonDto[];
+  stats?: CTAAddedInfoDto[];
 }
 
 export class CreateCTAButtonDto {

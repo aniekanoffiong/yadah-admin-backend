@@ -1,6 +1,6 @@
 import { PastorRepository } from './pastor.repository';
 import { CreatePastorDto } from './pastor.dto';
-import { Pastor, Achievement, MinistryFocus } from './pastor.entity';
+import { Pastor, Achievement, MinistryFocus, MinistryJourneyItem } from './pastor.entity';
 
 export class PastorService {
   private pastorRepository: PastorRepository;
@@ -19,6 +19,12 @@ export class PastorService {
     return pastor;
   }
 
+  async findBySlug(slug: string): Promise<Pastor> {
+    const pastor = await this.pastorRepository.findBySlug(slug);
+    if (!pastor) throw new Error(`Pastor with slug ${slug} not found`);
+    return pastor;
+  }
+
   async leadPastor(): Promise<Pastor | null> {
     return await this.pastorRepository.getLeadPastor();
   }
@@ -28,8 +34,11 @@ export class PastorService {
     pastor.image = dto.image;
     pastor.role = dto.role;
     pastor.name = dto.name;
+    pastor.about = dto.about;
     pastor.description = dto.description;
     pastor.quote = dto.quote;
+    pastor.focusTitle = dto.focusTitle;
+    pastor.focusContent = dto.focusContent;
 
     pastor.achievements = dto.achievements.map(achDto => {
       const ach = new Achievement();
@@ -38,12 +47,21 @@ export class PastorService {
       return ach;
     });
 
-    if (dto.ministry) {
+    pastor.focus = dto.ministry.map(ministryDto => {
       const ministry = new MinistryFocus();
-      ministry.title = dto.ministry.title;
-      ministry.content = dto.ministry.content;
-      pastor.ministry = ministry;
-    }
+      ministry.title = ministryDto.title;
+      ministry.content = ministryDto.content;
+      return ministry;
+    });
+
+    pastor.journey = dto.journeyItems.map(itemDto => {
+      const item = new MinistryJourneyItem();
+      item.year = itemDto.year;
+      item.title = itemDto.title;
+      item.subtitle = itemDto.subtitle;
+      item.content = itemDto.content;
+      return item;
+    });
 
     return this.pastorRepository.create(pastor);
   }
@@ -53,8 +71,11 @@ export class PastorService {
     pastor.image = dto.image;
     pastor.role = dto.role;
     pastor.name = dto.name;
+    pastor.about = dto.about;
     pastor.description = dto.description;
     pastor.quote = dto.quote;
+    pastor.focusTitle = dto.focusTitle;
+    pastor.focusContent = dto.focusContent;
 
     await this.pastorRepository.deleteAchievementsByPastorId(id);
 
@@ -65,19 +86,21 @@ export class PastorService {
       return ach;
     });
 
-    if (dto.ministry) {
-      if (pastor.ministry) {
-        pastor.ministry.title = dto.ministry.title;
-        pastor.ministry.content = dto.ministry.content;
-      } else {
-        const ministry = new MinistryFocus();
-        ministry.title = dto.ministry.title;
-        ministry.content = dto.ministry.content;
-        pastor.ministry = ministry;
-      }
-    } else {
-      pastor.ministry = undefined;
-    }
+    pastor.journey = dto.journeyItems.map(itemDto => {
+      const item = new MinistryJourneyItem();
+      item.year = itemDto.year;
+      item.title = itemDto.title;
+      item.subtitle = itemDto.subtitle;
+      item.content = itemDto.content;
+      return item;
+    });
+
+    pastor.focus = dto.ministry.map(ministryDto => {
+      const ministry = new MinistryFocus();
+      ministry.title = ministryDto.title;
+      ministry.content = ministryDto.content;
+      return ministry;
+    });
 
     return this.pastorRepository.update(pastor);
   }

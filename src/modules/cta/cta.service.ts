@@ -1,7 +1,7 @@
 import { CallToActionRepository } from './cta.repository';
 import { CreateCallToActionDto } from './cta.dto';
 import { CallToAction, CTAButton } from './cta.entity';
-import { SpecificPage } from '../../utils/enums';
+import { SpecificPage, SpecificPageSection } from '../../utils/enums';
 
 export class CallToActionService {
   private ctaRepository: CallToActionRepository;
@@ -23,6 +23,12 @@ export class CallToActionService {
   async findByPage(page: SpecificPage): Promise<CallToAction> {
     const cta = await this.ctaRepository.findByPage(page);
     if (!cta) throw new Error(`CallToAction with page ${page} not found`);
+    return cta;
+  }
+
+  async findByPageSection(page: SpecificPage, section: SpecificPageSection): Promise<CallToAction> {
+    const cta = await this.ctaRepository.findByPageSection(page, section);
+    if (!cta) throw new Error(`CallToAction with page ${page} and section ${section} not found`);
     return cta;
   }
 

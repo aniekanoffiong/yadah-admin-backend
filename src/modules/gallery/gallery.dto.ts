@@ -5,7 +5,17 @@ import {
   IsArray,
   ValidateNested,
 } from 'class-validator';
-import { ItemTagDto } from '../itemTag/itemTag.dto';
+import { ItemTagDto, ItemTagResponseDto } from '../itemTag/itemTag.dto';
+
+
+export class GalleryItemPublicResponseDto {
+  id!: number;
+  src!: string;
+  alt!: string;
+  caption!: string;
+  date!: string;
+  tags: ItemTagResponseDto[] = [];
+}
 
 export class GalleryItemDto {
   id!: number;
@@ -44,6 +54,7 @@ export class CreateGalleryItemDto {
 export class GalleryItemResponseDto {
   title!: string
   subtitle!: string
+  instagramLink?: string
   images!: GalleryImageItem[]
 }
 

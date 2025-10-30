@@ -10,7 +10,9 @@ export class CreateContactInfoTable1680000000008 implements MigrationInterface {
         { name: "subtitle", type: "varchar" },
         { name: "address", type: "varchar" },
         { name: "email", type: "varchar" },
+        { name: "mapAddress", type: "varchar", isNullable: true },
         { name: "phones", type: "text", isArray: true },
+        { name: "latLong", type: "text", isArray: true },
         { name: "createdAt", type: "timestamp", default: "now()" },
         { name: "updatedAt", type: "timestamp", default: "now()" },
       ]

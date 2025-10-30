@@ -23,7 +23,7 @@ export class Footer extends BaseEntity {
   @Column('text')
   description!: string;
 
-  @ManyToMany(() => SocialLink, (social) => social.footers, { cascade: true, eager: true })
+  @ManyToMany(() => SocialLink, (social) => social.footers, { cascade: true })
   @JoinTable({
     name: 'footer_social_social_links',
     joinColumn: {
@@ -37,7 +37,7 @@ export class Footer extends BaseEntity {
   })
   socialLinks!: SocialLink[];
 
-  @ManyToMany(() => SiteLink, (site) => site.footerQuickLinks, { cascade: true, eager: true })
+  @ManyToMany(() => SiteLink, (site) => site.footerQuickLinks, { cascade: true })
   @JoinTable({
     name: 'footer_quick_links',
     joinColumn: {
@@ -51,7 +51,7 @@ export class Footer extends BaseEntity {
   })
   quickLinks!: SiteLink[];
 
-  @ManyToMany(() => SiteLink, (site) => site.footerMinistriesLinks, { cascade: true, eager: true })
+  @ManyToMany(() => SiteLink, (site) => site.footerMinistriesLinks, { cascade: true })
   @JoinTable({
     name: 'footer_ministries_links',
     joinColumn: {
@@ -74,7 +74,7 @@ export class Footer extends BaseEntity {
   @Column()
   email!: string;
 
-  @ManyToMany(() => SiteLink, (site) => site.footerLegalLinks, { cascade: true, eager: true })
+  @ManyToMany(() => SiteLink, (site) => site.footerLegalLinks, { cascade: true })
   @JoinTable({
     name: 'footer_legal_links',
     joinColumn: {
