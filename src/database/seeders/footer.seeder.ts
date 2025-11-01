@@ -5,7 +5,7 @@ import { SiteLink } from '../../modules/siteLinks/siteLink.entity';
 import { Platform } from '../../utils/enums';
 
 const footerData = {
-  newsletterTitle: 'Welcome to the Yadah family',
+  newsletterTitle: 'We are City of Yadah',
   newsletterSubtitle: "We are glad to share our lives with you...",
   logoSrc: 'https://api.builder.io/api/v1/image/assets/TEMP/8e2476537d97037d4cff80a59722a04edd589e7e?width=128',
   logoAlt: 'City of Yadah Logo',

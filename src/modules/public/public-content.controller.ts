@@ -63,6 +63,7 @@ import { YoutubeIntegrationService } from '../live/external/youtube-integration.
 import { isoDurationToHuman } from '../../utils/isoDuration';
 import { NextStepDto, NextStepItemDto } from '../nextStep/nextStep.dto';
 import { toSlug } from '../../utils/toSlug';
+import { mapOptionToDescription, mapOptionToName } from '../payment/paymentOption.dto';
 
 export class PublicContentController {
   private heroService = new HeroService();
@@ -782,6 +783,8 @@ export class PublicContentController {
   private toPaymentOptionsDto(paymentOption: PaymentOption) {
     return {
       title: paymentOption.title,
+      name: mapOptionToName(paymentOption.title),
+      description: mapOptionToDescription(paymentOption.title),
       details: JSON.parse(paymentOption.config),
     }
   }
