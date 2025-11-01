@@ -69,7 +69,6 @@ export class PublicContentController {
   private heroService = new HeroService();
   private eventService = new EventService();
   private ministryService = new MinistryService();
-  private sermonService = new SermonService();
   private galleryService = new GalleryService();
   private aboutService = new AboutService();
   private pastorService = new PastorService();
@@ -311,19 +310,16 @@ export class PublicContentController {
         contactHero,
         contact,
         callToAction,
-        footer,
       ] = await Promise.all([
         this.heroService.findByPage(SpecificPage.CONTACT),
         this.contactService.find(),
         this.ctaService.findByPage(SpecificPage.CONTACT),
-        this.footerService.getFooter(),
       ]);
-      // Add call to a ContactService if exists or static data
+
       res.json({
         hero: contactHero,
-        contact,
+        contact: this.toContactDto(contact),
         callToAction: await this.toCallToActionDto(callToAction),
-        footer,
       });
     } catch (error) {
       next(error);

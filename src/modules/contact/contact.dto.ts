@@ -3,6 +3,7 @@ import {
   IsArray,
   ArrayNotEmpty,
   ArrayUnique,
+  IsOptional,
 } from 'class-validator';
 import { CreateSocialOptionDto, SocialDto } from '../social/social.dto';
 
@@ -61,9 +62,9 @@ export class CreateContactInfoDto {
   @ArrayUnique()
   phones!: string[];
 
+  @IsOptional()
   @IsArray()
-  @ArrayNotEmpty()
-  letLong!: number[];
+  latLong?: number[];
 
   @IsArray()
   @ArrayNotEmpty()
