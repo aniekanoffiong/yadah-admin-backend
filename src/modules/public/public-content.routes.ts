@@ -15,7 +15,10 @@ publicRouter.post('/contact', controller.saveContactRequest.bind(controller));
 publicRouter.get('/gallery', controller.gallery.bind(controller));
 publicRouter.get('/watch-live', controller.watchLive.bind(controller));
 publicRouter.get('/give', controller.give.bind(controller));
-publicRouter.get('/live-updates', controller.liveUpdatesSSE.bind(controller));
+publicRouter.get('/live-stream-events', controller.liveUpdatesSSE.bind(controller));
+publicRouter.get('/youtube/videos', controller.youtubeVideos.bind(controller));
+publicRouter.get('/youtube/latest', controller.youtubeLatestVideo.bind(controller));
+publicRouter.get('/youtube/live-status', controller.youtubeLiveStatus.bind(controller));
 
 publicRouter.get('/site-config', controller.siteConfig.bind(controller));
 export { publicRouter };

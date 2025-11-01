@@ -1,8 +1,9 @@
 import { google, youtube_v3 } from 'googleapis';
 import * as dotenv from 'dotenv';
 import { Live } from '../live.entity';
-import { format, parse, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import { FileStorageService } from '../../fileStorage/fileStorage.service';
+import { arrayChunk } from '../../../utils/arrayChunk';
 
 dotenv.config();
 
@@ -178,6 +179,49 @@ export class YoutubeIntegrationService {
     }
 
     return live;
+  }
+
+  async processPreviousLive(ids: string[], idToLive: Map<string, Live>): Promise<Live[]> {
+    const batches = arrayChunk(ids, 50);
+    const toUpdate: Live[] = [];
+    for (const batch of batches) {
+      const videosResponse = await this.retryWithBackoff(() =>
+        this.youtube.videos.list({
+          part: ['snippet', 'liveStreamingDetails'],
+          id: batch,
+        })
+      );
+
+      const items = videosResponse?.data.items || [];
+
+      for (const item of items) {
+        const vid = item.id || '';
+        const liveRow = idToLive.get(vid);
+        if (!liveRow) continue;
+
+        const liveBroadcastContent = item.snippet?.liveBroadcastContent;
+        const actualEnd = item.liveStreamingDetails?.actualEndTime;
+        const actualStart = item.liveStreamingDetails?.actualStartTime;
+
+        // If it's no longer live OR actualEnd exists, mark as not live
+        if (liveBroadcastContent !== 'live' || actualEnd) {
+          liveRow.isLive = false;
+          // set endTime if available
+          if (actualEnd) {
+            const endDate = new Date(actualEnd);
+            liveRow.endTime = format(endDate, 'HH:mm');
+          } else if (actualStart && liveRow.startTime) {
+            // optional: if no end time, set endTime to current time
+            liveRow.endTime = format(new Date(), 'HH:mm');
+          }
+          toUpdate.push(liveRow);
+          // remove from map so we don't process it again
+          idToLive.delete(vid);
+        }
+      }
+
+    }
+    return toUpdate
   }
 
   /**

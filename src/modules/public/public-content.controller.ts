@@ -411,12 +411,10 @@ export class PublicContentController {
       const [
         upcomingServices,
         recentServices,
-        footer,
         callToAction,
       ] = await Promise.all([
         this.scheduleProgramService.findUpcomingServices(),
-        this.sermonService.findRecent(4),
-        this.footerService.getFooter(),
+        this.liveService.findRecent(8),
         this.ctaService.findByPage(SpecificPage.WATCH_LIVE),
       ])
       // let liveStream = await this.liveService.getCachedLiveEvent();
@@ -437,22 +435,23 @@ export class PublicContentController {
         },
         upcomingServices: {
           title: "Upcoming Services",
-          services: upcomingServices,
+          services: await Promise.all(upcomingServices.map(this.toScheduleProgramDto.bind(this))),
           message: "Service schedule will be updated shortly."
         },
         recentServices: {
           title: "Recent Services",
-          services: recentServices,
+          siubtitle: "Catch up on recent messages and worship services you may have missed.",
+          services: await Promise.all(recentServices.map(this.toLiveDto.bind(this))),
           message: "Recent recordings will be available soon."
         },
         callToAction: await this.toCallToActionDto(callToAction),
-        footer,
       });
     } catch (error) {
       next(error);
     }
   };
 
+  // GET /api/v1/public/live-stream-events
   async liveUpdatesSSE(req: Request, res: Response) {
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
@@ -490,6 +489,42 @@ export class PublicContentController {
     });
   }
 
+  // /api/v1/public/youtube/videos
+  async youtubeVideos(req: Request, res: Response) {
+    const { maxResults } = req.query
+    const videos = await this.liveService.findRecent(Number(maxResults) ?? 10)
+    res.json({
+      success: true,
+      data: videos
+    })
+  }
+
+  // /api/v1/public/youtube/latest
+   async youtubeLatestVideo(req: Request, res: Response) {
+    const latestVideo = await this.liveService.getLastestLive()
+    res.json({ 
+      success: true,
+      data: await this.toLiveDto(latestVideo)
+    })
+  }
+
+  // /api/v1/public/youtube/live-status
+  async youtubeLiveStatus(req: Request, res: Response) {
+    const latestVideo = await this.liveService.getLastestLive()
+    res.json({
+      success: true,
+      data: {
+        isLive: latestVideo.isLive,
+        videoId: this.liveService.extractYoutubeVideoId(latestVideo.videoUrl),
+        title: latestVideo.title,
+        date: latestVideo.date,
+        startTime: latestVideo.startTime,
+        viewerCount: latestVideo.viewCount,
+      }
+    });
+  }
+
+  // /api/v1/public/site-config
   async siteConfig(req: Request, res: Response) {
     const isComingSoonConfig = await this.siteConfigService.getConfig(CONFIG_ITEM_KEYS.COMING_SOON);
     const clientUrl = req.header('Referer')?.replace(/https?:\/\/(www\.)?/, '').split('/')[0] || 'default';

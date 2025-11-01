@@ -56,4 +56,15 @@ export class LiveRepository {
   async delete(id: number): Promise<void> {
     await this.liveRepo.delete(id);
   }
+
+  // Return all rows currently marked as live
+  async findActiveLives(): Promise<Live[]> {
+    return this.liveRepo.find({ where: { isLive: true } });
+  }
+
+  // Save multiple lives (bulk save)
+  async saveMany(lives: Live[]): Promise<Live[]> {
+    if (!lives || lives.length === 0) return [];
+    return this.liveRepo.save(lives);
+  }
 }

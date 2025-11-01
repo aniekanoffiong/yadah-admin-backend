@@ -1,9 +1,6 @@
-import { YoutubeIntegrationService } from './youtube-integration.service';
 import dotenv from 'dotenv';
-import { Live } from '../live.entity';
-// Import your database repository/service
-import { LiveRepository } from '../live.repository';
 import { AppDataSource } from '../../../database/data-source';
+import { LiveService } from '../live.service';
 
 dotenv.config();
 
@@ -12,12 +9,10 @@ dotenv.config();
  * Run this once to populate your database with existing videos
  */
 export class HistoricVideoImporter {
-  private youtubeService: YoutubeIntegrationService;
-  private liveRepository: LiveRepository;
+  private liveService: LiveService;
 
   constructor() {
-    this.youtubeService = new YoutubeIntegrationService();
-    this.liveRepository = new LiveRepository();
+    this.liveService = new LiveService();
   }
 
   /**
@@ -32,57 +27,8 @@ export class HistoricVideoImporter {
     console.log('========================================');
     console.log('Starting Historic Video Import');
     console.log('========================================\n');
-
-    const startTime = Date.now();
-    let totalImported = 0;
-    let totalErrors = 0;
-
-    try {
-      // Fetch all videos with batch callback
-      const allVideos = await this.youtubeService.getAllHistoricVideos({
-        maxResults: 50, // Fetch 50 at a time (max allowed by YouTube API)
-        // Optional: Only fetch videos from a certain date onwards
-        // publishedAfter: new Date('2020-01-01'),
-        
-        // Process each batch as it comes in
-        onBatch: async (videos: Live[]) => {
-          console.log(`\n📦 Processing batch of ${videos.length} videos...`);
-          
-          for (const video of videos) {
-            try {
-              // Save to database
-              await this.saveVideoToDatabase(video);
-              totalImported++;
-              
-              // Log progress
-              if (totalImported % 10 === 0) {
-                console.log(`✅ Imported ${totalImported} videos so far...`);
-              }
-            } catch (error) {
-              console.error(`❌ Error saving video "${video.title}":`, error);
-              totalErrors++;
-            }
-          }
-          
-          console.log(`Batch complete. Total imported: ${totalImported}, Errors: ${totalErrors}`);
-        },
-      });
-
-      const endTime = Date.now();
-      const duration = ((endTime - startTime) / 1000).toFixed(2);
-
-      console.log('\n========================================');
-      console.log('Import Complete!');
-      console.log('========================================');
-      console.log(`✅ Total videos imported: ${totalImported}`);
-      console.log(`❌ Total errors: ${totalErrors}`);
-      console.log(`⏱️  Time taken: ${duration} seconds`);
-      console.log(`📊 Success rate: ${((totalImported / (totalImported + totalErrors)) * 100).toFixed(2)}%`);
-
-    } catch (error) {
-      console.error('Fatal error during import:', error);
-      throw error;
-    }
+    
+    this.liveService.executeVideosImport();
   }
 
   /**
@@ -94,50 +40,7 @@ export class HistoricVideoImporter {
     console.log('Starting Historic LIVE STREAMS Import');
     console.log('========================================\n');
 
-    const startTime = Date.now();
-    let totalImported = 0;
-    let totalSkipped = 0;
-    let totalErrors = 0;
-
-    try {
-      await this.youtubeService.getAllHistoricVideos({
-        maxResults: 50,
-        
-        onBatch: async (videos: Live[]) => {
-          console.log(`\n📦 Processing batch of ${videos.length} videos...`);
-          
-          for (const video of videos) {
-            try {
-              // Check if it's a live stream
-              // You'll need to add a field to track this in mapHistoricVideoToLiveEntity
-              // For now, we'll save all and you can filter in your DB later
-              
-              await this.saveVideoToDatabase(video);
-              totalImported++;
-              
-            } catch (error) {
-              console.error(`❌ Error saving video "${video.title}":`, error);
-              totalErrors++;
-            }
-          }
-        },
-      });
-
-      const endTime = Date.now();
-      const duration = ((endTime - startTime) / 1000).toFixed(2);
-
-      console.log('\n========================================');
-      console.log('Import Complete!');
-      console.log('========================================');
-      console.log(`✅ Live streams imported: ${totalImported}`);
-      console.log(`⏭️  Regular uploads skipped: ${totalSkipped}`);
-      console.log(`❌ Errors: ${totalErrors}`);
-      console.log(`⏱️  Time taken: ${duration} seconds`);
-
-    } catch (error) {
-      console.error('Fatal error during import:', error);
-      throw error;
-    }
+    this.liveService.executeVideosImport({ filterLive: true })
   }
 
   /**
@@ -146,49 +49,11 @@ export class HistoricVideoImporter {
   async importVideosFromDateRange(startDate: Date, endDate?: Date): Promise<void> {
     console.log('========================================');
     console.log('Starting Date Range Import');
-    console.log(`From: ${startDate.toISOString()}`);
+    console.log(`From: ${startDate?.toISOString()}`);
     if (endDate) console.log(`To: ${endDate.toISOString()}`);
     console.log('========================================\n');
 
-    let totalImported = 0;
-    let totalErrors = 0;
-
-    try {
-      const allVideos = await this.youtubeService.getAllHistoricVideos({
-        maxResults: 50,
-        publishedAfter: startDate,
-        
-        onBatch: async (videos: Live[]) => {
-          // Filter by end date if provided
-          const filteredVideos = endDate
-            ? videos.filter(v => {
-                // You'd need to store publishedAt in your Live entity
-                // For now, this is a placeholder
-                return true;
-              })
-            : videos;
-
-          for (const video of filteredVideos) {
-            try {
-              await this.saveVideoToDatabase(video);
-              totalImported++;
-            } catch (error) {
-              console.error(`❌ Error saving video:`, error);
-              totalErrors++;
-            }
-          }
-        },
-      });
-
-      console.log('\n========================================');
-      console.log(`✅ Imported ${totalImported} videos from date range`);
-      console.log(`❌ Errors: ${totalErrors}`);
-      console.log('========================================');
-
-    } catch (error) {
-      console.error('Fatal error during import:', error);
-      throw error;
-    }
+    this.liveService.executeVideosImport({ startDate, endDate });
   }
 
   /**
@@ -199,47 +64,7 @@ export class HistoricVideoImporter {
     console.log('DRY RUN - No data will be saved');
     console.log('========================================\n');
 
-    let totalVideos = 0;
-
-    try {
-      await this.youtubeService.getAllHistoricVideos({
-        maxResults: 50,
-        
-        onBatch: async (videos: Live[]) => {
-          totalVideos += videos.length;
-          
-          console.log(`\n📦 Batch of ${videos.length} videos:`);
-          videos.slice(0, 3).forEach(video => {
-            console.log(`  - ${video.title}`);
-            console.log(`    URL: ${video.videoUrl}`);
-            console.log(`    Start: ${video.startTime}`);
-          });
-          
-          if (videos.length > 3) {
-            console.log(`  ... and ${videos.length - 3} more`);
-          }
-        },
-      });
-
-      console.log('\n========================================');
-      console.log('Dry Run Complete');
-      console.log(`📊 Total videos found: ${totalVideos}`);
-      console.log('No data was saved to the database');
-      console.log('========================================');
-
-    } catch (error) {
-      console.error('Error during dry run:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Save video to database
-   * Replace this with your actual database logic
-   */
-  private async saveVideoToDatabase(video: Live): Promise<void> {
-    await this.liveRepository.save(video);
-    console.log(`💾 Successfully saved video: ${video.title}`);    
+    this.liveService.executeVideosImport()
   }
 
   /**
