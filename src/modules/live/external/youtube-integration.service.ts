@@ -187,7 +187,7 @@ export class YoutubeIntegrationService {
     for (const batch of batches) {
       const videosResponse = await this.retryWithBackoff(() =>
         this.youtube.videos.list({
-          part: ['snippet', 'liveStreamingDetails'],
+          part: ['snippet', 'liveStreamingDetails', 'contentDetails'],
           id: batch,
         })
       );
@@ -214,6 +214,7 @@ export class YoutubeIntegrationService {
             // optional: if no end time, set endTime to current time
             liveRow.endTime = format(new Date(), 'HH:mm');
           }
+          liveRow.duration = item.contentDetails?.duration || '';
           toUpdate.push(liveRow);
           // remove from map so we don't process it again
           idToLive.delete(vid);
