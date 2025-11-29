@@ -14,7 +14,7 @@ export class PastorRepository {
   }
 
   async findAll(): Promise<Pastor[]> {
-    return this.pastorRepo.find({ relations: ['achievements', 'ministry'] });
+    return this.pastorRepo.find({ relations: ['achievements', 'focus', 'journey'] });
   }
 
   async findOne(id: number): Promise<Pastor | null> {
