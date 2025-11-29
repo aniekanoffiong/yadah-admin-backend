@@ -22,13 +22,13 @@ export class MinistryDto {
 
   description!: string;
 
-  meetingTime?: string;
+  meetingTime?: string | null;
 
-  location?: string;
+  location?: string | null;
 
-  leader?: string;
+  leader?: string | null;
 
-  members?: string;
+  members?: string | null;
 
   activities?: MinistryActivityDto[];
 }
@@ -43,15 +43,19 @@ export class CreateMinistryDto {
   @IsString()
   description!: string;
 
+  @IsOptional()
   @IsString()
   meetingTime?: string;
 
+  @IsOptional()
   @IsString()
   location?: string;
 
+  @IsOptional()
   @IsString()
   leader?: string;
 
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => MinistryActivityDto)
