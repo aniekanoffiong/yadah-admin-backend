@@ -156,14 +156,14 @@ export class YoutubeIntegrationService {
       // For live streams, use actual start time if available
       const actualStartTime = video.liveStreamingDetails?.actualStartTime;
       live.date = actualStartTime ? new Date(actualStartTime) : new Date()
-      live.startTime = format(live.date, 'HH:mm')
+      live.startTime = format(live.date, 'HH:mm') ?? undefined
     } else {
       // For upcoming streams, use scheduled start time
       const scheduledStartTime = video.liveStreamingDetails?.scheduledStartTime;
       live.date = scheduledStartTime ? new Date(scheduledStartTime) : new Date()
       live.startTime = scheduledStartTime
         ? format(live.date, 'HH:mm')
-        : '';
+        : undefined;
     }
 
     // Add description

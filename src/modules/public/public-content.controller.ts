@@ -858,7 +858,7 @@ export class PublicContentController {
       pastor?: string;
       date: Date;
       duration: string;
-      thumbnailUrl: string;
+      thumbnailUrl?: string;
       videoUrl: string;
       videoId: string | null;
     };
@@ -874,7 +874,7 @@ export class PublicContentController {
         title: this.youtubeIntegrationService.stripTrailingDate(featured.title) ?? "",
         date: featured.date,
         duration: featured?.duration ? isoDurationToHuman(featured.duration) : "0:00",
-        thumbnailUrl: await this.fileStorageService.getDownloadUrl(featured.thumbnailUrl),
+        thumbnailUrl: featured.thumbnailUrl ? await this.fileStorageService.getDownloadUrl(featured.thumbnailUrl) : undefined,
         videoUrl: featured.videoUrl,
         videoId: this.liveService.extractYoutubeVideoId(featured.videoUrl),
       },
@@ -889,8 +889,8 @@ export class PublicContentController {
       title: this.youtubeIntegrationService.stripTrailingDate(live.title),
       date: live.date,
       description: live.description,
-      thumbnailUrl: await this.fileStorageService.getDownloadUrl(live.thumbnailUrl),
-      duration: isoDurationToHuman(live.duration),
+      thumbnailUrl: live.thumbnailUrl ? await this.fileStorageService.getDownloadUrl(live.thumbnailUrl) : undefined,
+      duration: live.duration ? isoDurationToHuman(live.duration) : undefined,
       videoUrl: live.videoUrl,
       videoId: this.liveService.extractYoutubeVideoId(live.videoUrl),
       featured: live.featured,

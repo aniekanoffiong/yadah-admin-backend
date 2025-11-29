@@ -20,29 +20,6 @@ const scheduleProgramData = [
     location: "Fellowship Hall",
     icon: "clock",
   },
-  {
-    title: "Youth Service",
-    scheduledDay: DayOfWeek.Friday,
-    startTime: "18:00:00",
-    endTime: "20:00:00",
-    location: "Youth Center",
-    icon: "users",
-  },
-  {
-    title: "Community Service",
-    scheduledDay: DayOfWeek.Saturday,
-    startTime: "07:00:00",
-    endTime: "10:00:00",
-    location: "Community Center",
-    icon: "family",
-  },
-  {
-    title: "Mission Movement",
-    scheduledDay: DayOfWeek.Saturday,
-    startTime: "11:00:00",
-    endTime: "06:00:00",
-    location: "Community Center",
-  }
 ];
 
 export async function seedScheduledPrograms() {

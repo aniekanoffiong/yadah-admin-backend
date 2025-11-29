@@ -413,7 +413,7 @@ const aboutConfigFields = {
     {
       fieldName: 'mainTitle',
       label: 'About Main Title',
-      fieldType: 'string',
+      fieldType: 'text',
       editable: true,
       displayOrder: 1,
       validationRulesJson: JSON.stringify({ required: true }),

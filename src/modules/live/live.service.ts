@@ -114,7 +114,7 @@ export class LiveService extends EventEmitter {
       if (toUpdateList.length > 0) {
         const nowTime = new Date()
         // only mark live as ended after 10 minutes
-        const toUpdateFinal = toUpdateList.filter(item => parse(item.startTime, "HH:mm", item.date).getTime() - nowTime.getTime() > 10 * 1000 * 60)
+        const toUpdateFinal = toUpdateList.filter(item => item.startTime ? parse(item.startTime, "HH:mm", item.date).getTime() - nowTime.getTime() > 10 * 1000 * 60 : false)
         await this.liveRepository.saveMany(toUpdateFinal);
         console.log(`Reconciled ${toUpdateFinal.length} ended live(s) out of total ${toUpdateList.length}`);
       }

@@ -28,7 +28,7 @@ export class MinistryService {
     ministry.location = dto.location;
     ministry.leader = dto.leader;
 
-    ministry.activities = dto.activities.map(actDto => {
+    ministry.activities = dto.activities?.map(actDto => {
       const activity = new MinistryActivity();
       activity.activityName = actDto.activityName;
       return activity;
@@ -48,7 +48,7 @@ export class MinistryService {
 
     await this.ministryRepository.deleteActivitiesByMinistryId(id);
     
-    ministry.activities = dto.activities.map(actDto => {
+    ministry.activities = dto.activities?.map(actDto => {
       const activity = new MinistryActivity();
       activity.activityName = actDto.activityName;
       return activity;

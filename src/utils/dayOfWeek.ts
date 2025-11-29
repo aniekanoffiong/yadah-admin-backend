@@ -5,7 +5,8 @@ export enum DayOfWeek {
   Thursday = 'Thursday',
   Friday = 'Friday',
   Saturday = 'Saturday',
-  Sunday = 'Sunday'
+  Sunday = 'Sunday',
+  Everyday = 'Everyday',
 }
 
 export function getDayOfWeekFromDate(date: Date): DayOfWeek {

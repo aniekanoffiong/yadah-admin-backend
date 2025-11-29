@@ -13,25 +13,25 @@ export class Live extends BaseEntity {
   date!: Date;
 
   @Column({ type: 'time', nullable: true })
-  startTime!: string;
+  startTime?: string;
 
   @Column({ type: 'time', nullable: true })
-  endTime!: string;
+  endTime?: string;
 
   @Column({ nullable: true })
-  description!: string;
+  description?: string;
 
   @Column({ nullable: true })
-  thumbnailUrl!: string;
+  thumbnailUrl?: string;
 
   @Column({ type: 'boolean', default: false })
   wasLiveStream!: boolean; // Distinguish live streams from regular uploads
 
   @Column({ type: 'varchar', length: 20, nullable: true })
-  duration!: string; // ISO 8601 duration format (e.g., "PT1H30M")
+  duration?: string; // ISO 8601 duration format (e.g., "PT1H30M")
 
   @Column({ type: 'bigint', nullable: true })
-  viewCount!: number;
+  viewCount?: number;
 
   @Column({ default: false })
   featured!: boolean;
