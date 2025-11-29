@@ -64,7 +64,7 @@ export class HeroService {
     return {
       title: heroData.title,
       subtitle: heroData.subtitle,
-      backgroundImage: heroData.image,
+      backgroundImage: await this.fileStorageService.getDownloadUrl(heroData.image),
       video: await this.fileStorageService.getDownloadUrl(heroData.video),
       volunteerProgram: { text: heroData.volunteerProgramText }
     }
