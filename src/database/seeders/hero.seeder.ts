@@ -6,7 +6,7 @@ const heroData = [
   {
     page: SpecificPage.HOME,
     image: 'https://api.builder.io/api/v1/image/assets/TEMP/2bcbb4495b901fec7f6c0d07609652a829ac1170?width=2880',
-    video: 'https://yadah.co.uk/wp-content/uploads/2024/09/latest.m4v',
+    video: 'uploads/city-of-yadah.mp4',
     title: 'City of Yadah',
     subtitle: '...Jesus revealed, Nations United',
     showControls: false,

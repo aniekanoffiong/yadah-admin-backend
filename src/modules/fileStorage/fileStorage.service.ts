@@ -44,12 +44,12 @@ export class FileStorageService {
       ContentType: normalizedContentType,
     });
     const url = await getSignedUrl(s3, command, { expiresIn: URL_EXPIRY });
-    console.log('Generated URL:', url);
     setCache(fileName, url, URL_EXPIRY);
     return url;
   }
 
-  async getDownloadUrl(fileKey: string): Promise<string> {
+  async getDownloadUrl(fileKey?: string): Promise<string> {
+    if (!fileKey) return '';
     // skip generating link for existing URLs
     if (fileKey.includes("http://") || fileKey.includes("https://")) {
       return fileKey

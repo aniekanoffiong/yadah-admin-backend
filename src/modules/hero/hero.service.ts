@@ -2,12 +2,15 @@ import { HeroRepository } from './hero.repository';
 import { Hero } from './hero.entity';
 import { CreateHeroDto, HeroResponseDto } from './hero.dto';
 import { SpecificPage } from '../../utils/enums';
+import { FileStorageService } from '../fileStorage/fileStorage.service';
 
 export class HeroService {
   private heroRepository: HeroRepository;
+  private fileStorageService: FileStorageService;
 
-  constructor(heroRepository?: HeroRepository) {
+  constructor(heroRepository?: HeroRepository, fileStorageService?: FileStorageService) {
     this.heroRepository = heroRepository || new HeroRepository();
+    this.fileStorageService = fileStorageService || new FileStorageService();
   }
 
   async findAll(): Promise<Hero[]> {
@@ -21,7 +24,7 @@ export class HeroService {
   }
 
   async findByPage(page: SpecificPage): Promise<HeroResponseDto | null> {
-    return this.toDto(await this.heroRepository.findByPage(page)) || null;
+    return await this.toDto(await this.heroRepository.findByPage(page)) || null;
   }
 
   async create(dto: CreateHeroDto): Promise<Hero> {
@@ -56,13 +59,13 @@ export class HeroService {
     await this.heroRepository.delete(id);
   }
 
-  private toDto(heroData: Hero | null): HeroResponseDto | null {
+  private async toDto(heroData: Hero | null): Promise<HeroResponseDto | null> {
     if (!heroData) return null
     return {
       title: heroData.title,
       subtitle: heroData.subtitle,
       backgroundImage: heroData.image,
-      video: heroData.video,
+      video: await this.fileStorageService.getDownloadUrl(heroData.video),
       volunteerProgram: { text: heroData.volunteerProgramText }
     }
   }
