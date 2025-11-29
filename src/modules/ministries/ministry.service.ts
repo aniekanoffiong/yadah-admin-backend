@@ -24,7 +24,7 @@ export class MinistryService {
     ministry.icon = dto.icon;
     ministry.title = dto.title;
     ministry.description = dto.description;
-    ministry.meetingTime = dto.meetingTime ?? undefined;
+    ministry.meetingTime = dto.meetingTime ? dto.meetingTime : undefined;
     ministry.location = dto.location;
     ministry.leader = dto.leader;
 
@@ -42,7 +42,7 @@ export class MinistryService {
     ministry.icon = dto.icon;
     ministry.title = dto.title;
     ministry.description = dto.description;
-    ministry.meetingTime = dto.meetingTime ?? undefined;
+    ministry.meetingTime = dto.meetingTime ? dto.meetingTime : undefined;
     ministry.location = dto.location;
     ministry.leader = dto.leader;
 

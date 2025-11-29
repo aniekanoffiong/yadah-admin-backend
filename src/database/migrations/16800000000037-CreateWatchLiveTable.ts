@@ -10,7 +10,7 @@ export class CreateWatchLiveTable16800000000037 implements MigrationInterface {
           { name: 'videoUrl', type: 'varchar', isNullable: false },
           { name: 'title', type: 'varchar', isNullable: false },
           { name: 'date', type: 'date', isNullable: true },
-          { name: 'startTime', type: 'time', isNullable: false },
+          { name: 'startTime', type: 'time', isNullable: true },
           { name: 'endTime', type: 'time', isNullable: true },
           { name: 'featured', type: 'boolean', default: false },
           { name: 'isLive', type: 'boolean', default: false },
