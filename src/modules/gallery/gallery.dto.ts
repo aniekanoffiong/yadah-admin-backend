@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsArray,
   ValidateNested,
+  IsNotEmpty,
 } from 'class-validator';
 import { ItemTagDto, ItemTagResponseDto } from '../itemTag/itemTag.dto';
 
@@ -65,6 +66,10 @@ export class GalleryImageItem {
 }
 
 export class SelectOption {
+  @IsString()
+  @IsNotEmpty()
   label!: string
+
+  @IsNotEmpty()
   value!: string | number
 }

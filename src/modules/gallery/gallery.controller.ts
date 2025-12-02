@@ -69,7 +69,7 @@ export class GalleryController {
       ...item,
       // date: format(item.date, "iii. do MMM., yyyy"),
       tags: item.tags.map(tag => ({
-        id: tag.id,
+        value: tag.id,
         label: tag.label,
         active: tag.isActive,
       })),

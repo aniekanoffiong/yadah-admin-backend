@@ -6,7 +6,7 @@ export class ItemTagResponseDto {
 }
 
 export class ItemTagDto {
-  id!: number;
+  value!: number;
   label!: string;
   active!: boolean;
 }
