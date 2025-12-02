@@ -3,12 +3,15 @@ import { GalleryService } from './gallery.service';
 import { CreateGalleryItemDto, GalleryItemDto } from './gallery.dto';
 import { GalleryItem } from './gallery.entity';
 import { format } from 'date-fns';
+import { FileStorageService } from '../fileStorage/fileStorage.service';
 
 export class GalleryController {
   private galleryService: GalleryService;
+  private fileStorageService: FileStorageService;
 
   constructor(galleryService?: GalleryService) {
     this.galleryService = galleryService || new GalleryService();
+    this.fileStorageService = new FileStorageService();
   }
 
   /**
@@ -64,9 +67,10 @@ export class GalleryController {
     }
   };
 
-  private toDto(item: GalleryItem): GalleryItemDto {
+  private async toDto(item: GalleryItem): Promise<GalleryItemDto> {
     return {
       ...item,
+      src: await this.fileStorageService.getDownloadUrl(item.src),
       // date: format(item.date, "iii. do MMM., yyyy"),
       tags: item.tags.map(tag => ({
         value: tag.id,
