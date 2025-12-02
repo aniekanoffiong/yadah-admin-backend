@@ -20,7 +20,7 @@ export class GalleryController {
   getAllItems = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const items = await this.galleryService.findAllItems();
-      res.json({ data: items.map(this.toDto) });
+      res.json({ data: await Promise.all(items.map(this.toDto)) });
     } catch (error) {
       next(error);
     }
@@ -30,7 +30,7 @@ export class GalleryController {
     try {
       const id = Number(req.params.id);
       const item = await this.galleryService.findItemById(id);
-      res.json({ data: this.toDto(item) });
+      res.json({ data: await this.toDto(item) });
     } catch (error) {
       next(error);
     }
@@ -40,7 +40,7 @@ export class GalleryController {
     try {
       const dto = req.body as CreateGalleryItemDto;
       const item = await this.galleryService.createItem(dto);
-      res.status(201).json({ data: this.toDto(item) });
+      res.status(201).json({ data: await this.toDto(item) });
     } catch (error) {
       next(error);
     }
@@ -51,7 +51,7 @@ export class GalleryController {
       const id = Number(req.params.id);
       const dto = req.body as CreateGalleryItemDto;
       const item = await this.galleryService.updateItem(id, dto);
-      res.json({ data: this.toDto(item) });
+      res.json({ data: await this.toDto(item) });
     } catch (error) {
       next(error);
     }
