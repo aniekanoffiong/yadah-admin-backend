@@ -9,9 +9,9 @@ export class GalleryController {
   private galleryService: GalleryService;
   private fileStorageService: FileStorageService;
 
-  constructor(galleryService?: GalleryService) {
+  constructor(galleryService?: GalleryService, fileStorageService?: FileStorageService) {
     this.galleryService = galleryService || new GalleryService();
-    this.fileStorageService = new FileStorageService();
+    this.fileStorageService = fileStorageService || new FileStorageService();
   }
 
   /**
@@ -20,7 +20,7 @@ export class GalleryController {
   getAllItems = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const items = await this.galleryService.findAllItems();
-      res.json({ data: await Promise.all(items.map(this.toDto)) });
+      res.json({ data: await Promise.all(items.map(this.toDto.bind(this))) });
     } catch (error) {
       next(error);
     }

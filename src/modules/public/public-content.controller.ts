@@ -129,7 +129,7 @@ export class PublicContentController {
       // Adjust and format as necessary for exact shape
       res.json({
         hero,
-        services: await Promise.all(services.map(this.toScheduleProgramDto)),
+        services: await Promise.all(services.map(this.toScheduleProgramDto.bind(this))),
         about: this.toAboutDto(about),
         pastor: await this.toPastorDto(pastor),
         givingImpact: await this.toCallToActionDto(givingImpact),
