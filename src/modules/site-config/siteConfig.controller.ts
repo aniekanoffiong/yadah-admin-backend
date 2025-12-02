@@ -40,8 +40,8 @@ export class SiteConfigController {
 
   update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const dto = req.body;
-      const key = req.params.key;
+      const dto = req.body.content;
+      const key = req.body.name;
       const configData = await this.siteConfigService.setConfig(key, dto);
       res.status(200).json({ data: this.toDto([key, configData]) });
     } catch (error) {

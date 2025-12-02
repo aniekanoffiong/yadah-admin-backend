@@ -25,7 +25,7 @@ siteConfigRouter.post(
 
 siteConfigRouter.put(
   '/:key',
-  authorizationMiddleware('update.siteConfig'),
+  authorizationMiddleware('create.siteConfig'),
   siteConfigController.update.bind(siteConfigController)
 );
 
