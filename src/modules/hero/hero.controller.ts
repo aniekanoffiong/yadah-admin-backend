@@ -4,6 +4,7 @@ import { CreateHeroDto } from './hero.dto';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { SpecificPage } from '../../utils/enums';
+import { Hero } from './hero.entity';
 
 export class HeroController {
   private heroService: HeroService;
@@ -39,7 +40,7 @@ export class HeroController {
         res.status(404).json({ message: 'Hero not found for page' });
         return;
       }
-      res.json({ data: this.toDto(hero) });
+      res.json({ data: hero });
     } catch (error) {
       next(error);
     }
@@ -88,11 +89,12 @@ export class HeroController {
     }
   };
 
-  private toDto(hero: any) {
+  private toDto(hero: Hero) {
     return {
       id: hero.id,
       page: hero.page,
-      backgroundImage: hero.backgroundImage,
+      image: hero.image,
+      backgroundImage: hero.image,
       title: hero.title,
       subtitle: hero.subtitle,
       showControls: hero.showControls,

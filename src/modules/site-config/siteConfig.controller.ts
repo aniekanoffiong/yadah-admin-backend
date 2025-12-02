@@ -31,8 +31,19 @@ export class SiteConfigController {
     try {
       const dto = req.body;
       const key = req.params.key;
-      const configData = await this.siteConfigService.createConfig(key, dto);
+      const configData = await this.siteConfigService.setConfig(key, dto);
       res.status(201).json({ data: this.toDto([key, configData]) });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const dto = req.body;
+      const key = req.params.key;
+      const configData = await this.siteConfigService.setConfig(key, dto);
+      res.status(200).json({ data: this.toDto([key, configData]) });
     } catch (error) {
       next(error);
     }

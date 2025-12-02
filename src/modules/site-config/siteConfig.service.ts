@@ -22,7 +22,7 @@ export class SiteConfigService {
     return config[key]
   }
 
-  async createConfig(key: string, value: Object) {
+  async setConfig(key: string, value: Object) {
     const configData = await redis.get(SYSTEM_CONFIG_KEY);
     const configObject = configData ? JSON.parse(configData) as ConfigData : {};
     configObject[key] = value;

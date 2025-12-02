@@ -23,6 +23,12 @@ siteConfigRouter.post(
   siteConfigController.create.bind(siteConfigController)
 );
 
+siteConfigRouter.put(
+  '/:key',
+  authorizationMiddleware('update.siteConfig'),
+  siteConfigController.update.bind(siteConfigController)
+);
+
 siteConfigRouter.delete(
   '/:id',
   authorizationMiddleware('delete.siteConfig'),
