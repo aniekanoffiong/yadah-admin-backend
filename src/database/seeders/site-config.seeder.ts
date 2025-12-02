@@ -16,7 +16,7 @@ const siteConfigSeedingData = [
 export async function seedSiteConfig() {
   const configService = new SiteConfigService();
   for (const config of siteConfigSeedingData) {
-    await configService.createConfig(config.key, config.value);
+    await configService.setConfig(config.key, config.value);
   }
   console.log('Seeded Site Config');
 }
