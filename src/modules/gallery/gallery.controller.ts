@@ -67,7 +67,7 @@ export class GalleryController {
   private toDto(item: GalleryItem): GalleryItemDto {
     return {
       ...item,
-      date: format(item.date, "iii. do MMM., yyyy"),
+      // date: format(item.date, "iii. do MMM., yyyy"),
       tags: item.tags.map(tag => ({
         id: tag.id,
         label: tag.label,
