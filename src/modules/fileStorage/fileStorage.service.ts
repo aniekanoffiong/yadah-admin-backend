@@ -44,7 +44,7 @@ export class FileStorageService {
       ContentType: normalizedContentType,
     });
     const url = await getSignedUrl(s3, command, { expiresIn: URL_EXPIRY });
-    setCache(fileName, url, URL_EXPIRY);
+    // setCache(fileName, url, URL_EXPIRY);
     return url;
   }
 
