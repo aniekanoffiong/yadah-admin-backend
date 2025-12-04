@@ -19,7 +19,7 @@ import { SiteConfigResponse } from '../site-config/siteConfig.interface';
 import { CONFIG_ITEM_KEYS, SiteConfigService } from '../site-config/siteConfig.service';
 import { ScheduledProgram } from '../scheduledPrograms/scheduledProgram.entity';
 import { ScheduledProgramDto } from '../scheduledPrograms/scheduledProgram.dto';
-import { format, parse, parseISO } from 'date-fns';
+import { format, parse } from 'date-fns';
 import { Sermon } from '../sermon/sermon.entity';
 import { SermonDto } from '../sermon/sermon.dto';
 import { StatisticsService } from '../statistics/statistics.service';
@@ -28,15 +28,15 @@ import { StatisticsDto, StatItemDto } from '../statistics/statistics.dto';
 import { About, Story, StoryStat, ValueItem, Values } from '../about/about.entity';
 import { AboutDto, StoryDto, StoryStatDto, ValueItemDto, ValuesDto } from '../about/about.dto';
 import { GalleryItem } from '../gallery/gallery.entity';
-import { GalleryItemDto, GalleryItemPublicResponseDto } from '../gallery/gallery.dto';
+import { GalleryItemPublicResponseDto } from '../gallery/gallery.dto';
 import { ItemTag } from '../itemTag/itemTag.entity';
-import { ItemTagDto, ItemTagResponseDto } from '../itemTag/itemTag.dto';
+import { ItemTagResponseDto } from '../itemTag/itemTag.dto';
 import { Ministry, MinistryActivity } from '../ministries/ministry.entity';
 import { MinistryActivityDto, MinistryDto } from '../ministries/ministry.dto';
 import { Pastor } from '../pastor/pastor.entity';
 import { PastorDetailsDto, PastorDto } from '../pastor/pastor.dto';
 import { Event } from '../event/event.entity';
-import { EventDto, EventResponseDto } from '../event/event.dto';
+import { EventResponseDto } from '../event/event.dto';
 import { ContactInfo } from '../contact/contact.entity';
 import { ContactInfoPublicDto } from '../contact/contact.dto';
 import { SocialLink } from '../social/social.entity';
@@ -178,7 +178,7 @@ export class PublicContentController {
         pastor: await this.toPastorDto(pastor),
         ministries: ministries.map(this.toMinistryDto.bind(this)),
         statistics: await this.toStatisticsDto(statistics),
-        growingInFaith: this.toGrowInFaithDto(growingInFaith),
+        growingInFaith: await this.toGrowInFaithDto(growingInFaith),
         beliefs: this.toBeliefsDto(belief),
         findUs: this.toContactDto(contact),
         callToAction: await this.toCallToActionDto(callToAction),
@@ -391,7 +391,7 @@ export class PublicContentController {
         events: {
           title: "Upcoming Events",
           subtitle: "Join us at these upcoming programs",
-          images: events.map(e => e.image),
+          images: await Promise.all(events.map(e => this.fileStorageService.getDownloadUrl(e.image))),
           button: { text: "View All Events", href: "/events" }
         },
         footer,
@@ -753,13 +753,13 @@ export class PublicContentController {
     };
   }
 
-  private toGrowInFaithDto(growInFaith: GrowInFaith): GrowingInFaithDto {
+  private async toGrowInFaithDto(growInFaith: GrowInFaith): Promise<GrowingInFaithDto> {
     return {
       id: growInFaith.id,
       title: growInFaith.title,
       description: growInFaith.description,
       secondDescription: growInFaith.secondDescription,
-      image: growInFaith.image,
+      image: await this.fileStorageService.getDownloadUrl(growInFaith.image),
       buttonText: growInFaith.buttonText,
       buttonLink: growInFaith.buttonLink,
     }
