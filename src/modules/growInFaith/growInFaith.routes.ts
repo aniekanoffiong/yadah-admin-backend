@@ -8,16 +8,9 @@ const growInFaithRouter = Router();
 const controller = new GrowInFaithController();
 
 growInFaithRouter.get(
-  '/:id',
+  '/',
   authorizationMiddleware('get.growInFaith'),
   controller.get.bind(controller)
-);
-
-growInFaithRouter.post(
-  '/',
-  authorizationMiddleware('create.growInFaith'),
-  validationMiddleware(CreateGrowInFaithDto),
-  controller.create.bind(controller)
 );
 
 growInFaithRouter.put(
@@ -25,12 +18,6 @@ growInFaithRouter.put(
   authorizationMiddleware('update.growInFaith'),
   validationMiddleware(CreateGrowInFaithDto),
   controller.update.bind(controller)
-);
-
-growInFaithRouter.delete(
-  '/:id',
-  authorizationMiddleware('delete.growInFaith'),
-  controller.remove.bind(controller)
 );
 
 export { growInFaithRouter };

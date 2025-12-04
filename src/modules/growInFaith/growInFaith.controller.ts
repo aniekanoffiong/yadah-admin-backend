@@ -18,31 +18,11 @@ export class GrowInFaithController {
     }
   };
 
-  create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const dto = req.body as CreateGrowInFaithDto;
-      const result = await this.service.create(dto);
-      res.status(201).json({ data: result });
-    } catch (err) {
-      next(err);
-    }
-  };
-
   update = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const dto = req.body as CreateGrowInFaithDto;
       const result = await this.service.update(dto);
       res.json({ data: result });
-    } catch (err) {
-      next(err);
-    }
-  };
-
-  remove = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const id = Number(req.params.id);
-      await this.service.delete(id);
-      res.sendStatus(204);
     } catch (err) {
       next(err);
     }
