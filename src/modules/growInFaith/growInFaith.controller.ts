@@ -12,7 +12,7 @@ export class GrowInFaithController {
   get = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const result = await this.service.findOne();
-      res.json({ data: result });
+      res.json({ data: [result] });
     } catch (err) {
       next(err);
     }
