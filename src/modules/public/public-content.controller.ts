@@ -64,6 +64,9 @@ import { isoDurationToHuman } from '../../utils/isoDuration';
 import { NextStepDto, NextStepItemDto } from '../nextStep/nextStep.dto';
 import { toSlug } from '../../utils/toSlug';
 import { mapOptionToDescription, mapOptionToName } from '../payment/paymentOption.dto';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export class PublicContentController {
   private heroService = new HeroService();
@@ -474,6 +477,8 @@ export class PublicContentController {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
       Connection: 'keep-alive',
+      'Access-Control-Allow-Origin': process.env.WEBSITE_FRONTEND_ENDPOINT!.split(","),
+      'Access-Control-Allow-Credentials': 'true',
     });
 
     const sendEvent = (data: any) => {
