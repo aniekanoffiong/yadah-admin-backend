@@ -199,12 +199,14 @@ export class PublicContentController {
         sermons,
         cta,
         mainCta,
+        footer,
       ] = await Promise.all([
         this.heroService.findByPage(SpecificPage.PASTOR),
         this.pastorService.findBySlug(slug),
         this.liveService.findRecent(4),
         this.ctaService.findByPageSection(SpecificPage.PASTOR, SpecificPageSection.PASTOR_DETAILS),
         this.ctaService.findByPage(SpecificPage.PASTOR),
+        this.footerService.getFooter(),
       ]);
 
       res.json({
@@ -213,6 +215,7 @@ export class PublicContentController {
         pastor: await this.toPastorDetailsDto(pastor!),
         cta: await this.toCallToActionDto(cta),
         mainCta: await this.toCallToActionDto(mainCta),
+        footer,
       });
     } catch (error) {
       next(error);
@@ -226,12 +229,14 @@ export class PublicContentController {
         hero,
         ministries,
         upcomingEvents,
+        sermonCta,
         questionNextStep,
         footer,
       ] = await Promise.all([
         this.heroService.findByPage(SpecificPage.MINISTRY),
         this.ministryService.findAll(),
         this.eventService.findUpcomingEvents(),
+        this.ctaService.findByPage(SpecificPage.SERMON),
         this.nextStepService.findOne(NextStepVariants.QuestionNextStep),
         this.footerService.getFooter(),
       ]);
@@ -244,6 +249,7 @@ export class PublicContentController {
           images: await Promise.all(upcomingEvents.map(this.toEventDto.bind(this))),
           button: { text: "View All Events", link: "/events" },
         },
+        sermonCta: await this.toCallToActionDto(sermonCta),
         questionNextStep: this.toNextStepDto(questionNextStep),
         footer,
       });
@@ -260,17 +266,20 @@ export class PublicContentController {
         filters,
         upcomingEvents,
         nextStep,
+        footer,
       ] = await Promise.all([
         this.heroService.findByPage(SpecificPage.EVENT),
         this.itemTagService.findByRelation("event"),
         this.eventService.findUpcomingEvents(),
-        this.nextStepService.findOne(NextStepVariants.StandardNextStep)
+        this.nextStepService.findOne(NextStepVariants.StandardNextStep),
+        this.footerService.getFooter(),
       ]);
       res.json({
         hero,
         filters: filters.map(this.toTagDto.bind(this)),
         events: await Promise.all(upcomingEvents.map(this.toEventDto.bind(this))),
-        nextStep: this.toNextStepDto(nextStep) 
+        nextStep: this.toNextStepDto(nextStep),
+        footer, 
       });
     } catch (error) {
       next(error);
@@ -284,12 +293,14 @@ export class PublicContentController {
         featured,
         sermons,
         cta,
-        socialYoutube
+        socialYoutube,
+        footer,
       ] = await Promise.all([
         this.liveService.findFeatured(),
         this.liveService.findRecent(12),
         this.ctaService.findByPage(SpecificPage.SERMON),
         this.socialLinkService.findByPlatform(Platform.YOUTUBE),
+        this.footerService.getFooter(),
       ])
 
       res.json({
@@ -297,6 +308,7 @@ export class PublicContentController {
         sermons: await Promise.all(sermons.map(this.toLiveDto.bind(this))),
         cta: await this.toCallToActionDto(cta),
         youtubeLink: socialYoutube?.url,
+        footer,
       });
     } catch (error) {
       next(error);
@@ -310,16 +322,19 @@ export class PublicContentController {
         contactHero,
         contact,
         callToAction,
+        footer,
       ] = await Promise.all([
         this.heroService.findByPage(SpecificPage.CONTACT),
         this.contactService.find(),
         this.ctaService.findByPage(SpecificPage.CONTACT),
+        this.footerService.getFooter(),
       ]);
 
       res.json({
         hero: contactHero,
         contact: this.toContactDto(contact),
         callToAction: await this.toCallToActionDto(callToAction),
+        footer,
       });
     } catch (error) {
       next(error);
@@ -408,10 +423,12 @@ export class PublicContentController {
         upcomingServices,
         recentServices,
         callToAction,
+        footer,
       ] = await Promise.all([
         this.scheduleProgramService.findUpcomingServices(),
         this.liveService.findRecent(8),
         this.ctaService.findByPage(SpecificPage.WATCH_LIVE),
+        this.footerService.getFooter(),
       ])
       // let liveStream = await this.liveService.getCachedLiveEvent();
       // if (!liveStream) {
@@ -441,6 +458,7 @@ export class PublicContentController {
           message: "Recent recordings will be available soon."
         },
         callToAction: await this.toCallToActionDto(callToAction),
+        footer,
       });
     } catch (error) {
       next(error);
