@@ -265,12 +265,14 @@ export class PublicContentController {
         hero,
         filters,
         upcomingEvents,
+        sermonCta,
         nextStep,
         footer,
       ] = await Promise.all([
         this.heroService.findByPage(SpecificPage.EVENT),
-        this.itemTagService.findByRelation("event"),
+        this.itemTagService.findByRelation(SpecificPage.EVENT),
         this.eventService.findUpcomingEvents(),
+        this.ctaService.findByPage(SpecificPage.SERMON),
         this.nextStepService.findOne(NextStepVariants.StandardNextStep),
         this.footerService.getFooter(),
       ]);
@@ -278,6 +280,7 @@ export class PublicContentController {
         hero,
         filters: filters.map(this.toTagDto.bind(this)),
         events: await Promise.all(upcomingEvents.map(this.toEventDto.bind(this))),
+        sermonCta: await this.toCallToActionDto(sermonCta),
         nextStep: this.toNextStepDto(nextStep),
         footer, 
       });
