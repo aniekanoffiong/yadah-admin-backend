@@ -577,6 +577,7 @@ export class PublicContentController {
       description: scheduleProgram.description,
       scheduledDay: scheduleProgram.scheduledDay,
       startTime: format(parse(scheduleProgram.startTime, "HH:mm:ss", new Date()), "h:mm a"),
+      additionalTimes: scheduleProgram.additionalTimes?.split(",")?.map(it => format(parse(it, "HH:mm:ss", new Date()), "h:mm a")),
       endTime: format(parse(scheduleProgram.endTime, "HH:mm:ss", new Date()), "h:mm a"),
       location: scheduleProgram.location,
       icon: scheduleProgram.icon,

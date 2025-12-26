@@ -16,6 +16,9 @@ export class ScheduledProgram extends BaseEntity {
   @Column({ type: 'time' })
   endTime!: string;
 
+  @Column({ type: 'text', name: "additional_times", nullable: true })
+  additionalTimes?: string;
+
   @Column()
   location!: string;
 

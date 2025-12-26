@@ -82,7 +82,7 @@ export class FooterService {
         email: footer.email,
         phone: footer.phone,
         address: footer.address,
-        schedule: schedules.map(schedule => ({ [schedule.title]: `${schedule.scheduledDay} ${format(parse(schedule.startTime, "HH:mm:ss", new Date()), "h:mm a")}` }))
+        schedule: schedules.map(schedule => ({ [schedule.title]: `${schedule.scheduledDay} ${format(parse(schedule.startTime, "HH:mm:ss", new Date()), "h:mm a")} ${schedule.additionalTimes ? schedule.additionalTimes.split(",").map(it => format(parse(it, "HH:mm:ss", new Date()), "h:mm a")) : ""}` }))
       },
       socialLinks: footer.socialLinks.map(this.toLinksDto.bind(this)),
       quickLinks: footer.quickLinks.map(this.toLinksDto.bind(this)),

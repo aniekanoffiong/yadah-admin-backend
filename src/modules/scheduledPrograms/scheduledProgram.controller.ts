@@ -13,7 +13,7 @@ export class ScheduledProgramController {
   getAll = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const scheduledPrograms = await this.scheduledProgramService.findAll();
-      res.json({ data: scheduledPrograms });
+      res.json({ data: scheduledPrograms.map(this.toDto.bind(this)) });
     } catch (error) {
       next(error);
     }
@@ -74,6 +74,7 @@ export class ScheduledProgramController {
       title: entity.title,
       description: entity.description,
       scheduledDay: entity.scheduledDay,
+      additionalTimes: entity.additionalTimes?.split(",") || [],
       startTime: entity.startTime,
       endTime: entity.endTime,
       location: entity.location,

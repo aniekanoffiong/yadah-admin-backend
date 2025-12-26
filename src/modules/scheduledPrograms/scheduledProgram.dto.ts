@@ -1,10 +1,11 @@
-import { IsString, IsNotEmpty, IsDateString, IsOptional, Matches } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, Matches } from 'class-validator';
 
 export class ScheduledProgramDto {
   id!: number;
   title!: string;
   scheduledDay?: string;
   startTime!: string;
+  additionalTimes?: string[];
   endTime!: string;
   location!: string;
   description?: string;
@@ -27,6 +28,9 @@ export class CreateScheduledProgramDto {
   @IsNotEmpty()
   @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/, { message: 'endTime must be in HH:mm format' })
   endTime!: string;
+
+  @IsOptional()
+  additionalTimes!: string[];
 
   @IsNotEmpty()
   @IsString()

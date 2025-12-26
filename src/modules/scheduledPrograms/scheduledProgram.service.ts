@@ -1,3 +1,4 @@
+import { format, parse } from 'date-fns';
 import { DayOfWeek } from '../../utils/dayOfWeek';
 import { CreateScheduledProgramDto, ScheduledProgramDto } from './scheduledProgram.dto';
 import { ScheduledProgram } from './scheduledProgram.entity';
@@ -15,6 +16,9 @@ export class ScheduledProgramService {
     scheduledProgram.title = scheduledProgramDto.title;
     scheduledProgram.description = scheduledProgramDto.description;
     scheduledProgram.startTime = scheduledProgramDto.startTime;
+    scheduledProgram.additionalTimes = scheduledProgramDto.additionalTimes.map(it =>
+      format(parse(it, "HH:mm", new Date()), "HH:mm:ss")
+    ).join(",");
     scheduledProgram.endTime = scheduledProgramDto.endTime;
     scheduledProgram.location = scheduledProgramDto.location;
     scheduledProgram.icon = scheduledProgramDto.icon;
@@ -62,7 +66,13 @@ export class ScheduledProgramService {
     if (!scheduledProgram) {
       return null;
     }
-    Object.assign(scheduledProgram, scheduledProgramDto);
+    Object.assign(
+      scheduledProgram, {
+        ...scheduledProgramDto, additionalTimes: scheduledProgramDto.additionalTimes ? 
+          scheduledProgramDto.additionalTimes.map(it => format(parse(it, "HH:mm", new Date()), "HH:mm:ss")).join(",") :
+          scheduledProgram.additionalTimes
+      }
+    );
     return this.scheduledProgramRepository.update(scheduledProgram);
   }
 

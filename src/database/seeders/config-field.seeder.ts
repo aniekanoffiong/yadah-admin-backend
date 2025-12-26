@@ -1,5 +1,3 @@
-import { AppDataSource } from '../data-source';
-import { ConfigEntity } from '../../modules/config/config.entity';
 import { RolesEnum } from '../../enum/roles.enum';
 import { DayOfWeek } from '../../utils/dayOfWeek';
 import { ConfigFieldService } from '../../modules/config/config.service';
@@ -1263,11 +1261,21 @@ const scheduleProgramConfigFields = {
       validationRulesJson: JSON.stringify({ required: true }),
     },
     {
+      fieldName: 'additionalTimes',
+      label: 'Additional Times',
+      fieldType: 'time',
+      editable: true,
+      displayOrder: 4,
+      multipleOccurrence: true,
+      styling: JSON.stringify({ colSpan: 1 }),
+      validationRulesJson: JSON.stringify({ required: true }),
+    },
+    {
       fieldName: 'endTime',
       label: 'End Time',
       fieldType: 'time',
       editable: true,
-      displayOrder: 4,
+      displayOrder: 5,
       styling: JSON.stringify({ colSpan: 1 }),
       validationRulesJson: JSON.stringify({ required: true }),
     },
@@ -1276,28 +1284,28 @@ const scheduleProgramConfigFields = {
       label: 'Location',
       fieldType: 'text',
       editable: true,
-      displayOrder: 5,
+      displayOrder: 6,
     },
     {
       fieldName: 'description',
       label: 'Description',
       fieldType: 'textarea',
       editable: true,
-      displayOrder: 6,
+      displayOrder: 7,
     },
     {
       fieldName: 'icon',
       label: 'Icon',
       fieldType: 'text',
       editable: true,
-      displayOrder: 7,
+      displayOrder: 8,
     },
     {
       fieldName: 'image',
       label: 'Image Upload',
       fieldType: 'image',
       editable: true,
-      displayOrder: 8,
+      displayOrder: 9,
     },
   ]
 }
